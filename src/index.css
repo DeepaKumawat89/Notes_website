@@ -1,0 +1,40 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-cream-light text-pista-deep font-outfit antialiased selection:bg-pista-light m-0 min-h-screen w-full overflow-x-hidden;
+  }
+}
+
+#root {
+  width: 100%;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+.glass-card {
+  @apply bg-white/80 backdrop-blur-md border border-white/20 shadow-lg;
+}
+
+.pista-gradient {
+  @apply bg-gradient-to-br from-pista-light to-white;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-cream-light;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-pista/50 rounded-full hover:bg-pista/80 transition-colors;
+}

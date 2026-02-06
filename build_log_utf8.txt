@@ -1,0 +1,48 @@
+﻿
+> notes_web@0.0.0 build
+> vite build
+
+[36mvite v7.3.1 [32mbuilding client environment for production...[36m[39m
+transforming...
+node.exe : 
+[33msrc/components/Navbar.jsx 
+(3:40): "LucideIcon" is not exported 
+by "node_modules/lucide-react/dist/esm
+/lucide-react.js", imported by 
+"src/components/Navbar.jsx".[39m
+At C:\Program Files\nodejs\npm.ps1:29 
+char:3
++   & $NODE_EXE $NPM_CLI_JS $args
++   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpec 
+   ified: ([33msrc/compon...vbar.js  
+  x".[39m:String) [], RemoteExcept   
+ ion
+    + FullyQualifiedErrorId : NativeC 
+   ommandError
+ 
+[32mΓ£ô[39m 2122 modules transformed.
+rendering chunks...
+computing gzip size...
+[2mdist/[22m[32mindex.html                       [39m[1m[2m  0.85 kB[22m[1m[22m[2m Γöé gzip:  0.49 kB[22m
+[2mdist/[22m[35massets/index-CBpN6OAH.css        [39m[1m[2m 36.55 kB[22m[1m[22m[2m Γöé gzip:  6.50 kB[22m
+[2mdist/[22m[36massets/x-Ug24NykD.js             [39m[1m[2m  0.16 kB[22m[1m[22m[2m Γöé gzip:  0.15 kB[22m
+[2mdist/[22m[36massets/log-in-CaCvnNQK.js        [39m[1m[2m  0.23 kB[22m[1m[22m[2m Γöé gzip:  0.19 kB[22m
+[2mdist/[22m[36massets/leaf-cI1wSm_m.js          [39m[1m[2m  0.27 kB[22m[1m[22m[2m Γöé gzip:  0.23 kB[22m
+[2mdist/[22m[36massets/scroll-BUUPynwn.js        [39m[1m[2m  0.27 kB[22m[1m[22m[2m Γöé gzip:  0.21 kB[22m
+[2mdist/[22m[36massets/book-open-DEl8LybK.js     [39m[1m[2m  0.28 kB[22m[1m[22m[2m Γöé gzip:  0.21 kB[22m
+[2mdist/[22m[36massets/feather-DUoDitKH.js       [39m[1m[2m  0.30 kB[22m[1m[22m[2m Γöé gzip:  0.23 kB[22m
+[2mdist/[22m[36massets/shield-check-BpPrv91z.js  [39m[1m[2m  0.32 kB[22m[1m[22m[2m Γöé gzip:  0.25 kB[22m
+[2mdist/[22m[36massets/mail-BkQD7bJB.js          [39m[1m[2m  0.37 kB[22m[1m[22m[2m Γöé gzip:  0.27 kB[22m
+[2mdist/[22m[36massets/sparkles-F_-apl7n.js      [39m[1m[2m  0.50 kB[22m[1m[22m[2m Γöé gzip:  0.28 kB[22m
+[2mdist/[22m[36massets/trash-2-D1caU_Em.js       [39m[1m[2m  0.63 kB[22m[1m[22m[2m Γöé gzip:  0.35 kB[22m
+[2mdist/[22m[36massets/index-DKR_ZZI1.js         [39m[1m[2m  3.83 kB[22m[1m[22m[2m Γöé gzip:  1.82 kB[22m
+[2mdist/[22m[36massets/Navbar-DdpLPGf-.js        [39m[1m[2m  5.10 kB[22m[1m[22m[2m Γöé gzip:  1.67 kB[22m
+[2mdist/[22m[36massets/Login-Dmi7i8eE.js         [39m[1m[2m  5.95 kB[22m[1m[22m[2m Γöé gzip:  1.82 kB[22m
+[2mdist/[22m[36massets/Register-DQQmCagB.js      [39m[1m[2m  6.43 kB[22m[1m[22m[2m Γöé gzip:  1.90 kB[22m
+[2mdist/[22m[36massets/Notes-BHerLPpu.js         [39m[1m[2m  7.75 kB[22m[1m[22m[2m Γöé gzip:  2.55 kB[22m
+[2mdist/[22m[36massets/Home-BJFMruDB.js          [39m[1m[2m 14.36 kB[22m[1m[22m[2m Γöé gzip:  5.29 kB[22m
+[2mdist/[22m[36massets/Admin-BaTDBdmy.js         [39m[1m[2m 16.77 kB[22m[1m[22m[2m Γöé gzip:  4.66 kB[22m
+[2mdist/[22m[36massets/proxy-DNI8Ctej.js         [39m[1m[2m119.15 kB[22m[1m[22m[2m Γöé gzip: 39.29 kB[22m
+[2mdist/[22m[36massets/index-n4n_C4Jy.js         [39m[1m[2m231.73 kB[22m[1m[22m[2m Γöé gzip: 74.42 kB[22m
+[32mΓ£ô built in 3.75s[39m

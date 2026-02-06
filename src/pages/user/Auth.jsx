@@ -1,0 +1,296 @@
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Mail, Lock, User, ArrowRight, X, Loader2 } from 'lucide-react';
+import { auth, db } from '../../firebase';
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword
+} from 'firebase/auth';
+import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
+import toast from 'react-hot-toast';
+
+const AuthModal = ({ isOpen, onClose }) => {
+  const [isLogin, setIsLogin] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({ name: '', email: '', password: '' });
+
+  if (!isOpen) return null;
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      if (isLogin) {
+        // --- LOGIN LOGIC ---
+        await signInWithEmailAndPassword(auth, formData.email, formData.password);
+        toast.success('Successfully logged in!', {
+          style: { borderRadius: '1rem', background: '#5F6F52', color: '#fff' }
+        });
+        onClose();
+      } else {
+        // --- SIGNUP LOGIC ---
+        const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
+        const user = userCredential.user;
+
+        // Save extra data to Firestore
+        await setDoc(doc(db, 'users', user.uid), {
+          uid: user.uid,
+          name: formData.name,
+          email: formData.email,
+          createdAt: serverTimestamp(),
+          role: 'user', // Default role
+          viewsCount: 0,
+          subscription: 'free'
+        });
+
+        toast.success('Account created successfully!', {
+          style: { borderRadius: '1rem', background: '#5F6F52', color: '#fff' }
+        });
+        onClose();
+      }
+    } catch (error) {
+      console.error("Auth Error:", error);
+      let message = "An error occurred. Please try again.";
+      if (error.code === 'auth/email-already-in-use') message = "Email already in use.";
+      if (error.code === 'auth/invalid-credential') message = "Invalid email or password.";
+      if (error.code === 'auth/weak-password') message = "Password should be at least 6 characters.";
+
+      toast.error(message, {
+        style: { borderRadius: '1rem' }
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleToggle = () => {
+    setIsLogin(!isLogin);
+  };
+
+  return (
+    <AnimatePresence>
+      <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 overflow-hidden">
+        {/* Backdrop */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          onClick={onClose}
+          className="absolute inset-0 bg-pista-deep/40 backdrop-blur-md"
+        />
+
+        {/* 3D Container */}
+        <div className="relative w-full max-w-5xl h-[650px] [perspective:2000px]">
+          <motion.div
+            initial={false}
+            animate={{ rotateY: isLogin ? 0 : 180 }}
+            transition={{ duration: 0.8, ease: "easeInOut" }}
+            className="w-full h-full relative [transform-style:preserve-3d]"
+          >
+            {/* FRONT SIDE (LOGIN) */}
+            <div className={`absolute inset-0 w-full h-full [backface-visibility:hidden] bg-white rounded-[2.5rem] shadow-2xl flex flex-col lg:flex-row overflow-hidden border border-pista-light/20`}>
+              {/* Close Button Front */}
+              <button
+                onClick={onClose}
+                className="absolute top-6 right-6 z-20 p-2 bg-white/80 hover:bg-white rounded-full text-pista-deep shadow-md transition-all active:scale-95"
+              >
+                <X size={20} />
+              </button>
+
+              {/* Left Side: Study Image */}
+              <div className="hidden lg:block lg:w-5/12 relative">
+                <img
+                  src="https://images.unsplash.com/photo-1513258496099-48168024aec0?q=80&w=2070&auto=format&fit=crop"
+                  alt="Study Session"
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-pista-dark/30 backdrop-blur-[1px]"></div>
+                <div className="absolute bottom-10 left-10 right-10 z-10 text-white">
+                  <h2 className="text-3xl font-black leading-tight">Empowering Students <br /> Through Better Notes.</h2>
+                </div>
+              </div>
+
+              {/* Right Side: Login Form */}
+              <div className="w-full lg:w-7/12 p-8 lg:p-12 flex flex-col justify-center bg-white">
+                <div className="max-w-md mx-auto w-full">
+                  <header className="mb-10 text-center lg:text-left">
+                    <h1 className="text-4xl font-black text-pista-deep mb-2">Login</h1>
+                    <p className="text-pista-deep/40 font-bold">Welcome back to your educational archive</p>
+                  </header>
+
+                  <form onSubmit={handleSubmit} className="space-y-6">
+                    <div className="space-y-2">
+                      <label className="text-sm font-black text-pista-deep/60 px-1 uppercase tracking-wider">Email Address</label>
+                      <div className="relative group">
+                        <Mail className="absolute left-5 top-1/2 -translate-y-1/2 text-pista-deep/30 group-focus-within:text-pista-dark transition-colors" size={20} />
+                        <input
+                          type="email"
+                          placeholder="name@institute.edu"
+                          className="w-full pl-14 pr-6 py-4 bg-cream-light border border-pista-light/40 rounded-3xl focus:outline-none focus:border-pista transition-all font-bold text-pista-deep"
+                          required
+                          value={formData.email}
+                          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                          disabled={loading}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-center px-1">
+                        <label className="text-sm font-black text-pista-deep/60 uppercase tracking-wider">Password</label>
+                        <button type="button" className="text-xs font-black text-pista-dark hover:underline">Forgot?</button>
+                      </div>
+                      <div className="relative group">
+                        <Lock className="absolute left-5 top-1/2 -translate-y-1/2 text-pista-deep/30 group-focus-within:text-pista-dark transition-colors" size={20} />
+                        <input
+                          type="password"
+                          placeholder="••••••••••••"
+                          className="w-full pl-14 pr-6 py-4 bg-cream-light border border-pista-light/40 rounded-3xl focus:outline-none focus:border-pista transition-all font-bold text-pista-deep"
+                          required
+                          value={formData.password}
+                          onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                          disabled={loading}
+                        />
+                      </div>
+                    </div>
+
+                    <button
+                      type="submit"
+                      disabled={loading}
+                      className="w-full flex items-center justify-center space-x-3 py-5 bg-pista-dark text-white rounded-[2rem] font-black text-lg hover:bg-pista-deep transition-all shadow-xl shadow-pista/20 active:scale-[0.98] disabled:opacity-70"
+                    >
+                      {loading ? (
+                        <Loader2 className="animate-spin" size={24} />
+                      ) : (
+                        <>
+                          <span>Authenticate</span>
+                          <ArrowRight size={22} />
+                        </>
+                      )}
+                    </button>
+                  </form>
+
+                  <footer className="mt-12 text-center border-t border-pista-light/20 pt-8">
+                    <p className="text-pista-deep/30 font-bold mb-2 uppercase tracking-tighter text-sm">New to the community?</p>
+                    <button onClick={handleToggle} disabled={loading} className="text-pista-dark font-black hover:text-pista-deep transition-colors text-xl underline decoration-pista-light underline-offset-8 decoration-4 disabled:opacity-50">
+                      Create new account
+                    </button>
+                  </footer>
+                </div>
+              </div>
+            </div>
+
+            {/* BACK SIDE (SIGNUP) */}
+            <div className={`absolute inset-0 w-full h-full [backface-visibility:hidden] [transform:rotateY(180deg)] bg-white rounded-[2.5rem] shadow-2xl flex flex-col lg:flex-row-reverse overflow-hidden border border-pista-light/20`}>
+              {/* Close Button Back */}
+              <button
+                onClick={onClose}
+                className="absolute top-6 left-6 z-20 p-2 bg-white/80 hover:bg-white rounded-full text-pista-deep shadow-md transition-all active:scale-95"
+              >
+                <X size={20} />
+              </button>
+
+              {/* Right Side: Theme Image (now on left physically) */}
+              <div className="hidden lg:block lg:w-5/12 relative">
+                <img
+                  src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=2070&auto=format&fit=crop"
+                  alt="Study Group"
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-pista-dark/30 backdrop-blur-[1px]"></div>
+                <div className="absolute bottom-10 left-10 right-10 z-10 text-white">
+                  <h2 className="text-3xl font-black leading-tight text-right">Join the Network <br /> of Bright Minds.</h2>
+                </div>
+              </div>
+
+              {/* Left Side: Form Area (now on right physically) */}
+              <div className="w-full lg:w-7/12 p-8 lg:p-12 flex flex-col justify-center bg-white">
+                <div className="max-w-md mx-auto w-full">
+                  <header className="mb-8 text-center lg:text-left">
+                    <h1 className="text-4xl font-black text-pista-deep mb-2">Register</h1>
+                    <p className="text-pista-deep/40 font-bold">Initialize your student profile today</p>
+                  </header>
+
+                  <form onSubmit={handleSubmit} className="space-y-4">
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-black text-pista-deep/60 px-1 uppercase tracking-wider">Full Name</label>
+                      <div className="relative group">
+                        <User className="absolute left-5 top-1/2 -translate-y-1/2 text-pista-deep/30 group-focus-within:text-pista-dark transition-colors" size={20} />
+                        <input
+                          type="text"
+                          placeholder="John Doe"
+                          className="w-full pl-14 pr-6 py-4 bg-cream-light border border-pista-light/40 rounded-3xl focus:outline-none focus:border-pista transition-all font-bold text-pista-deep"
+                          required={!isLogin}
+                          value={formData.name}
+                          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                          disabled={loading}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-black text-pista-deep/60 px-1 uppercase tracking-wider">Education Email</label>
+                      <div className="relative group">
+                        <Mail className="absolute left-5 top-1/2 -translate-y-1/2 text-pista-deep/30 group-focus-within:text-pista-dark transition-colors" size={20} />
+                        <input
+                          type="email"
+                          placeholder="name@university.edu"
+                          className="w-full pl-14 pr-6 py-4 bg-cream-light border border-pista-light/40 rounded-3xl focus:outline-none focus:border-pista transition-all font-bold text-pista-deep"
+                          required
+                          value={formData.email}
+                          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                          disabled={loading}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-black text-pista-deep/60 px-1 uppercase tracking-wider">Secure Password</label>
+                      <div className="relative group">
+                        <Lock className="absolute left-5 top-1/2 -translate-y-1/2 text-pista-deep/30 group-focus-within:text-pista-dark transition-colors" size={20} />
+                        <input
+                          type="password"
+                          placeholder="••••••••••••"
+                          className="w-full pl-14 pr-6 py-4 bg-cream-light border border-pista-light/40 rounded-3xl focus:outline-none focus:border-pista transition-all font-bold text-pista-deep"
+                          required
+                          value={formData.password}
+                          onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                          disabled={loading}
+                        />
+                      </div>
+                    </div>
+
+                    <button
+                      type="submit"
+                      disabled={loading}
+                      className="w-full flex items-center justify-center space-x-3 py-5 bg-pista-dark text-white rounded-[2rem] font-black text-lg hover:bg-pista-deep transition-all shadow-xl shadow-pista/20 active:scale-[0.98] mt-4 disabled:opacity-70"
+                    >
+                      {loading ? (
+                        <Loader2 className="animate-spin" size={24} />
+                      ) : (
+                        <>
+                          <span>Initialize Account</span>
+                          <ArrowRight size={22} />
+                        </>
+                      )}
+                    </button>
+                  </form>
+
+                  <footer className="mt-10 text-center border-t border-pista-light/20 pt-6">
+                    <p className="text-pista-deep/30 font-bold mb-2 uppercase tracking-tighter text-sm">Already a member?</p>
+                    <button onClick={handleToggle} disabled={loading} className="text-pista-dark font-black hover:text-pista-deep transition-colors text-xl underline decoration-pista-light underline-offset-8 decoration-4 disabled:opacity-50">
+                      Back to login
+                    </button>
+                  </footer>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    </AnimatePresence>
+  );
+};
+
+export default AuthModal;
