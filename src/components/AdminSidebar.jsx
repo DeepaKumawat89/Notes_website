@@ -11,7 +11,6 @@ const AdminSidebar = () => {
         { title: 'Manage Notes', path: '/admin/manage', icon: FileStack },
         { title: 'Users List', path: '/admin/users', icon: Users },
         { title: 'Payments', path: '/admin/payments', icon: CreditCard },
-        { title: 'Requests', path: '/admin/requests', icon: MessageSquare },
     ];
 
     return (

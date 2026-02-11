@@ -20,7 +20,7 @@ const UsersList = () => {
     const [searchTerm, setSearchTerm] = useState('');
 
     useEffect(() => {
-        const q = query(collection(db, 'users'), orderBy('name', 'asc'));
+        const q = query(collection(db, 'users'), orderBy('createdAt', 'desc'));
         const unsubscribe = onSnapshot(q, (snapshot) => {
             const usersData = snapshot.docs.map(doc => ({
                 id: doc.id,
@@ -38,129 +38,163 @@ const UsersList = () => {
         user.email?.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
+    const stats = {
+        total: users.length,
+        premium: users.filter(u => u.subscription === 'premium').length,
+        standard: users.filter(u => u.subscription !== 'premium').length
+    };
+
     return (
-        <div className="min-h-screen bg-cream-light flex">
+        <div className="min-h-screen bg-[#FDFCF9] flex font-sans selection:bg-pista-light">
             <AdminSidebar />
 
-            <main className="flex-1 lg:ml-72 p-6 lg:p-10 pt-24 lg:pt-10">
-                <header className="mb-12 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-                    <div>
-                        <h1 className="text-3xl font-bold text-pista-deep">Students & Admins</h1>
-                        <p className="text-pista-deep/50 font-medium">Registered users on the platform</p>
-                    </div>
-
-                    <div className="flex items-center space-x-6">
-                        <div className="bg-white px-6 py-3 rounded-2xl border border-pista-light/30 shadow-sm flex items-center space-x-3">
-                            <span className="text-pista-deep/50 font-bold uppercase text-xs tracking-widest">Total Users</span>
-                            <span className="text-2xl font-black text-pista-deep">{users.length}</span>
+            <main className="flex-1 lg:ml-72 flex flex-col h-screen overflow-hidden">
+                {/* Premium Header */}
+                <header className="px-10 py-10 bg-white border-b border-gray-100 z-20">
+                    <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-8 mb-10">
+                        <div>
+                            <div className="flex items-center space-x-3 mb-2">
+                                <div className="h-2 w-10 bg-pista-dark rounded-full" />
+                                <span className="text-[10px] font-black text-pista-deep/40 uppercase tracking-[0.4em]">Administrative Oversight</span>
+                            </div>
+                            <h1 className="text-4xl font-black text-slate-900 tracking-tight">Student <span className="text-pista-dark italic">Directory</span></h1>
                         </div>
 
-                        <div className="relative group">
-                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-pista-deep/30 group-focus-within:text-pista-dark" size={20} />
+                        <div className="flex flex-wrap items-center gap-4">
+                            <div className="px-6 py-4 bg-slate-50 rounded-3xl border border-slate-200 flex items-center space-x-4">
+                                <div className="p-2 bg-slate-800 text-white rounded-xl">
+                                    <UsersIcon size={18} />
+                                </div>
+                                <div>
+                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Total Capacity</p>
+                                    <p className="text-xl font-black text-slate-900 leading-none">{stats.total}</p>
+                                </div>
+                            </div>
+
+                            <div className="px-6 py-4 bg-purple-50 rounded-3xl border border-purple-100 flex items-center space-x-4">
+                                <div className="p-2 bg-purple-600 text-white rounded-xl shadow-lg shadow-purple-100">
+                                    <Shield size={18} />
+                                </div>
+                                <div>
+                                    <p className="text-[10px] font-black text-purple-600/50 uppercase tracking-widest leading-none mb-1">Premium Tier</p>
+                                    <p className="text-xl font-black text-purple-700 leading-none">{stats.premium}</p>
+                                </div>
+                            </div>
+
+                            <div className="px-6 py-4 bg-pista-light/30 rounded-3xl border border-pista/20 flex items-center space-x-4">
+                                <div className="p-2 bg-pista-dark text-white rounded-xl shadow-lg shadow-pista/20">
+                                    <User size={18} />
+                                </div>
+                                <div>
+                                    <p className="text-[10px] font-black text-pista-dark/50 uppercase tracking-widest leading-none mb-1">Standard</p>
+                                    <p className="text-xl font-black text-pista-deep leading-none">{stats.standard}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="flex items-center space-x-4">
+                        <div className="relative group flex-1">
+                            <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-pista-dark transition-colors" size={20} />
                             <input
                                 type="text"
-                                placeholder="Search by name or email..."
+                                placeholder="Search students by name or unique ID..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="pl-12 pr-4 py-3 bg-white border border-pista-light/30 rounded-2xl focus:outline-none focus:ring-2 focus:ring-pista/20 w-80 shadow-sm"
+                                className="w-full pl-14 pr-8 py-5 bg-slate-50 border-none rounded-[2rem] focus:outline-none focus:ring-4 focus:ring-pista/10 font-bold text-slate-700 placeholder:text-slate-300 transition-all shadow-inner"
                             />
                         </div>
                     </div>
                 </header>
 
-                <div className="bg-white rounded-[2.5rem] border border-pista-light/20 shadow-xl shadow-pista/5 overflow-hidden">
-                    {loading ? (
-                        <div className="py-32 flex flex-col items-center justify-center">
-                            <Loader2 className="animate-spin text-pista-dark mb-4" size={48} />
-                            <p className="text-pista-deep/40 font-bold">Fetching user database...</p>
-                        </div>
-                    ) : (
-                        <div className="overflow-x-auto">
-                            <table className="w-full text-left">
-                                <thead>
-                                    <tr className="bg-cream-light/50 border-b border-pista-light/30">
-                                        <th className="px-8 py-6 text-sm font-black text-pista-deep/50 uppercase tracking-wider">User Info</th>
-                                        <th className="px-8 py-6 text-sm font-black text-pista-deep/50 uppercase tracking-wider">Email Address</th>
-                                        <th className="px-8 py-6 text-sm font-black text-pista-deep/50 uppercase tracking-wider">Plan</th>
-                                        <th className="px-8 py-6 text-sm font-black text-pista-deep/50 uppercase tracking-wider">Views</th>
-                                        <th className="px-8 py-6 text-sm font-black text-pista-deep/50 uppercase tracking-wider">Joined Date</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y divide-pista-light/20">
-                                    <AnimatePresence>
-                                        {filteredUsers.map((user) => (
-                                            <motion.tr
-                                                key={user.id}
-                                                initial={{ opacity: 0 }}
-                                                animate={{ opacity: 1 }}
-                                                className="group hover:bg-cream-light/30 transition-colors"
-                                            >
-                                                <td className="px-8 py-6">
-                                                    <div className="flex items-center space-x-4">
-                                                        <div className="w-10 h-10 bg-pista-light/50 rounded-full flex items-center justify-center text-pista-dark font-black">
-                                                            {user.name?.charAt(0).toUpperCase() || <User size={18} />}
-                                                        </div>
-                                                        <div>
-                                                            <p className="font-bold text-pista-deep">{user.name || 'Anonymous User'}</p>
-                                                            <p className="text-[10px] text-pista-deep/40 font-bold uppercase tracking-tighter">ID: {user.id.slice(0, 8)}...</p>
-                                                        </div>
+                <div className="flex-1 overflow-y-auto p-10 custom-scrollbar bg-[#F8F9FA]/50">
+                    <div className="max-w-7xl mx-auto">
+                        {loading ? (
+                            <div className="h-[50vh] flex flex-col items-center justify-center">
+                                <Loader2 className="animate-spin text-pista-dark mb-4" size={48} />
+                                <p className="text-sm font-black text-pista-deep/20 uppercase tracking-[0.3em]">Accessing Directory</p>
+                            </div>
+                        ) : filteredUsers.length > 0 ? (
+                            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+                                <AnimatePresence mode='popLayout'>
+                                    {filteredUsers.map((user, idx) => (
+                                        <motion.div
+                                            key={user.id}
+                                            layout
+                                            initial={{ opacity: 0, y: 20 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            exit={{ opacity: 0, scale: 0.95 }}
+                                            transition={{ delay: idx * 0.03, duration: 0.4 }}
+                                            className="bg-white rounded-[3rem] p-8 border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.02)] hover:shadow-[0_20px_50px_rgba(107,136,108,0.1)] transition-all group overflow-hidden"
+                                        >
+                                            <div className="flex items-center justify-between mb-8">
+                                                <div className="relative">
+                                                    <div className="w-16 h-16 bg-pista-light/30 rounded-[1.5rem] flex items-center justify-center text-pista-dark font-black text-2xl italic shadow-inner">
+                                                        {user.name?.charAt(0).toUpperCase() || <User size={24} />}
                                                     </div>
-                                                </td>
-                                                <td className="px-8 py-6">
-                                                    <div className="flex items-center space-x-2 text-pista-deep/70">
-                                                        <Mail size={14} className="text-pista-dark" />
-                                                        <span className="font-medium">{user.email || 'No email provided'}</span>
-                                                    </div>
-                                                </td>
-                                                <td className="px-8 py-6">
-                                                    <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase flex items-center w-fit space-x-1.5 ${user.subscription === 'premium'
-                                                        ? 'bg-purple-100 text-purple-700 border border-purple-200'
-                                                        : 'bg-pista-light text-pista-dark border border-pista'
+                                                    {user.subscription === 'premium' && (
+                                                        <div className="absolute -top-2 -right-2 p-1.5 bg-purple-600 text-white rounded-lg shadow-lg border-2 border-white">
+                                                            <Shield size={12} fill="currentColor" />
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                <div className="text-right">
+                                                    <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest italic border ${user.subscription === 'premium' ? 'bg-purple-100 text-purple-700 border-purple-200' : 'bg-pista-light text-pista-dark border-pista'
                                                         }`}>
-                                                        {user.subscription === 'premium' && <Shield size={10} />}
-                                                        <span>{user.subscription || 'free'}</span>
+                                                        {user.subscription || 'free tier'}
                                                     </span>
-                                                </td>
-                                                <td className="px-8 py-6">
-                                                    <div className="flex items-center space-x-2">
-                                                        <div className="w-full bg-cream-light h-2 rounded-full overflow-hidden max-w-[80px]">
-                                                            <div
-                                                                className={`h-full transition-all duration-500 ${(user.viewsCount || 0) >= 3 ? 'bg-red-500' : 'bg-pista-dark'}`}
-                                                                style={{ width: `${Math.min(((user.viewsCount || 0) / 3) * 100, 100)}%` }}
-                                                            ></div>
-                                                        </div>
-                                                        <span className="text-xs font-bold text-pista-deep/60">{user.viewsCount || 0}/3</span>
+                                                </div>
+                                            </div>
+
+                                            <div className="mb-8">
+                                                <h3 className="text-xl font-black text-slate-900 truncate">{user.name || 'Anonymous User'}</h3>
+                                                <p className="text-sm font-bold text-slate-400 truncate mt-1">{user.email || 'no-email-recorded'}</p>
+                                            </div>
+
+                                            <div className="space-y-6 pt-6 border-t border-slate-50">
+                                                <div>
+                                                    <div className="flex justify-between items-end mb-2">
+                                                        <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest italic">Inventory Views</p>
+                                                        <p className="text-xs font-black text-slate-700">{user.viewsCount || 0}/3 <span className="text-slate-300 font-bold ml-1">Limit</span></p>
                                                     </div>
-                                                </td>
-                                                <td className="px-8 py-6">
-                                                    <div className="flex items-center space-x-2 text-pista-deep/40 text-sm font-medium">
-                                                        <Calendar size={14} />
-                                                        <span>
-                                                            {user.createdAt ? new Date(user.createdAt.seconds * 1000).toLocaleDateString() : 'N/A'}
+                                                    <div className="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden shadow-inner flex">
+                                                        <motion.div
+                                                            initial={{ width: 0 }}
+                                                            animate={{ width: `${Math.min(((user.viewsCount || 0) / 3) * 100, 100)}%` }}
+                                                            className={`h-full transition-all duration-700 ${(user.viewsCount || 0) >= 3 ? 'bg-gradient-to-r from-red-500 to-red-400' : 'bg-gradient-to-r from-pista-dark to-pista'
+                                                                }`}
+                                                        />
+                                                    </div>
+                                                </div>
+
+                                                <div className="flex items-center justify-between text-slate-400">
+                                                    <div className="flex items-center gap-2">
+                                                        <Calendar size={14} className="text-pista-dark" />
+                                                        <span className="text-xs font-bold uppercase tracking-tighter">
+                                                            {user.createdAt ? new Date(user.createdAt.seconds * 1000).toLocaleDateString('en-IN', { month: 'short', year: 'numeric' }) : 'Joined Age Ago'}
                                                         </span>
                                                     </div>
-                                                </td>
-                                            </motion.tr>
-                                        ))}
-                                    </AnimatePresence>
-                                </tbody>
-                            </table>
-                        </div>
-                    )}
-
-                    {!loading && filteredUsers.length === 0 && (
-                        <div className="py-32 text-center">
-                            <div className="inline-flex p-8 bg-cream-light text-pista-deep/20 rounded-full mb-8">
-                                <UsersIcon size={64} />
+                                                    <p className="text-[10px] font-black italic tracking-widest text-slate-300">#{user.id.slice(0, 8).toUpperCase()}</p>
+                                                </div>
+                                            </div>
+                                        </motion.div>
+                                    ))}
+                                </AnimatePresence>
                             </div>
-                            <h3 className="text-2xl font-bold text-pista-deep">
-                                {users.length === 0 ? "No users registered yet" : "No matching users found"}
-                            </h3>
-                            <p className="text-pista-deep/50 mt-2">
-                                {users.length === 0 ? "Users will appear here as they sign up." : "Try adjusting your search criteria."}
-                            </p>
-                        </div>
-                    )}
+                        ) : (
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                className="py-32 text-center bg-white rounded-[4rem] border border-dashed border-slate-200"
+                            >
+                                <div className="inline-flex p-10 bg-slate-50 text-slate-200 rounded-full mb-8 shadow-inner">
+                                    <UsersIcon size={80} strokeWidth={1} />
+                                </div>
+                                <h3 className="text-3xl font-black text-slate-800">No Students Found</h3>
+                                <p className="text-slate-400 font-bold mt-3 max-w-sm mx-auto">Your search didn't return any matches in the current database.</p>
+                            </motion.div>
+                        )}
+                    </div>
                 </div>
             </main>
         </div>

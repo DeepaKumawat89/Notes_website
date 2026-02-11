@@ -1,20 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Mail, Lock, User, ArrowRight, X, Loader2 } from 'lucide-react';
 import { auth, db } from '../../firebase';
 import {
   createUserWithEmailAndPassword,
-  signInWithEmailAndPassword
+  signInWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
+  sendPasswordResetEmail
 } from 'firebase/auth';
-import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore';
 import toast from 'react-hot-toast';
 
 const AuthModal = ({ isOpen, onClose }) => {
+  const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({ name: '', email: '', password: '' });
 
-  if (!isOpen) return null;
+  const isStandalonePage = isOpen === undefined;
+
+  if (!isOpen && !isStandalonePage) return null;
+
+  const handleSuccess = () => {
+    if (onClose) onClose();
+    if (isStandalonePage) navigate('/');
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,6 +40,7 @@ const AuthModal = ({ isOpen, onClose }) => {
           style: { borderRadius: '1rem', background: '#5F6F52', color: '#fff' }
         });
         onClose();
+        handleSuccess();
       } else {
         // --- SIGNUP LOGIC ---
         const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
@@ -64,6 +77,70 @@ const AuthModal = ({ isOpen, onClose }) => {
     }
   };
 
+  const handleGoogleLogin = async () => {
+    setLoading(true);
+    const provider = new GoogleAuthProvider();
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+
+      // Check if user already exists in Firestore
+      const userDoc = await getDoc(doc(db, 'users', user.uid));
+
+      if (!userDoc.exists()) {
+        // Create user document if it doesn't exist
+        await setDoc(doc(db, 'users', user.uid), {
+          uid: user.uid,
+          name: user.displayName || 'User',
+          email: user.email,
+          createdAt: serverTimestamp(),
+          role: 'user',
+          viewsCount: 0,
+          subscription: 'free',
+          photoURL: user.photoURL
+        });
+        toast.success('Account created with Google!');
+      } else {
+        toast.success('Signed in with Google!');
+      }
+      onClose();
+      handleSuccess();
+    } catch (error) {
+      console.error("Google Auth Error:", error);
+      toast.error("Failed to sign in with Google.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleForgotPassword = async () => {
+    if (!formData.email) {
+      toast.error('Please enter your email address first to reset password.', {
+        style: { borderRadius: '1rem' }
+      });
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await sendPasswordResetEmail(auth, formData.email);
+      toast.success('Password reset link sent to your email!', {
+        style: { borderRadius: '1rem', background: '#5F6F52', color: '#fff' }
+      });
+    } catch (error) {
+      console.error("Reset Error:", error);
+      let message = "Failed to send reset email. Please try again.";
+      if (error.code === 'auth/user-not-found') message = "No account found with this email.";
+      if (error.code === 'auth/invalid-email') message = "Please enter a valid email address.";
+
+      toast.error(message, {
+        style: { borderRadius: '1rem' }
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleToggle = () => {
     setIsLogin(!isLogin);
   };
@@ -71,17 +148,19 @@ const AuthModal = ({ isOpen, onClose }) => {
   return (
     <AnimatePresence>
       <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 overflow-hidden">
-        {/* Backdrop */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          onClick={onClose}
-          className="absolute inset-0 bg-pista-deep/40 backdrop-blur-md"
-        />
+        {/* Backdrop - Only show if modal */}
+        {!isStandalonePage && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={onClose}
+            className="absolute inset-0 bg-pista-deep/40 backdrop-blur-md"
+          />
+        )}
 
         {/* 3D Container */}
-        <div className="relative w-full max-w-5xl h-[650px] [perspective:2000px]">
+        <div className="relative w-full max-w-5xl h-[720px] max-h-[90vh] [perspective:2000px]">
           <motion.div
             initial={false}
             animate={{ rotateY: isLogin ? 0 : 180 }}
@@ -90,13 +169,15 @@ const AuthModal = ({ isOpen, onClose }) => {
           >
             {/* FRONT SIDE (LOGIN) */}
             <div className={`absolute inset-0 w-full h-full [backface-visibility:hidden] bg-white rounded-[2.5rem] shadow-2xl flex flex-col lg:flex-row overflow-hidden border border-pista-light/20`}>
-              {/* Close Button Front */}
-              <button
-                onClick={onClose}
-                className="absolute top-6 right-6 z-20 p-2 bg-white/80 hover:bg-white rounded-full text-pista-deep shadow-md transition-all active:scale-95"
-              >
-                <X size={20} />
-              </button>
+              {/* Close Button Front - Only show if modal */}
+              {!isStandalonePage && (
+                <button
+                  onClick={onClose}
+                  className="absolute top-6 right-6 z-20 p-2 bg-white/80 hover:bg-white rounded-full text-pista-deep shadow-md transition-all active:scale-95"
+                >
+                  <X size={20} />
+                </button>
+              )}
 
               {/* Left Side: Study Image */}
               <div className="hidden lg:block lg:w-5/12 relative">
@@ -112,9 +193,9 @@ const AuthModal = ({ isOpen, onClose }) => {
               </div>
 
               {/* Right Side: Login Form */}
-              <div className="w-full lg:w-7/12 p-8 lg:p-12 flex flex-col justify-center bg-white">
-                <div className="max-w-md mx-auto w-full">
-                  <header className="mb-10 text-center lg:text-left">
+              <div className="w-full lg:w-7/12 flex flex-col bg-white overflow-y-auto custom-scrollbar">
+                <div className="max-w-md mx-auto w-full p-8 lg:p-12 my-auto">
+                  <header className="mb-8 text-center lg:text-left">
                     <h1 className="text-4xl font-black text-pista-deep mb-2">Login</h1>
                     <p className="text-pista-deep/40 font-bold">Welcome back to your educational archive</p>
                   </header>
@@ -139,7 +220,14 @@ const AuthModal = ({ isOpen, onClose }) => {
                     <div className="space-y-2">
                       <div className="flex justify-between items-center px-1">
                         <label className="text-sm font-black text-pista-deep/60 uppercase tracking-wider">Password</label>
-                        <button type="button" className="text-xs font-black text-pista-dark hover:underline">Forgot?</button>
+                        <button
+                          type="button"
+                          onClick={handleForgotPassword}
+                          disabled={loading}
+                          className="text-xs font-black text-pista-dark hover:underline disabled:opacity-50"
+                        >
+                          Forgot?
+                        </button>
                       </div>
                       <div className="relative group">
                         <Lock className="absolute left-5 top-1/2 -translate-y-1/2 text-pista-deep/30 group-focus-within:text-pista-dark transition-colors" size={20} />
@@ -171,25 +259,43 @@ const AuthModal = ({ isOpen, onClose }) => {
                     </button>
                   </form>
 
-                  <footer className="mt-12 text-center border-t border-pista-light/20 pt-8">
-                    <p className="text-pista-deep/30 font-bold mb-2 uppercase tracking-tighter text-sm">New to the community?</p>
-                    <button onClick={handleToggle} disabled={loading} className="text-pista-dark font-black hover:text-pista-deep transition-colors text-xl underline decoration-pista-light underline-offset-8 decoration-4 disabled:opacity-50">
-                      Create new account
-                    </button>
-                  </footer>
+                  <div className="mt-2 mb-2 border-t border-pista-light/20 w-full" />
+
+                  <button
+                    onClick={handleGoogleLogin}
+                    disabled={loading}
+                    className="w-full flex items-center justify-center space-x-4 py-4 bg-white border-2 border-pista-light/20 text-pista-deep rounded-[2rem] font-black hover:border-pista-dark/40 transition-all active:scale-[0.98] disabled:opacity-70"
+                  >
+                    <svg className="w-6 h-6" viewBox="0 0 24 24">
+                      <path
+                        fill="#EA4335"
+                        d="M12.48 10.92v3.28h7.84c-.24 1.84-.908 3.152-1.928 4.176-1.248 1.224-3.192 2.544-6.416 2.544-5.112 0-9.12-4.144-9.12-9.264 0-5.12 4.008-9.264 9.12-9.264 2.768 0 4.8 1.096 6.288 2.512l2.312-2.312C18.16 1.056 15.44 0 12.48 0 5.688 0 0 5.688 0 12.512c0 6.824 5.688 12.512 12.48 12.512 3.688 0 6.472-1.208 8.64-3.48 2.224-2.224 2.928-5.384 2.928-7.96 0-.768-.064-1.488-.184-2.16H12.48z"
+                      />
+                    </svg>
+                    <span>Sign in with Google</span>
+                  </button>
                 </div>
+
+                <footer className="mt-2 text-center border-t border-pista-light/20 pt-4">
+                  <p className="text-pista-deep/30 font-bold mb-2 uppercase tracking-tighter text-sm">New to the community?</p>
+                  <button onClick={handleToggle} disabled={loading} className="text-pista-dark font-black hover:text-pista-deep transition-colors text-xl underline decoration-pista-light underline-offset-8 decoration-4 disabled:opacity-50">
+                    Create new account
+                  </button>
+                </footer>
               </div>
             </div>
 
             {/* BACK SIDE (SIGNUP) */}
             <div className={`absolute inset-0 w-full h-full [backface-visibility:hidden] [transform:rotateY(180deg)] bg-white rounded-[2.5rem] shadow-2xl flex flex-col lg:flex-row-reverse overflow-hidden border border-pista-light/20`}>
-              {/* Close Button Back */}
-              <button
-                onClick={onClose}
-                className="absolute top-6 left-6 z-20 p-2 bg-white/80 hover:bg-white rounded-full text-pista-deep shadow-md transition-all active:scale-95"
-              >
-                <X size={20} />
-              </button>
+              {/* Close Button Back - Only show if modal */}
+              {!isStandalonePage && (
+                <button
+                  onClick={onClose}
+                  className="absolute top-6 left-6 z-20 p-2 bg-white/80 hover:bg-white rounded-full text-pista-deep shadow-md transition-all active:scale-95"
+                >
+                  <X size={20} />
+                </button>
+              )}
 
               {/* Right Side: Theme Image (now on left physically) */}
               <div className="hidden lg:block lg:w-5/12 relative">
@@ -205,9 +311,9 @@ const AuthModal = ({ isOpen, onClose }) => {
               </div>
 
               {/* Left Side: Form Area (now on right physically) */}
-              <div className="w-full lg:w-7/12 p-8 lg:p-12 flex flex-col justify-center bg-white">
-                <div className="max-w-md mx-auto w-full">
-                  <header className="mb-8 text-center lg:text-left">
+              <div className="w-full lg:w-7/12 flex flex-col bg-white overflow-y-auto custom-scrollbar">
+                <div className="max-w-md mx-auto w-full p-8 lg:p-12 my-auto">
+                  <header className="mb-6 text-center lg:text-left">
                     <h1 className="text-4xl font-black text-pista-deep mb-2">Register</h1>
                     <p className="text-pista-deep/40 font-bold">Initialize your student profile today</p>
                   </header>
@@ -276,6 +382,8 @@ const AuthModal = ({ isOpen, onClose }) => {
                       )}
                     </button>
                   </form>
+
+
 
                   <footer className="mt-10 text-center border-t border-pista-light/20 pt-6">
                     <p className="text-pista-deep/30 font-bold mb-2 uppercase tracking-tighter text-sm">Already a member?</p>

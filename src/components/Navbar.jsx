@@ -70,8 +70,12 @@ const Navbar = () => {
                                         animate={{ opacity: 1, x: 0 }}
                                         className="flex items-center space-x-3 bg-pista-light/30 px-4 py-2 rounded-full border border-pista-light"
                                     >
-                                        <div className="w-8 h-8 bg-pista-dark rounded-full flex items-center justify-center text-white font-bold text-sm">
-                                            {userData?.name?.charAt(0).toUpperCase() || <User size={14} />}
+                                        <div className="w-8 h-8 bg-pista-dark rounded-full overflow-hidden flex items-center justify-center text-white font-bold text-sm border border-pista-light">
+                                            {userData?.photoURL ? (
+                                                <img src={userData.photoURL} alt={userData.name} className="w-full h-full object-cover" />
+                                            ) : (
+                                                userData?.name?.charAt(0).toUpperCase() || <User size={14} />
+                                            )}
                                         </div>
                                         <div className="flex flex-col">
                                             <span className="text-sm font-black text-pista-deep leading-none">

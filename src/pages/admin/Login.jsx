@@ -8,15 +8,15 @@ const AdminLogin = () => {
     const navigate = useNavigate();
     // Default admin credentials
     const [formData, setFormData] = useState({
-        email: 'admin@edunotes.com',
-        password: 'admin'
+        email: '',
+        password: ''
     });
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
         // Simulating authentication
-        if (formData.email === 'admin@edunotes.com' && formData.password === 'admin') {
+        if (formData.email === 'admin@gmail.com' && formData.password === 'admin@123') {
             toast.success('Login successful! Welcome Admin.', {
                 duration: 3000,
                 style: {
