@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { BookOpen, Menu, User, Shield, LogOut, Loader2 } from 'lucide-react';
+import { BookOpen, Menu, X, User, Shield, LogOut, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import AuthModal from '../pages/user/Auth';
 import { auth, db } from '../firebase';
@@ -10,6 +10,7 @@ import toast from 'react-hot-toast';
 
 const Navbar = () => {
     const [isAuthOpen, setIsAuthOpen] = useState(false);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [user, setUser] = useState(null);
     const [userData, setUserData] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -39,10 +40,13 @@ const Navbar = () => {
         try {
             await signOut(auth);
             toast.success('Logged out successfully');
+            setIsMobileMenuOpen(false);
         } catch (error) {
             toast.error('Error logging out');
         }
     };
+
+    const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
 
     return (
         <>
@@ -56,6 +60,7 @@ const Navbar = () => {
                             <span className="text-xl font-bold tracking-tight text-pista-deep">EduNotes</span>
                         </Link>
 
+                        {/* Desktop Menu */}
                         <div className="hidden md:flex items-center space-x-6">
                             <Link to="/classes" className="text-pista-deep hover:text-pista-dark font-medium transition-colors">Classes</Link>
 
@@ -112,11 +117,82 @@ const Navbar = () => {
                             )}
                         </div>
 
-                        <button className="md:hidden p-2 text-pista-deep">
-                            <Menu size={24} />
-                        </button>
+                        {/* Mobile Menu Toggle */}
+                        <div className="md:hidden flex items-center">
+                            <button
+                                onClick={toggleMobileMenu}
+                                className="p-2.5 bg-pista-light/30 text-pista-deep rounded-xl hover:bg-pista-light transition-all active:scale-95"
+                            >
+                                {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                            </button>
+                        </div>
                     </div>
                 </div>
+
+                {/* Mobile Menu Drawer */}
+                <AnimatePresence>
+                    {isMobileMenuOpen && (
+                        <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: 'auto' }}
+                            exit={{ opacity: 0, height: 0 }}
+                            className="md:hidden bg-white border-b border-pista-light overflow-hidden shadow-2xl"
+                        >
+                            <div className="px-6 py-8 space-y-6">
+                                <Link
+                                    to="/classes"
+                                    onClick={() => setIsMobileMenuOpen(false)}
+                                    className="block text-xl font-bold text-pista-deep hover:text-pista-dark"
+                                >
+                                    Explore Classes
+                                </Link>
+
+                                {user ? (
+                                    <div className="pt-6 border-t border-pista-light/50">
+                                        <div className="flex items-center space-x-4 mb-6">
+                                            <div className="w-12 h-12 bg-pista-dark rounded-2xl flex items-center justify-center text-white font-bold text-xl overflow-hidden shadow-lg border border-pista-light">
+                                                {userData?.photoURL ? (
+                                                    <img src={userData.photoURL} alt={userData.name} className="w-full h-full object-cover" />
+                                                ) : (
+                                                    userData?.name?.charAt(0).toUpperCase() || <User size={20} />
+                                                )}
+                                            </div>
+                                            <div>
+                                                <p className="text-lg font-black text-pista-deep leading-none mb-1">{userData?.name || 'User'}</p>
+                                                <p className="text-xs font-bold text-pista-deep/50 uppercase tracking-widest">Active Profile</p>
+                                            </div>
+                                        </div>
+                                        <button
+                                            onClick={handleLogout}
+                                            className="w-full flex items-center justify-center space-x-3 py-4 bg-red-50 text-red-500 rounded-2xl font-bold transition-all active:scale-95"
+                                        >
+                                            <LogOut size={20} />
+                                            <span>Terminate Session</span>
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <div className="grid grid-cols-1 gap-4 pt-6 border-t border-pista-light/50">
+                                        <button
+                                            onClick={() => { setIsAuthOpen(true); setIsMobileMenuOpen(false); }}
+                                            className="w-full flex items-center justify-center space-x-3 py-4 border-2 border-pista-dark text-pista-dark rounded-2xl font-bold hover:bg-pista-light transition-all active:scale-95"
+                                        >
+                                            <User size={20} />
+                                            <span>User Ingestion</span>
+                                        </button>
+                                        <Link
+                                            to="/admin/login"
+                                            onClick={() => setIsMobileMenuOpen(false)}
+                                            className="w-full flex items-center justify-center space-x-3 py-4 bg-pista-dark text-white rounded-2xl font-bold hover:bg-pista-deep transition-all active:scale-95 shadow-xl shadow-pista/10"
+                                        >
+                                            <Shield size={20} />
+                                            <span>Admin Access</span>
+                                        </Link>
+                                    </div>
+                                )}
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
             </nav>
 
             <AuthModal isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)} />

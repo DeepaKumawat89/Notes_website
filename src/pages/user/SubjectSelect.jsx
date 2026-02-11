@@ -83,7 +83,7 @@ const SubjectSelect = () => {
     }, [classId]);
 
     return (
-        <div className="min-h-screen bg-cream-light pt-32 pb-20 px-6">
+        <div className="min-h-screen bg-cream-light pt-28 lg:pt-36 pb-20 px-4 sm:px-8">
             <Navbar />
 
             <div className="max-w-6xl mx-auto">
@@ -100,7 +100,7 @@ const SubjectSelect = () => {
                     animate={{ opacity: 1, y: 0 }}
                     className="mb-12"
                 >
-                    <h1 className="text-4xl font-bold text-pista-deep mb-2">Class {classId} Subjects</h1>
+                    <h1 className="text-3xl sm:text-4xl font-bold text-pista-deep mb-2">Class {classId} Subjects</h1>
                     <p className="text-pista-deep/60">Choose a subject to explore available notes and resources.</p>
                 </motion.div>
 

@@ -96,9 +96,9 @@ const Payments = () => {
         <div className="min-h-screen bg-[#FDFCF9] flex font-sans selection:bg-pista-light">
             <AdminSidebar />
 
-            <main className="flex-1 lg:ml-72 flex flex-col h-screen overflow-hidden">
+            <main className="flex-1 lg:ml-72 flex flex-col h-screen overflow-hidden pt-20 lg:pt-0">
                 {/* Premium Header */}
-                <header className="px-10 py-10 bg-white border-b border-gray-100 z-20 overflow-visible">
+                <header className="px-6 py-6 lg:px-10 lg:py-10 bg-white border-b border-gray-100 z-20 overflow-visible">
                     <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-8 mb-10">
                         <div>
                             <div className="flex items-center space-x-3 mb-2">
@@ -109,7 +109,7 @@ const Payments = () => {
                         </div>
 
                         <div className="flex flex-wrap items-center gap-4">
-                            <div className="px-6 py-4 bg-amber-50 rounded-3xl border border-amber-100 flex items-center space-x-4">
+                            <div className="px-4 lg:px-6 py-4 bg-amber-50 rounded-3xl border border-amber-100 flex items-center space-x-4 flex-1 md:flex-none min-w-[140px]">
                                 <div className="p-2 bg-amber-500 text-white rounded-xl shadow-lg shadow-amber-200">
                                     <Clock size={18} />
                                 </div>
@@ -119,7 +119,7 @@ const Payments = () => {
                                 </div>
                             </div>
 
-                            <div className="px-6 py-4 bg-pista-light/30 rounded-3xl border border-pista/20 flex items-center space-x-4">
+                            <div className="px-4 lg:px-6 py-4 bg-pista-light/30 rounded-3xl border border-pista/20 flex items-center space-x-4 flex-1 md:flex-none min-w-[140px]">
                                 <div className="p-2 bg-pista-dark text-white rounded-xl shadow-lg shadow-pista/20">
                                     <Check size={18} />
                                 </div>
@@ -129,12 +129,12 @@ const Payments = () => {
                                 </div>
                             </div>
 
-                            <div className="px-6 py-4 bg-slate-50 rounded-3xl border border-slate-200 flex items-center space-x-4">
+                            <div className="px-4 lg:px-6 py-4 bg-slate-50 rounded-3xl border border-slate-200 flex items-center space-x-4 flex-1 md:flex-none min-w-[140px]">
                                 <div className="p-2 bg-slate-800 text-white rounded-xl shadow-lg shadow-slate-200">
                                     <CreditCard size={18} />
                                 </div>
                                 <div>
-                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Total Logs</p>
+                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Logs</p>
                                     <p className="text-xl font-black text-slate-900 leading-none">{stats.total}</p>
                                 </div>
                             </div>
@@ -169,7 +169,7 @@ const Payments = () => {
                     </div>
                 </header>
 
-                <div className="flex-1 overflow-y-auto p-10 custom-scrollbar bg-[#F8F9FA]/50">
+                <div className="flex-1 overflow-y-auto p-4 lg:p-10 custom-scrollbar bg-[#F8F9FA]/50">
                     <div className="max-w-7xl mx-auto space-y-8">
                         {loading ? (
                             <div className="h-[50vh] flex flex-col items-center justify-center">
@@ -187,11 +187,11 @@ const Payments = () => {
                                             animate={{ opacity: 1, y: 0 }}
                                             exit={{ opacity: 0, scale: 0.95 }}
                                             transition={{ delay: idx * 0.05, duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
-                                            className="bg-white rounded-[3rem] p-8 border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.02)] hover:shadow-[0_20px_50px_rgba(107,136,108,0.1)] transition-all group overflow-hidden relative"
+                                            className="bg-white rounded-[2rem] lg:rounded-[3rem] p-6 lg:p-8 border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.02)] hover:shadow-[0_20px_50px_rgba(107,136,108,0.1)] transition-all group overflow-hidden relative"
                                         >
                                             {/* Status Background Accent */}
                                             <div className={`absolute top-0 right-0 w-32 h-32 -mr-16 -mt-16 rounded-full blur-3xl opacity-10 transition-colors ${req.status === 'approved' ? 'bg-green-500' :
-                                                    req.status === 'rejected' ? 'bg-red-500' : 'bg-amber-500 group-hover:bg-pista'
+                                                req.status === 'rejected' ? 'bg-red-500' : 'bg-amber-500 group-hover:bg-pista'
                                                 }`} />
 
                                             <div className="flex justify-between items-start mb-10 relative z-10">
@@ -201,7 +201,7 @@ const Payments = () => {
                                                             {req.userName?.charAt(0).toUpperCase()}
                                                         </div>
                                                         <div className={`absolute -bottom-1 -right-1 w-6 h-6 rounded-lg flex items-center justify-center text-white shadow-sm ${req.status === 'approved' ? 'bg-green-500 animate-pulse' :
-                                                                req.status === 'rejected' ? 'bg-red-500' : 'bg-amber-500'
+                                                            req.status === 'rejected' ? 'bg-red-500' : 'bg-amber-500'
                                                             }`}>
                                                             {req.status === 'approved' ? <Check size={12} strokeWidth={4} /> :
                                                                 req.status === 'rejected' ? <X size={12} strokeWidth={4} /> : <Clock size={12} strokeWidth={4} />}
@@ -238,7 +238,7 @@ const Payments = () => {
                                                             {req.createdAt ? new Date(req.createdAt.seconds * 1000).toLocaleString('en-IN', { dateStyle: 'long', timeStyle: 'short' }) : 'Pending...'}
                                                         </p>
                                                         <span className={`px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-tighter ${req.status === 'approved' ? 'bg-green-50 text-green-600' :
-                                                                req.status === 'rejected' ? 'bg-red-50 text-red-600' : 'bg-amber-50 text-amber-600'
+                                                            req.status === 'rejected' ? 'bg-red-50 text-red-600' : 'bg-amber-50 text-amber-600'
                                                             }`}>
                                                             {req.status}
                                                         </span>

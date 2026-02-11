@@ -160,7 +160,7 @@ const AuthModal = ({ isOpen, onClose }) => {
         )}
 
         {/* 3D Container */}
-        <div className="relative w-full max-w-5xl h-[720px] max-h-[90vh] [perspective:2000px]">
+        <div className="relative w-full max-w-5xl h-[600px] sm:h-[720px] max-h-[90vh] [perspective:2000px]">
           <motion.div
             initial={false}
             animate={{ rotateY: isLogin ? 0 : 180 }}
@@ -168,7 +168,7 @@ const AuthModal = ({ isOpen, onClose }) => {
             className="w-full h-full relative [transform-style:preserve-3d]"
           >
             {/* FRONT SIDE (LOGIN) */}
-            <div className={`absolute inset-0 w-full h-full [backface-visibility:hidden] bg-white rounded-[2.5rem] shadow-2xl flex flex-col lg:flex-row overflow-hidden border border-pista-light/20`}>
+            <div className={`absolute inset-0 w-full h-full [backface-visibility:hidden] bg-white rounded-[2rem] sm:rounded-[2.5rem] shadow-2xl flex flex-col lg:flex-row overflow-hidden border border-pista-light/20 shadow-pista/5`}>
               {/* Close Button Front - Only show if modal */}
               {!isStandalonePage && (
                 <button
@@ -286,7 +286,7 @@ const AuthModal = ({ isOpen, onClose }) => {
             </div>
 
             {/* BACK SIDE (SIGNUP) */}
-            <div className={`absolute inset-0 w-full h-full [backface-visibility:hidden] [transform:rotateY(180deg)] bg-white rounded-[2.5rem] shadow-2xl flex flex-col lg:flex-row-reverse overflow-hidden border border-pista-light/20`}>
+            <div className={`absolute inset-0 w-full h-full [backface-visibility:hidden] [transform:rotateY(180deg)] bg-white rounded-[2rem] sm:rounded-[2.5rem] shadow-2xl flex flex-col lg:flex-row-reverse overflow-hidden border border-pista-light/20 shadow-pista/5`}>
               {/* Close Button Back - Only show if modal */}
               {!isStandalonePage && (
                 <button

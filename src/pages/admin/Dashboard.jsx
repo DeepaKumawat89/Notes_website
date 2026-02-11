@@ -105,9 +105,9 @@ const AdminDashboard = () => {
         <div className="min-h-screen bg-[#FDFCF9] flex font-sans selection:bg-pista-light">
             <AdminSidebar />
 
-            <main className="flex-1 lg:ml-72 flex flex-col h-screen overflow-hidden">
+            <main className="flex-1 lg:ml-72 flex flex-col h-screen overflow-hidden pt-20 lg:pt-0">
                 {/* Premium Header */}
-                <header className="px-10 py-10 bg-white border-b border-gray-100 z-30 overflow-visible">
+                <header className="px-6 py-6 lg:px-10 lg:py-10 bg-white border-b border-gray-100 z-30 overflow-visible">
                     <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-8">
                         <div>
                             <div className="flex items-center space-x-3 mb-2">
@@ -141,7 +141,7 @@ const AdminDashboard = () => {
                                             initial={{ opacity: 0, y: 20, scale: 0.95 }}
                                             animate={{ opacity: 1, y: 0, scale: 1 }}
                                             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-                                            className="absolute right-0 mt-6 w-[420px] bg-white rounded-[3rem] shadow-[0_40px_100px_-20px_rgba(0,0,0,0.2)] border border-gray-100 z-[100] overflow-hidden"
+                                            className="absolute right-0 mt-6 w-[calc(100vw-2rem)] sm:w-[420px] bg-white rounded-[3rem] shadow-[0_40px_100px_-20px_rgba(0,0,0,0.2)] border border-gray-100 z-[100] overflow-hidden"
                                         >
                                             <div className="p-8 border-b border-gray-50 flex justify-between items-center bg-slate-50/50">
                                                 <div className="flex items-center space-x-3">
@@ -216,7 +216,7 @@ const AdminDashboard = () => {
                     </div>
                 </header>
 
-                <div className="flex-1 overflow-y-auto p-10 custom-scrollbar bg-[#F8F9FA]/50">
+                <div className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-10 custom-scrollbar bg-[#F8F9FA]/50">
                     <div className="max-w-7xl mx-auto space-y-12 pb-20">
                         {loading ? (
                             <div className="h-[60vh] flex flex-col items-center justify-center">
@@ -270,13 +270,13 @@ const AdminDashboard = () => {
                                                 initial={{ opacity: 0, x: -20 }}
                                                 animate={{ opacity: 1, x: 0 }}
                                                 transition={{ delay: 0.4 + (idx * 0.05) }}
-                                                className="group bg-white rounded-[2rem] p-6 border border-gray-100 shadow-sm hover:shadow-[0_20px_50px_rgba(0,0,0,0.04)] hover:border-pista-light/30 transition-all flex items-center gap-8 relative overflow-hidden"
+                                                className="group bg-white rounded-[2rem] p-5 sm:p-6 border border-gray-100 shadow-sm hover:shadow-[0_20px_50px_rgba(0,0,0,0.04)] hover:border-pista-light/30 transition-all flex flex-col sm:flex-row sm:items-center gap-6 sm:gap-8 relative overflow-hidden"
                                             >
                                                 {/* Left Accent Bar */}
                                                 <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-pista-dark/10 group-hover:bg-pista-dark transition-colors" />
 
-                                                <div className="w-16 h-16 bg-slate-50 rounded-[1.5rem] flex items-center justify-center text-slate-800 group-hover:bg-slate-900 group-hover:text-white transition-all shadow-inner flex-shrink-0">
-                                                    <FileText size={28} strokeWidth={2.5} />
+                                                <div className="w-14 h-14 sm:w-16 sm:h-16 bg-slate-50 rounded-[1.2rem] sm:rounded-[1.5rem] flex items-center justify-center text-slate-800 group-hover:bg-slate-900 group-hover:text-white transition-all shadow-inner flex-shrink-0">
+                                                    <FileText size={24} strokeWidth={2.5} />
                                                 </div>
 
                                                 <div className="flex-1 min-w-0">
@@ -284,27 +284,27 @@ const AdminDashboard = () => {
                                                         <span className="px-3 py-0.5 bg-pista-light/30 text-pista-dark text-[9px] font-black uppercase tracking-widest rounded-full">
                                                             {note.classId}
                                                         </span>
-                                                        <span className="text-[9px] font-black text-slate-300 uppercase tracking-widest">
+                                                        <span className="text-[9px] font-black text-slate-300 uppercase tracking-widest truncate">
                                                             ID: {note.id.slice(0, 8)}
                                                         </span>
                                                     </div>
-                                                    <h4 className="font-black text-xl text-slate-900 truncate group-hover:text-pista-dark transition-colors leading-tight">
+                                                    <h4 className="font-black text-lg sm:text-xl text-slate-900 truncate group-hover:text-pista-dark transition-colors leading-tight">
                                                         {note.title || 'Untitled Fragment'}
                                                     </h4>
                                                     <div className="flex items-center space-x-4 mt-2">
-                                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">
+                                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter truncate max-w-[100px] sm:max-w-none">
                                                             Domain: <span className="text-slate-900">{note.subjectId}</span>
                                                         </p>
                                                         <div className="w-1 h-1 bg-slate-200 rounded-full" />
                                                         <p className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter flex items-center gap-1">
                                                             <Clock size={10} className="text-pista-dark" />
-                                                            {note.createdAt?.toDate().toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' })}
+                                                            {note.createdAt?.toDate().toLocaleDateString('en-IN', { month: 'short', day: 'numeric' })}
                                                         </p>
                                                     </div>
                                                 </div>
 
-                                                <div className="flex items-center space-x-6 pr-4">
-                                                    <div className="flex flex-col items-end">
+                                                <div className="flex items-center justify-between sm:justify-end space-x-6 sm:pr-4">
+                                                    <div className="hidden md:flex flex-col items-end">
                                                         <div className="flex items-center -space-x-2 mb-2">
                                                             {[1, 2, 3].map((i) => (
                                                                 <div key={i} className="w-6 h-6 rounded-full bg-slate-100 border-2 border-white flex items-center justify-center text-[8px] font-black text-slate-400">
@@ -312,14 +312,14 @@ const AdminDashboard = () => {
                                                                 </div>
                                                             ))}
                                                         </div>
-                                                        <p className="text-[9px] font-black text-pista-dark uppercase tracking-widest">Verified Archive</p>
+                                                        <p className="text-[9px] font-black text-pista-dark uppercase tracking-widest">Verified</p>
                                                     </div>
 
                                                     <motion.button
                                                         whileHover={{ x: 5 }}
-                                                        className="p-4 bg-slate-50 text-slate-300 hover:bg-pista-dark hover:text-white rounded-2xl transition-all shadow-sm"
+                                                        className="p-3 sm:p-4 bg-slate-50 text-slate-300 hover:bg-pista-dark hover:text-white rounded-2xl transition-all shadow-sm ml-auto sm:ml-0"
                                                     >
-                                                        <ArrowUpRight size={22} strokeWidth={3} />
+                                                        <ArrowUpRight size={20} strokeWidth={3} />
                                                     </motion.button>
                                                 </div>
                                             </motion.div>

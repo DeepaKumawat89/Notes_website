@@ -110,7 +110,7 @@ const NoteList = () => {
     );
 
     return (
-        <div className="min-h-screen bg-cream-light pt-32 pb-20 px-6">
+        <div className="min-h-screen bg-cream-light pt-28 lg:pt-36 pb-20 px-4 sm:px-8">
             <Navbar />
             <AuthModal isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)} />
             <SubscriptionModal
@@ -129,9 +129,9 @@ const NoteList = () => {
                             <ChevronLeft size={20} />
                             <span>Back to Subjects</span>
                         </button>
-                        <h1 className="text-4xl font-bold text-pista-deep capitalize">
+                        <h1 className="text-3xl sm:text-4xl font-bold text-pista-deep capitalize">
                             {subjectId} Notes
-                            <span className="text-pista-dark font-medium text-2xl ml-4">· Class {classId}</span>
+                            <span className="text-pista-dark font-medium text-xl sm:text-2xl ml-4">· Class {classId}</span>
                         </h1>
                     </div>
 

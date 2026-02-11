@@ -12,7 +12,7 @@ const ClassSelect = () => {
     ];
 
     return (
-        <div className="min-h-screen bg-cream-light pt-32 pb-20 px-6">
+        <div className="min-h-screen bg-cream-light pt-28 lg:pt-36 pb-20 px-4 sm:px-8">
             <Navbar />
 
             <div className="max-w-5xl mx-auto">
@@ -21,7 +21,7 @@ const ClassSelect = () => {
                     animate={{ opacity: 1, y: 0 }}
                     className="text-center mb-16"
                 >
-                    <h1 className="text-4xl md:text-5xl font-bold text-pista-deep mb-4">Choose Your Class</h1>
+                    <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-pista-deep mb-4">Choose Your Class</h1>
                     <p className="text-pista-deep/60 text-lg">Select your academic level to access specialized notes.</p>
                 </motion.div>
 

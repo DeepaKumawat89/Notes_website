@@ -53,27 +53,27 @@ const Requests = () => {
         <div className="min-h-screen bg-cream-light flex">
             <AdminSidebar />
 
-            <main className="flex-1 lg:ml-72 p-6 lg:p-10 pt-24 lg:pt-10">
-                <header className="mb-12 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+            <main className="flex-1 lg:ml-72 p-4 sm:p-6 lg:p-10 pt-24 lg:pt-0">
+                <header className="mb-12 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 pt-6 lg:pt-10">
                     <div>
                         <h1 className="text-3xl font-bold text-pista-deep">Note Requests</h1>
                         <p className="text-pista-deep/50 font-medium">Study material requested by students</p>
                     </div>
 
-                    <div className="flex items-center space-x-6">
-                        <div className="bg-white px-6 py-3 rounded-2xl border border-pista-light/30 shadow-sm flex items-center space-x-3">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full md:w-auto">
+                        <div className="bg-white px-6 py-3 rounded-2xl border border-pista-light/30 shadow-sm flex items-center space-x-3 w-full sm:w-auto justify-between sm:justify-start">
                             <span className="text-pista-deep/50 font-bold uppercase text-xs tracking-widest">Pending</span>
                             <span className="text-2xl font-black text-pista-deep">{requests.length}</span>
                         </div>
 
-                        <div className="relative group">
+                        <div className="relative group flex-1 md:flex-none w-full">
                             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-pista-deep/30 group-focus-within:text-pista-dark" size={20} />
                             <input
                                 type="text"
                                 placeholder="Search requests..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="pl-12 pr-4 py-3 bg-white border border-pista-light/30 rounded-2xl focus:outline-none focus:ring-2 focus:ring-pista/20 w-80 shadow-sm"
+                                className="pl-12 pr-4 py-3 bg-white border border-pista-light/30 rounded-2xl focus:outline-none focus:ring-2 focus:ring-pista/20 w-full md:w-64 lg:w-80 shadow-sm"
                             />
                         </div>
                     </div>

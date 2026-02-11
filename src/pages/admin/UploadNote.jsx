@@ -113,9 +113,9 @@ const UploadNote = () => {
         <div className="min-h-screen bg-[#FDFCF9] flex font-sans selection:bg-pista-light">
             <AdminSidebar />
 
-            <main className="flex-1 lg:ml-72 flex flex-col h-screen overflow-hidden">
+            <main className="flex-1 lg:ml-72 flex flex-col h-screen overflow-hidden pt-20 lg:pt-0">
                 {/* Premium Header */}
-                <header className="px-10 py-10 bg-white border-b border-gray-100 z-30">
+                <header className="px-6 py-6 lg:px-10 lg:py-10 bg-white border-b border-gray-100 z-30">
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                         <div>
                             <div className="flex items-center space-x-3 mb-2">
@@ -138,7 +138,7 @@ const UploadNote = () => {
                     </div>
                 </header>
 
-                <div className="flex-1 overflow-y-auto p-10 custom-scrollbar bg-[#F8F9FA]/50">
+                <div className="flex-1 overflow-y-auto p-4 lg:p-10 custom-scrollbar bg-[#F8F9FA]/50">
                     <div className="max-w-7xl mx-auto">
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
                             {/* Form Section */}
@@ -146,7 +146,7 @@ const UploadNote = () => {
                                 <motion.div
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
-                                    className="bg-white rounded-[3rem] p-12 border border-gray-100 shadow-sm"
+                                    className="bg-white rounded-[2rem] lg:rounded-[3rem] p-6 lg:p-12 border border-gray-100 shadow-sm"
                                 >
                                     <form onSubmit={handleUpload} className="space-y-10">
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">

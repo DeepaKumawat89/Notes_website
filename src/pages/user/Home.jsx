@@ -125,7 +125,7 @@ const Home = () => {
                             <span className="flex h-2 w-2 rounded-full bg-pista-dark mr-2"></span>
                             The Ultimate Notes Platform
                         </div>
-                        <h1 className="text-5xl lg:text-7xl font-bold text-pista-deep leading-tight mb-6">
+                        <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold text-pista-deep leading-tight mb-6">
                             Elevate Your <span className="text-pista-dark">Learning</span> Journey.
                         </h1>
                         <p className="text-lg text-pista-deep/70 mb-10 max-w-lg">
@@ -210,7 +210,7 @@ const Home = () => {
 
             {/* Featured Chapters (Recent Uploads) */}
             <section className="py-24 max-w-7xl mx-auto px-6">
-                <div className="flex justify-between items-end mb-12">
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-6 mb-12">
                     <div>
                         <h2 className="text-4xl font-bold text-pista-deep mb-4">Recent Uploads</h2>
                         <p className="text-pista-deep/60">Get the latest notes added to our library.</p>

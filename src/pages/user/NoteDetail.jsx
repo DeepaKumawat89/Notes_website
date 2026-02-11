@@ -24,7 +24,7 @@ const NoteDetail = () => {
     };
 
     return (
-        <div className="min-h-screen bg-cream-light pt-32 pb-20 px-6">
+        <div className="min-h-screen bg-cream-light pt-28 lg:pt-36 pb-20 px-4 sm:px-8">
             <Navbar />
 
             <div className="max-w-5xl mx-auto">
@@ -32,7 +32,7 @@ const NoteDetail = () => {
                     onClick={() => navigate(-1)}
                     className="flex items-center space-x-2 text-pista-deep mb-8 hover:text-pista-dark transition-colors font-bold"
                 >
-                    <ChevronLeft size={24} />
+                    <ChevronLeft size={20} />
                     <span>Back to List</span>
                 </button>
 
@@ -42,27 +42,27 @@ const NoteDetail = () => {
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
-                            className="bg-white rounded-[3rem] p-8 md:p-12 shadow-xl shadow-pista/5 border border-pista-light/20"
+                            className="bg-white rounded-[2rem] sm:rounded-[3rem] p-6 sm:p-12 shadow-xl shadow-pista/5 border border-pista-light/20"
                         >
                             <div className="inline-flex px-4 py-2 bg-pista-light/50 text-pista-dark rounded-full text-xs font-bold mb-6 tracking-wide">
                                 CLASS {note.class} · {note.subject}
                             </div>
-                            <h1 className="text-4xl md:text-5xl font-bold text-pista-deep mb-6 leading-tight">
+                            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-pista-deep mb-6 leading-tight">
                                 {note.chapter}
                             </h1>
 
-                            <div className="flex flex-wrap items-center gap-6 mb-10 pb-10 border-b border-pista-light/50">
+                            <div className="flex flex-wrap items-center gap-4 sm:gap-6 mb-10 pb-10 border-b border-pista-light/50">
                                 <div className="flex items-center space-x-3 text-pista-deep/60">
                                     <div className="p-2 bg-cream-light rounded-lg"><User size={20} /></div>
-                                    <span className="font-semibold">{note.author}</span>
+                                    <span className="font-semibold text-sm sm:text-base">{note.author}</span>
                                 </div>
                                 <div className="flex items-center space-x-3 text-pista-deep/60">
                                     <div className="p-2 bg-cream-light rounded-lg"><Calendar size={20} /></div>
-                                    <span className="font-semibold">{note.date}</span>
+                                    <span className="font-semibold text-sm sm:text-base">{note.date}</span>
                                 </div>
                                 <div className="flex items-center space-x-3 text-pista-deep/60">
                                     <div className="p-2 bg-cream-light rounded-lg"><Eye size={20} /></div>
-                                    <span className="font-semibold">{note.downloads} Downloads</span>
+                                    <span className="font-semibold text-sm sm:text-base">{note.downloads} Downloads</span>
                                 </div>
                             </div>
 
@@ -73,13 +73,13 @@ const NoteDetail = () => {
                                 </p>
                             </div>
 
-                            <div className="p-8 bg-pista-light/20 rounded-3xl flex flex-col md:flex-row items-center justify-between gap-8">
+                            <div className="p-5 sm:p-8 bg-pista-light/20 rounded-3xl flex flex-col md:flex-row items-center justify-between gap-8">
                                 <div className="flex items-center space-x-4">
                                     <div className="p-4 bg-white rounded-2xl shadow-sm text-pista-dark">
                                         <FileText size={32} />
                                     </div>
-                                    <div>
-                                        <h4 className="font-bold text-pista-deep">Chapter_Roll_{noteId}.pdf</h4>
+                                    <div className="min-w-0">
+                                        <h4 className="font-bold text-pista-deep truncate">Chapter_Roll_{noteId}.pdf</h4>
                                         <p className="text-sm text-pista-deep/50">{note.size} · {note.pages} Pages</p>
                                     </div>
                                 </div>
@@ -96,7 +96,7 @@ const NoteDetail = () => {
                         <motion.div
                             initial={{ opacity: 0, x: 20 }}
                             animate={{ opacity: 1, x: 0 }}
-                            className="bg-white rounded-3xl p-8 border border-pista-light/20 shadow-lg"
+                            className="bg-white rounded-3xl p-6 sm:p-8 border border-pista-light/20 shadow-lg"
                         >
                             <h3 className="font-bold text-pista-deep mb-6 flex items-center space-x-2">
                                 <Info size={20} className="text-pista-dark" />
@@ -126,7 +126,7 @@ const NoteDetail = () => {
                             initial={{ opacity: 0, x: 20 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: 0.1 }}
-                            className="bg-pista-dark rounded-3xl p-8 text-white shadow-xl shadow-pista/20"
+                            className="bg-pista-dark rounded-3xl p-6 sm:p-8 text-white shadow-xl shadow-pista/20"
                         >
                             <h3 className="font-bold text-xl mb-4">Exam Coming Soon?</h3>
                             <p className="text-pista-light/70 text-sm mb-6 leading-relaxed">

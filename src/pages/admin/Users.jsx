@@ -48,9 +48,9 @@ const UsersList = () => {
         <div className="min-h-screen bg-[#FDFCF9] flex font-sans selection:bg-pista-light">
             <AdminSidebar />
 
-            <main className="flex-1 lg:ml-72 flex flex-col h-screen overflow-hidden">
+            <main className="flex-1 lg:ml-72 flex flex-col h-screen overflow-hidden pt-20 lg:pt-0">
                 {/* Premium Header */}
-                <header className="px-10 py-10 bg-white border-b border-gray-100 z-20">
+                <header className="px-6 py-6 lg:px-10 lg:py-10 bg-white border-b border-gray-100 z-20">
                     <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-8 mb-10">
                         <div>
                             <div className="flex items-center space-x-3 mb-2">
@@ -61,27 +61,27 @@ const UsersList = () => {
                         </div>
 
                         <div className="flex flex-wrap items-center gap-4">
-                            <div className="px-6 py-4 bg-slate-50 rounded-3xl border border-slate-200 flex items-center space-x-4">
+                            <div className="px-4 lg:px-6 py-4 bg-slate-50 rounded-3xl border border-slate-200 flex items-center space-x-4 flex-1 md:flex-none min-w-[140px]">
                                 <div className="p-2 bg-slate-800 text-white rounded-xl">
                                     <UsersIcon size={18} />
                                 </div>
                                 <div>
-                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Total Capacity</p>
+                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Total</p>
                                     <p className="text-xl font-black text-slate-900 leading-none">{stats.total}</p>
                                 </div>
                             </div>
 
-                            <div className="px-6 py-4 bg-purple-50 rounded-3xl border border-purple-100 flex items-center space-x-4">
+                            <div className="px-4 lg:px-6 py-4 bg-purple-50 rounded-3xl border border-purple-100 flex items-center space-x-4 flex-1 md:flex-none min-w-[140px]">
                                 <div className="p-2 bg-purple-600 text-white rounded-xl shadow-lg shadow-purple-100">
                                     <Shield size={18} />
                                 </div>
                                 <div>
-                                    <p className="text-[10px] font-black text-purple-600/50 uppercase tracking-widest leading-none mb-1">Premium Tier</p>
+                                    <p className="text-[10px] font-black text-purple-600/50 uppercase tracking-widest leading-none mb-1">Premium</p>
                                     <p className="text-xl font-black text-purple-700 leading-none">{stats.premium}</p>
                                 </div>
                             </div>
 
-                            <div className="px-6 py-4 bg-pista-light/30 rounded-3xl border border-pista/20 flex items-center space-x-4">
+                            <div className="px-4 lg:px-6 py-4 bg-pista-light/30 rounded-3xl border border-pista/20 flex items-center space-x-4 flex-1 md:flex-none min-w-[140px]">
                                 <div className="p-2 bg-pista-dark text-white rounded-xl shadow-lg shadow-pista/20">
                                     <User size={18} />
                                 </div>
@@ -98,7 +98,7 @@ const UsersList = () => {
                             <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-pista-dark transition-colors" size={20} />
                             <input
                                 type="text"
-                                placeholder="Search students by name or unique ID..."
+                                placeholder="Search students..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                                 className="w-full pl-14 pr-8 py-5 bg-slate-50 border-none rounded-[2rem] focus:outline-none focus:ring-4 focus:ring-pista/10 font-bold text-slate-700 placeholder:text-slate-300 transition-all shadow-inner"
@@ -107,7 +107,7 @@ const UsersList = () => {
                     </div>
                 </header>
 
-                <div className="flex-1 overflow-y-auto p-10 custom-scrollbar bg-[#F8F9FA]/50">
+                <div className="flex-1 overflow-y-auto p-4 lg:p-10 custom-scrollbar bg-[#F8F9FA]/50">
                     <div className="max-w-7xl mx-auto">
                         {loading ? (
                             <div className="h-[50vh] flex flex-col items-center justify-center">

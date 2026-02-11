@@ -122,9 +122,9 @@ const ManageNotes = () => {
         <div className="min-h-screen bg-[#FDFCF9] flex font-sans selection:bg-pista-light">
             <AdminSidebar />
 
-            <main className="flex-1 lg:ml-72 flex flex-col h-screen overflow-hidden">
+            <main className="flex-1 lg:ml-72 flex flex-col h-screen overflow-hidden pt-20 lg:pt-0">
                 {/* Stunning Header */}
-                <header className="px-10 py-10 flex flex-col md:flex-row justify-between items-center bg-white border-b border-gray-100 z-20">
+                <header className="px-6 py-6 lg:px-10 lg:py-10 flex flex-col md:flex-row justify-between items-center bg-white border-b border-gray-100 z-20">
                     <div className="mb-6 md:mb-0">
                         <div className="flex items-center space-x-3 mb-2">
                             <div className="h-2 w-10 bg-pista-dark rounded-full" />
@@ -133,15 +133,15 @@ const ManageNotes = () => {
                         <h1 className="text-4xl font-black text-slate-900 tracking-tight">Manage <span className="text-pista-dark italic">Notes</span></h1>
                     </div>
 
-                    <div className="flex items-center space-x-4">
-                        <div className="relative group">
+                    <div className="flex items-center space-x-4 w-full md:w-auto">
+                        <div className="relative group flex-1 md:flex-none">
                             <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-pista-dark transition-colors" size={20} />
                             <input
                                 type="text"
                                 placeholder="Search repository..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="pl-14 pr-8 py-5 bg-slate-50 border-none rounded-[2rem] focus:ring-4 focus:ring-pista/10 w-80 font-bold text-slate-700 placeholder:text-slate-300 transition-all shadow-inner"
+                                className="pl-14 pr-8 py-5 bg-slate-50 border-none rounded-[2rem] focus:ring-4 focus:ring-pista/10 w-full md:w-80 font-bold text-slate-700 placeholder:text-slate-300 transition-all shadow-inner"
                             />
                         </div>
                         <button className="p-5 bg-white border border-gray-100 rounded-full hover:bg-slate-50 transition-all shadow-sm text-slate-400">
@@ -151,7 +151,7 @@ const ManageNotes = () => {
                 </header>
 
                 {/* Vertical List Container */}
-                <div className="flex-1 overflow-y-auto p-10 custom-scrollbar bg-[#F8F9FA]/50">
+                <div className="flex-1 overflow-y-auto p-4 lg:p-10 custom-scrollbar bg-[#F8F9FA]/50">
                     <div className="max-w-6xl mx-auto space-y-6">
                         {loading ? (
                             <div className="py-20 flex flex-col items-center justify-center">
@@ -174,10 +174,10 @@ const ManageNotes = () => {
                                             animate={{ opacity: 1, x: 0 }}
                                             exit={{ opacity: 0, scale: 0.95 }}
                                             transition={{ delay: index * 0.05 }}
-                                            className="group relative bg-white rounded-[2rem] border border-gray-100 p-2 flex items-center hover:shadow-[0_20px_50px_rgba(0,0,0,0.04)] hover:border-pista-light/30 transition-all duration-500 overflow-hidden"
+                                            className="group relative bg-white rounded-[2rem] border border-gray-100 p-2 flex flex-col md:flex-row md:items-center hover:shadow-[0_20px_50px_rgba(0,0,0,0.04)] hover:border-pista-light/30 transition-all duration-500 overflow-hidden"
                                         >
                                             {/* Left Section: Icon & Identity */}
-                                            <div className="flex items-center space-x-6 p-4 pr-10 border-r border-gray-50 bg-slate-50/50 rounded-l-[1.8rem]">
+                                            <div className="flex items-center space-x-6 p-4 md:pr-10 border-b md:border-b-0 md:border-r border-gray-50 bg-slate-50/50 rounded-t-[1.8rem] md:rounded-l-[1.8rem] md:rounded-tr-none">
                                                 <div className="relative">
                                                     <div className="p-5 bg-white rounded-2xl text-slate-400 group-hover:bg-pista-dark group-hover:text-white transition-all duration-500 shadow-sm">
                                                         <FileText size={32} />
@@ -189,7 +189,7 @@ const ManageNotes = () => {
                                             </div>
 
                                             {/* Center Section: Main Info */}
-                                            <div className="flex-1 px-10 py-6 min-w-0">
+                                            <div className="flex-1 px-6 md:px-10 py-6 min-w-0">
                                                 <div className="flex items-center space-x-3 mb-2">
                                                     <span className="px-3 py-1 bg-pista-light/40 text-pista-dark text-[10px] font-black uppercase tracking-widest rounded-lg">
                                                         {note.subjectId}
@@ -198,14 +198,13 @@ const ManageNotes = () => {
                                                         Ref: {note.id.slice(0, 8)}
                                                     </span>
                                                 </div>
-                                                <h3 className="text-2xl font-black text-slate-900 truncate leading-tight group-hover:text-pista-deep transition-colors">
+                                                <h3 className="text-xl md:text-2xl font-black text-slate-900 truncate leading-tight group-hover:text-pista-deep transition-colors">
                                                     {note.title}
                                                 </h3>
                                                 <div className="flex items-center space-x-6 mt-4">
-
                                                     <div className="flex items-center space-x-2">
                                                         <Calendar size={14} className="text-slate-300" />
-                                                        <span className="text-xs font-bold text-slate-400">
+                                                        <span className="text-[10px] md:text-xs font-bold text-slate-400">
                                                             {note.createdAt?.toDate().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
                                                         </span>
                                                     </div>
@@ -213,32 +212,34 @@ const ManageNotes = () => {
                                             </div>
 
                                             {/* Right Section: Actions */}
-                                            <div className="flex items-center space-x-3 pr-10">
-                                                <a
-                                                    href={note.fileUrl}
-                                                    target="_blank"
-                                                    rel="noreferrer"
-                                                    className="p-4 bg-slate-50 text-slate-400 rounded-2xl hover:bg-pista-dark hover:text-white transition-all shadow-sm"
-                                                    title="Preview Asset"
-                                                >
-                                                    <ExternalLink size={20} />
-                                                </a>
-                                                <button
-                                                    onClick={() => handleEditClick(note)}
-                                                    className="p-4 bg-slate-50 text-slate-400 rounded-2xl hover:bg-slate-900 hover:text-white transition-all shadow-sm"
-                                                    title="Edit Record"
-                                                >
-                                                    <Edit3 size={20} />
-                                                </button>
-                                                <button
-                                                    onClick={() => deleteNote(note)}
-                                                    className="p-4 bg-slate-50 text-slate-400 rounded-2xl hover:bg-red-500 hover:text-white transition-all shadow-sm"
-                                                    title="Expunge Note"
-                                                >
-                                                    <Trash2 size={20} />
-                                                </button>
+                                            <div className="flex items-center justify-between md:justify-end space-x-3 p-6 md:pr-10 bg-slate-50/30 md:bg-transparent border-t md:border-t-0 border-gray-50">
+                                                <div className="flex items-center space-x-2">
+                                                    <a
+                                                        href={note.fileUrl}
+                                                        target="_blank"
+                                                        rel="noreferrer"
+                                                        className="p-3 md:p-4 bg-white md:bg-slate-50 text-slate-400 rounded-2xl hover:bg-pista-dark hover:text-white transition-all shadow-sm border border-gray-100 md:border-transparent"
+                                                        title="Preview Asset"
+                                                    >
+                                                        <ExternalLink size={18} />
+                                                    </a>
+                                                    <button
+                                                        onClick={() => handleEditClick(note)}
+                                                        className="p-3 md:p-4 bg-white md:bg-slate-50 text-slate-400 rounded-2xl hover:bg-slate-900 hover:text-white transition-all shadow-sm border border-gray-100 md:border-transparent"
+                                                        title="Edit Record"
+                                                    >
+                                                        <Edit3 size={18} />
+                                                    </button>
+                                                    <button
+                                                        onClick={() => deleteNote(note)}
+                                                        className="p-3 md:p-4 bg-white md:bg-slate-50 text-slate-400 rounded-2xl hover:bg-red-500 hover:text-white transition-all shadow-sm border border-gray-100 md:border-transparent"
+                                                        title="Expunge Note"
+                                                    >
+                                                        <Trash2 size={18} />
+                                                    </button>
+                                                </div>
 
-                                                <div className="pl-6 ml-6 border-l border-gray-100 flex items-center h-12">
+                                                <div className="hidden lg:flex pl-6 ml-6 border-l border-gray-100 items-center h-12">
                                                     <div className="h-10 w-10 rounded-full border-2 border-slate-50 bg-white flex items-center justify-center text-slate-200 group-hover:bg-pista-light group-hover:text-pista-dark transition-all cursor-pointer">
                                                         <ArrowRight size={20} />
                                                     </div>
