@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Mail, Lock, User, ArrowRight, X, Loader2 } from 'lucide-react';
+import { Mail, Lock, User, ArrowRight, X, Loader2, Eye, EyeOff } from 'lucide-react';
 import { auth, db } from '../../firebase';
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   GoogleAuthProvider,
   signInWithPopup,
-  sendPasswordResetEmail
+  sendPasswordResetEmail,
+  signOut
 } from 'firebase/auth';
-import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, setDoc, getDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import toast from 'react-hot-toast';
 
 const AuthModal = ({ isOpen, onClose }) => {
@@ -18,6 +19,7 @@ const AuthModal = ({ isOpen, onClose }) => {
   const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({ name: '', email: '', password: '' });
+  const [showPassword, setShowPassword] = useState(false);
 
   const isStandalonePage = isOpen === undefined;
 
@@ -28,6 +30,44 @@ const AuthModal = ({ isOpen, onClose }) => {
     if (isStandalonePage) navigate('/');
   };
 
+  const manageSession = async (userUid) => {
+    const sessionId = Date.now().toString(36) + Math.random().toString(36).substring(2);
+
+    const userRef = doc(db, 'users', userUid);
+    const userSnap = await getDoc(userRef);
+
+    if (userSnap.exists()) {
+      const userData = userSnap.data();
+      const isPremium = userData.subscription === 'premium';
+      const maxSessions = isPremium ? 2 : 1;
+
+      let currentSessions = userData.activeSessions || [];
+
+      // STRICT SESSION LIMIT: If limit reached, prevent entry
+      if (currentSessions.length >= maxSessions) {
+        await signOut(auth);
+        toast.error("Access restricted: Multiple logins not allowed", {
+          duration: 5000,
+          style: { borderRadius: '1rem', background: '#e11d48', color: '#fff', fontWeight: 'bold' }
+        });
+        return false;
+      }
+
+      // Add new session
+      currentSessions.push(sessionId);
+
+      await updateDoc(userRef, {
+        activeSessions: currentSessions,
+        lastLogin: serverTimestamp()
+      });
+
+      // Set session ID locally ONLY after it has been registered in the database
+      localStorage.setItem('activeSessionId', sessionId);
+      return true;
+    }
+    return true; // If user doc doesn't exist (shouldn't happen with our flow), allow
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -35,12 +75,16 @@ const AuthModal = ({ isOpen, onClose }) => {
     try {
       if (isLogin) {
         // --- LOGIN LOGIC ---
-        await signInWithEmailAndPassword(auth, formData.email, formData.password);
-        toast.success('Successfully logged in!', {
-          style: { borderRadius: '1rem', background: '#5F6F52', color: '#fff' }
-        });
-        onClose();
-        handleSuccess();
+        const userCredential = await signInWithEmailAndPassword(auth, formData.email, formData.password);
+        const sessionAllowed = await manageSession(userCredential.user.uid);
+
+        if (sessionAllowed) {
+          toast.success('Successfully logged in!', {
+            style: { borderRadius: '1rem', background: '#5F6F52', color: '#fff' }
+          });
+          if (onClose) onClose();
+          handleSuccess();
+        }
       } else {
         // --- SIGNUP LOGIC ---
         const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
@@ -54,13 +98,16 @@ const AuthModal = ({ isOpen, onClose }) => {
           createdAt: serverTimestamp(),
           role: 'user', // Default role
           viewsCount: 0,
-          subscription: 'free'
+          subscription: 'free',
+          activeSessions: [] // Initialize session array
         });
+
+        await manageSession(user.uid);
 
         toast.success('Account created successfully!', {
           style: { borderRadius: '1rem', background: '#5F6F52', color: '#fff' }
         });
-        onClose();
+        if (onClose) onClose();
       }
     } catch (error) {
       console.error("Auth Error:", error);
@@ -103,8 +150,12 @@ const AuthModal = ({ isOpen, onClose }) => {
       } else {
         toast.success('Signed in with Google!');
       }
-      onClose();
-      handleSuccess();
+
+      const sessionAllowed = await manageSession(user.uid);
+      if (sessionAllowed) {
+        if (onClose) onClose();
+        handleSuccess();
+      }
     } catch (error) {
       console.error("Google Auth Error:", error);
       toast.error("Failed to sign in with Google.");
@@ -147,7 +198,7 @@ const AuthModal = ({ isOpen, onClose }) => {
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 overflow-hidden">
+      <div className={`fixed inset-0 z-[100] flex flex-col items-center ${isStandalonePage ? 'overflow-y-auto bg-cream-light p-4 sm:p-8' : 'overflow-hidden justify-center p-2 sm:p-4'}`}>
         {/* Backdrop - Only show if modal */}
         {!isStandalonePage && (
           <motion.div
@@ -160,7 +211,7 @@ const AuthModal = ({ isOpen, onClose }) => {
         )}
 
         {/* 3D Container */}
-        <div className="relative w-full max-w-5xl h-[600px] sm:h-[720px] max-h-[90vh] [perspective:2000px]">
+        <div className={`relative w-full max-w-5xl h-[620px] sm:h-[720px] max-h-[96vh] sm:max-h-[90vh] [perspective:2000px] ${isStandalonePage ? 'my-auto' : ''}`}>
           <motion.div
             initial={false}
             animate={{ rotateY: isLogin ? 0 : 180 }}
@@ -168,7 +219,7 @@ const AuthModal = ({ isOpen, onClose }) => {
             className="w-full h-full relative [transform-style:preserve-3d]"
           >
             {/* FRONT SIDE (LOGIN) */}
-            <div className={`absolute inset-0 w-full h-full [backface-visibility:hidden] bg-white rounded-[2rem] sm:rounded-[2.5rem] shadow-2xl flex flex-col lg:flex-row overflow-hidden border border-pista-light/20 shadow-pista/5`}>
+            <div className={`absolute inset-0 w-full h-full [backface-visibility:hidden] bg-white rounded-[1.5rem] sm:rounded-[2.5rem] shadow-2xl flex flex-col lg:flex-row overflow-hidden border border-pista-light/20 shadow-pista/5`}>
               {/* Close Button Front - Only show if modal */}
               {!isStandalonePage && (
                 <button
@@ -194,9 +245,9 @@ const AuthModal = ({ isOpen, onClose }) => {
 
               {/* Right Side: Login Form */}
               <div className="w-full lg:w-7/12 flex flex-col bg-white overflow-y-auto custom-scrollbar">
-                <div className="max-w-md mx-auto w-full p-8 lg:p-12 my-auto">
+                <div className="max-w-md mx-auto w-full p-6 sm:p-8 lg:p-12 my-auto">
                   <header className="mb-8 text-center lg:text-left">
-                    <h1 className="text-4xl font-black text-pista-deep mb-2">Login</h1>
+                    <h1 className="text-3xl sm:text-4xl font-black text-pista-deep mb-2">Login</h1>
                     <p className="text-pista-deep/40 font-bold">Welcome back to your educational archive</p>
                   </header>
 
@@ -207,7 +258,7 @@ const AuthModal = ({ isOpen, onClose }) => {
                         <Mail className="absolute left-5 top-1/2 -translate-y-1/2 text-pista-deep/30 group-focus-within:text-pista-dark transition-colors" size={20} />
                         <input
                           type="email"
-                          placeholder="name@institute.edu"
+                          placeholder=""
                           className="w-full pl-14 pr-6 py-4 bg-cream-light border border-pista-light/40 rounded-3xl focus:outline-none focus:border-pista transition-all font-bold text-pista-deep"
                           required
                           value={formData.email}
@@ -232,21 +283,28 @@ const AuthModal = ({ isOpen, onClose }) => {
                       <div className="relative group">
                         <Lock className="absolute left-5 top-1/2 -translate-y-1/2 text-pista-deep/30 group-focus-within:text-pista-dark transition-colors" size={20} />
                         <input
-                          type="password"
-                          placeholder="••••••••••••"
-                          className="w-full pl-14 pr-6 py-4 bg-cream-light border border-pista-light/40 rounded-3xl focus:outline-none focus:border-pista transition-all font-bold text-pista-deep"
+                          type={showPassword ? "text" : "password"}
+                          placeholder=""
+                          className="w-full pl-14 pr-14 py-4 bg-cream-light border border-pista-light/40 rounded-3xl focus:outline-none focus:border-pista transition-all font-bold text-pista-deep"
                           required
                           value={formData.password}
                           onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                           disabled={loading}
                         />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="absolute right-5 top-1/2 -translate-y-1/2 text-pista-deep/30 hover:text-pista-dark transition-colors"
+                        >
+                          {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                        </button>
                       </div>
                     </div>
 
                     <button
                       type="submit"
                       disabled={loading}
-                      className="w-full flex items-center justify-center space-x-3 py-5 bg-pista-dark text-white rounded-[2rem] font-black text-lg hover:bg-pista-deep transition-all shadow-xl shadow-pista/20 active:scale-[0.98] disabled:opacity-70"
+                      className="w-full flex items-center justify-center space-x-3 py-4 sm:py-5 bg-pista-dark text-white rounded-[2rem] font-black text-lg hover:bg-pista-deep transition-all shadow-xl shadow-pista/20 active:scale-[0.98] disabled:opacity-70"
                     >
                       {loading ? (
                         <Loader2 className="animate-spin" size={24} />
@@ -264,7 +322,7 @@ const AuthModal = ({ isOpen, onClose }) => {
                   <button
                     onClick={handleGoogleLogin}
                     disabled={loading}
-                    className="w-full flex items-center justify-center space-x-4 py-4 bg-white border-2 border-pista-light/20 text-pista-deep rounded-[2rem] font-black hover:border-pista-dark/40 transition-all active:scale-[0.98] disabled:opacity-70"
+                    className="w-full flex items-center justify-center space-x-4 py-3 sm:py-4 bg-white border-2 border-pista-light/20 text-pista-deep rounded-[2rem] font-black hover:border-pista-dark/40 transition-all active:scale-[0.98] disabled:opacity-70"
                   >
                     <svg className="w-6 h-6" viewBox="0 0 24 24">
                       <path
@@ -286,7 +344,7 @@ const AuthModal = ({ isOpen, onClose }) => {
             </div>
 
             {/* BACK SIDE (SIGNUP) */}
-            <div className={`absolute inset-0 w-full h-full [backface-visibility:hidden] [transform:rotateY(180deg)] bg-white rounded-[2rem] sm:rounded-[2.5rem] shadow-2xl flex flex-col lg:flex-row-reverse overflow-hidden border border-pista-light/20 shadow-pista/5`}>
+            <div className={`absolute inset-0 w-full h-full [backface-visibility:hidden] [transform:rotateY(180deg)] bg-white rounded-[1.5rem] sm:rounded-[2.5rem] shadow-2xl flex flex-col lg:flex-row-reverse overflow-hidden border border-pista-light/20 shadow-pista/5`}>
               {/* Close Button Back - Only show if modal */}
               {!isStandalonePage && (
                 <button
@@ -312,9 +370,9 @@ const AuthModal = ({ isOpen, onClose }) => {
 
               {/* Left Side: Form Area (now on right physically) */}
               <div className="w-full lg:w-7/12 flex flex-col bg-white overflow-y-auto custom-scrollbar">
-                <div className="max-w-md mx-auto w-full p-8 lg:p-12 my-auto">
+                <div className="max-w-md mx-auto w-full p-6 sm:p-8 lg:p-12 my-auto">
                   <header className="mb-6 text-center lg:text-left">
-                    <h1 className="text-4xl font-black text-pista-deep mb-2">Register</h1>
+                    <h1 className="text-3xl sm:text-4xl font-black text-pista-deep mb-2">Register</h1>
                     <p className="text-pista-deep/40 font-bold">Initialize your student profile today</p>
                   </header>
 
@@ -325,7 +383,7 @@ const AuthModal = ({ isOpen, onClose }) => {
                         <User className="absolute left-5 top-1/2 -translate-y-1/2 text-pista-deep/30 group-focus-within:text-pista-dark transition-colors" size={20} />
                         <input
                           type="text"
-                          placeholder="John Doe"
+                          placeholder=""
                           className="w-full pl-14 pr-6 py-4 bg-cream-light border border-pista-light/40 rounded-3xl focus:outline-none focus:border-pista transition-all font-bold text-pista-deep"
                           required={!isLogin}
                           value={formData.name}
@@ -341,7 +399,7 @@ const AuthModal = ({ isOpen, onClose }) => {
                         <Mail className="absolute left-5 top-1/2 -translate-y-1/2 text-pista-deep/30 group-focus-within:text-pista-dark transition-colors" size={20} />
                         <input
                           type="email"
-                          placeholder="name@university.edu"
+                          placeholder=""
                           className="w-full pl-14 pr-6 py-4 bg-cream-light border border-pista-light/40 rounded-3xl focus:outline-none focus:border-pista transition-all font-bold text-pista-deep"
                           required
                           value={formData.email}
@@ -356,21 +414,28 @@ const AuthModal = ({ isOpen, onClose }) => {
                       <div className="relative group">
                         <Lock className="absolute left-5 top-1/2 -translate-y-1/2 text-pista-deep/30 group-focus-within:text-pista-dark transition-colors" size={20} />
                         <input
-                          type="password"
-                          placeholder="••••••••••••"
-                          className="w-full pl-14 pr-6 py-4 bg-cream-light border border-pista-light/40 rounded-3xl focus:outline-none focus:border-pista transition-all font-bold text-pista-deep"
+                          type={showPassword ? "text" : "password"}
+                          placeholder=""
+                          className="w-full pl-14 pr-14 py-4 bg-cream-light border border-pista-light/40 rounded-3xl focus:outline-none focus:border-pista transition-all font-bold text-pista-deep"
                           required
                           value={formData.password}
                           onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                           disabled={loading}
                         />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="absolute right-5 top-1/2 -translate-y-1/2 text-pista-deep/30 hover:text-pista-dark transition-colors"
+                        >
+                          {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                        </button>
                       </div>
                     </div>
 
                     <button
                       type="submit"
                       disabled={loading}
-                      className="w-full flex items-center justify-center space-x-3 py-5 bg-pista-dark text-white rounded-[2rem] font-black text-lg hover:bg-pista-deep transition-all shadow-xl shadow-pista/20 active:scale-[0.98] mt-4 disabled:opacity-70"
+                      className="w-full flex items-center justify-center space-x-3 py-4 sm:py-5 bg-pista-dark text-white rounded-[2rem] font-black text-lg hover:bg-pista-deep transition-all shadow-xl shadow-pista/20 active:scale-[0.98] mt-4 disabled:opacity-70"
                     >
                       {loading ? (
                         <Loader2 className="animate-spin" size={24} />

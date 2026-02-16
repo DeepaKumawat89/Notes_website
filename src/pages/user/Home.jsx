@@ -8,6 +8,7 @@ import { collection, query, orderBy, limit, onSnapshot, doc, getDoc, updateDoc, 
 import { onAuthStateChanged } from 'firebase/auth';
 import AuthModal from '../../pages/user/Auth';
 import SubscriptionModal from '../../components/SubscriptionModal';
+import NoteSkeleton from '../../components/NoteSkeleton';
 import toast from 'react-hot-toast';
 
 const Home = () => {
@@ -223,13 +224,7 @@ const Home = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {loading ? (
-                        [1, 2, 3].map(i => (
-                            <div key={i} className="glass-card rounded-3xl p-6 h-80 animate-pulse bg-white/50 border border-pista-light/20">
-                                <div className="w-full h-40 bg-pista-light/20 rounded-2xl mb-6"></div>
-                                <div className="h-4 w-3/4 bg-pista-light/20 rounded-full mb-3"></div>
-                                <div className="h-4 w-1/2 bg-pista-light/20 rounded-full"></div>
-                            </div>
-                        ))
+                        [1, 2, 3, 4, 5, 6].map(i => <NoteSkeleton key={i} />)
                     ) : (
                         <AnimatePresence>
                             {recentNotes.map((note, idx) => (

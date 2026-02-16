@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
-import { Lock, Mail, ArrowRight, ShieldCheck, ArrowLeft } from 'lucide-react';
+import { Lock, Mail, ArrowRight, ShieldCheck, ArrowLeft, Eye, EyeOff } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const AdminLogin = () => {
@@ -11,6 +11,7 @@ const AdminLogin = () => {
         email: '',
         password: ''
     });
+    const [showPassword, setShowPassword] = useState(false);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -80,13 +81,13 @@ const AdminLogin = () => {
 
                         <form onSubmit={handleSubmit} className="space-y-6">
                             <div className="space-y-2">
-                                <label className="text-xs font-black text-pista-deep/60 px-1 uppercase tracking-widest">Master Identity</label>
+                                <label className="text-xs font-black text-pista-deep/60 px-1 uppercase tracking-widest">Email</label>
                                 <div className="relative group">
                                     <Mail className="absolute left-5 top-1/2 -translate-y-1/2 text-pista-deep/20 group-focus-within:text-pista-dark transition-colors" size={20} />
                                     <input
                                         type="email"
-                                        placeholder="admin@edunotes.com"
-                                        className="w-full pl-14 pr-6 py-4.5 bg-cream-light border border-pista-light/40 rounded-[2rem] focus:outline-none focus:border-pista transition-all font-bold text-pista-deep"
+                                        placeholder=""
+                                        className="w-full pl-14 pr-6 py-5 bg-cream-light border border-pista-light/40 rounded-[2rem] focus:outline-none focus:border-pista transition-all font-bold text-pista-deep"
                                         value={formData.email}
                                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                         required
@@ -96,18 +97,25 @@ const AdminLogin = () => {
 
                             <div className="space-y-2">
                                 <div className="flex justify-between items-center px-1">
-                                    <label className="text-xs font-black text-pista-deep/60 uppercase tracking-widest">Access Key</label>
+                                    <label className="text-xs font-black text-pista-deep/60 uppercase tracking-widest">Password</label>
                                 </div>
                                 <div className="relative group">
                                     <Lock className="absolute left-5 top-1/2 -translate-y-1/2 text-pista-deep/20 group-focus-within:text-pista-dark transition-colors" size={20} />
                                     <input
-                                        type="password"
-                                        placeholder="Enter access key"
-                                        className="w-full pl-14 pr-6 py-4.5 bg-cream-light border border-pista-light/40 rounded-[2rem] focus:outline-none focus:border-pista transition-all font-bold text-pista-deep"
+                                        type={showPassword ? "text" : "password"}
+                                        placeholder=""
+                                        className="w-full pl-14 pr-14 py-5 bg-cream-light border border-pista-light/40 rounded-[2rem] focus:outline-none focus:border-pista transition-all font-bold text-pista-deep"
                                         value={formData.password}
                                         onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                                         required
                                     />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        className="absolute right-6 top-1/2 -translate-y-1/2 text-pista-deep/20 hover:text-pista-dark transition-colors"
+                                    >
+                                        {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                                    </button>
                                 </div>
                             </div>
 

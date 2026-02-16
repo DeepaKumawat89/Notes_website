@@ -8,6 +8,7 @@ import { collection, query, where, onSnapshot, orderBy, doc, getDoc, updateDoc, 
 import { onAuthStateChanged } from 'firebase/auth';
 import AuthModal from '../../pages/user/Auth';
 import SubscriptionModal from '../../components/SubscriptionModal';
+import NoteSkeleton from '../../components/NoteSkeleton';
 import toast from 'react-hot-toast';
 
 const NoteList = () => {
@@ -150,9 +151,8 @@ const NoteList = () => {
                 </div>
 
                 {loading ? (
-                    <div className="flex flex-col items-center justify-center py-32">
-                        <Loader2 className="animate-spin text-pista-dark mb-4" size={48} />
-                        <p className="text-pista-deep/50 font-bold uppercase tracking-widest text-xs">Curating Resources...</p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {[1, 2, 3, 4, 5, 6].map(i => <NoteSkeleton key={i} />)}
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
