@@ -15,6 +15,7 @@ const Navbar = () => {
     const [userData, setUserData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [isScrolled, setIsScrolled] = useState(false);
+    const [isProfileOpen, setIsProfileOpen] = useState(false);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -137,20 +138,19 @@ const Navbar = () => {
                                     <Loader2 className="animate-spin text-pista-dark" size={18} />
                                 </div>
                             ) : user ? (
-                                <div className="flex items-center space-x-4">
-                                    <motion.div
-                                        initial={{ opacity: 0, x: 20 }}
-                                        animate={{ opacity: 1, x: 0 }}
-                                        className="flex items-center space-x-3 bg-pista-light/30 px-4 py-2 rounded-full border border-pista-light"
+                                <div className="flex items-center space-x-4 relative">
+                                    <button
+                                        onClick={() => setIsProfileOpen(!isProfileOpen)}
+                                        className="flex items-center space-x-3 bg-pista-light/30 px-4 py-2 rounded-full border border-pista-light hover:bg-pista-light/50 transition-all active:scale-95 group"
                                     >
-                                        <div className="w-8 h-8 bg-pista-dark rounded-full overflow-hidden flex items-center justify-center text-white font-bold text-sm border border-pista-light">
+                                        <div className="w-8 h-8 bg-pista-dark rounded-full overflow-hidden flex items-center justify-center text-white font-bold text-sm border border-pista-light group-hover:rotate-12 transition-transform">
                                             {userData?.photoURL ? (
                                                 <img src={userData.photoURL} alt={userData.name} className="w-full h-full object-cover" />
                                             ) : (
                                                 userData?.name?.charAt(0).toUpperCase() || <User size={14} />
                                             )}
                                         </div>
-                                        <div className="flex flex-col">
+                                        <div className="flex flex-col text-left">
                                             <span className="text-sm font-black text-pista-deep leading-none">
                                                 {userData?.name || 'User'}
                                             </span>
@@ -158,15 +158,45 @@ const Navbar = () => {
                                                 Student Profile
                                             </span>
                                         </div>
-                                    </motion.div>
-
-                                    <button
-                                        onClick={handleLogout}
-                                        className="p-2.5 text-red-500 hover:bg-red-50 rounded-full transition-colors active:scale-95"
-                                        title="Logout"
-                                    >
-                                        <LogOut size={20} />
                                     </button>
+
+                                    <AnimatePresence>
+                                        {isProfileOpen && (
+                                            <>
+                                                <div className="fixed inset-0 z-40 pointer-events-auto" onClick={() => setIsProfileOpen(false)} />
+                                                <motion.div
+                                                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                                                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                                                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                                                    className="absolute right-0 top-full mt-4 w-64 bg-white rounded-[2.5rem] shadow-2xl border border-gray-100 p-8 z-50 overflow-hidden"
+                                                >
+                                                    <div className="flex flex-col items-center text-center space-y-4 mb-8">
+                                                        <div className="w-16 h-16 bg-pista-dark rounded-3xl flex items-center justify-center text-white font-black text-2xl shadow-lg border-2 border-pista-light">
+                                                            {userData?.name?.charAt(0).toUpperCase() || 'U'}
+                                                        </div>
+                                                        <div>
+                                                            <h4 className="font-black text-slate-900 leading-tight">
+                                                                {userData?.name || 'Academic User'}
+                                                            </h4>
+                                                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1 italic">
+                                                                Verified Scholar
+                                                            </p>
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="space-y-3 pt-4 border-t border-gray-50">
+                                                        <button
+                                                            onClick={() => { setIsProfileOpen(false); handleLogout(); }}
+                                                            className="w-full flex items-center justify-between px-6 py-4 bg-red-50 text-red-500 rounded-2xl hover:bg-red-100 transition-all font-black text-[10px] uppercase tracking-widest group"
+                                                        >
+                                                            <span>Terminate Session</span>
+                                                            <LogOut size={16} className="group-hover:translate-x-1 transition-transform" />
+                                                        </button>
+                                                    </div>
+                                                </motion.div>
+                                            </>
+                                        )}
+                                    </AnimatePresence>
                                 </div>
                             ) : (
                                 <>

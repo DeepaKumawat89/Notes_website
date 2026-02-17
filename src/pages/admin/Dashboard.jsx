@@ -32,11 +32,12 @@ import {
 const AdminDashboard = () => {
     const [stats, setStats] = useState([
         { label: 'Total Notes', value: '0', icon: FileText, color: 'text-blue-500', bg: 'bg-blue-50' },
-        { label: 'Total Downloads', value: '0', icon: Download, color: 'text-green-500', bg: 'bg-green-50' },
         { label: 'Active Students', value: '0', icon: Users, color: 'text-purple-500', bg: 'bg-purple-50' },
+        { label: 'Quizzes Taken', value: '0', icon: TrendingUp, color: 'text-rose-500', bg: 'bg-rose-50' },
         { label: 'Storage Used', value: '0 MB', icon: BarChart3, color: 'text-amber-500', bg: 'bg-amber-50' },
     ]);
     const [recentNotes, setRecentNotes] = useState([]);
+    const [recentSubmissions, setRecentSubmissions] = useState([]);
     const [loading, setLoading] = useState(true);
     const [hasNotifications, setHasNotifications] = useState(false);
     const [showNotifications, setShowNotifications] = useState(false);
@@ -69,7 +70,6 @@ const AdminDashboard = () => {
             }));
 
             setRecentNotes(notesData.slice(0, 6));
-            const totalDLs = notesData.reduce((acc, curr) => acc + (curr.downloads || 0), 0);
             const totalStorage = notesData.reduce((acc, curr) => {
                 const sizeStr = curr.size || "0 MB";
                 const sizeValue = parseFloat(sizeStr.replace(' MB', '')) || 0;
@@ -78,7 +78,6 @@ const AdminDashboard = () => {
 
             setStats(prev => prev.map(s => {
                 if (s.label === 'Total Notes') return { ...s, value: snapshot.size.toString() };
-                if (s.label === 'Total Downloads') return { ...s, value: totalDLs.toLocaleString() };
                 if (s.label === 'Storage Used') return { ...s, value: `${totalStorage.toFixed(1)} MB` };
                 return s;
             }));
@@ -93,10 +92,21 @@ const AdminDashboard = () => {
             ));
         });
 
+        // Real-time listener for Quiz Submissions
+        const qSubmissions = query(collection(db, 'quizSubmissions'), orderBy('submittedAt', 'desc'));
+        const unsubscribeSubmissions = onSnapshot(qSubmissions, (snapshot) => {
+            const subs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            setRecentSubmissions(subs.slice(0, 5));
+            setStats(prev => prev.map(s =>
+                s.label === 'Quizzes Taken' ? { ...s, value: snapshot.size.toString() } : s
+            ));
+        });
+
         return () => {
             unsubscribeSubReqs();
             unsubscribeNotes();
             unsubscribeUsers();
+            unsubscribeSubmissions();
             document.removeEventListener('mousedown', handleClickOutside);
         };
     }, []);
@@ -115,7 +125,7 @@ const AdminDashboard = () => {
                                 <span className="text-[10px] font-black text-pista-deep/40 uppercase tracking-[0.4em]">System Status</span>
                             </div>
                             <h1 className="text-4xl font-black text-slate-900 tracking-tight italic">
-                                Institutional <span className="text-pista-dark not-italic">Insights</span>
+                                Admin <span className="text-pista-dark not-italic">Panel</span>
                             </h1>
                         </div>
 
@@ -329,6 +339,53 @@ const AdminDashboard = () => {
                                                     <FileText size={48} strokeWidth={1} />
                                                 </div>
                                                 <p className="text-slate-400 font-black uppercase tracking-widest text-sm">Repository is currently empty</p>
+                                            </div>
+                                        )}
+                                    </div>
+                                </section>
+
+                                {/* Quiz Intelligence Section */}
+                                <section>
+                                    <div className="flex justify-between items-center mb-10">
+                                        <div className="flex items-center space-x-4">
+                                            <h2 className="text-2xl font-black text-slate-900">Quiz <span className="text-pista-dark italic">Intelligence</span></h2>
+                                            <div className="px-3 py-1 bg-amber-50 rounded-full text-[10px] font-black text-amber-600 uppercase tracking-widest">
+                                                Real-time Feedback
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+                                        {recentSubmissions.length > 0 ? (
+                                            recentSubmissions.map((sub, idx) => (
+                                                <motion.div
+                                                    key={sub.id}
+                                                    initial={{ opacity: 0, y: 10 }}
+                                                    animate={{ opacity: 1, y: 0 }}
+                                                    transition={{ delay: 0.5 + (idx * 0.1) }}
+                                                    className="bg-white p-6 rounded-[2.5rem] border border-gray-100 shadow-sm flex items-center gap-6"
+                                                >
+                                                    <div className="w-16 h-16 bg-slate-50 rounded-2xl flex flex-col items-center justify-center border border-gray-100">
+                                                        <span className="text-xl font-black text-slate-900">{sub.score}</span>
+                                                        <small className="text-[8px] font-black text-slate-400 uppercase tracking-tighter">Score</small>
+                                                    </div>
+                                                    <div className="flex-1 min-w-0">
+                                                        <p className="text-sm font-black text-slate-900">{sub.userName}</p>
+                                                        <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">
+                                                            {sub.quizDate} · {sub.totalQuestions} Questions
+                                                        </p>
+                                                    </div>
+                                                    <div className="text-right">
+                                                        <div className={`px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest ${sub.score / sub.totalQuestions > 0.7 ? 'bg-green-50 text-green-600' : 'bg-amber-50 text-amber-600'}`}>
+                                                            {Math.round((sub.score / sub.totalQuestions) * 100)}% Acc
+                                                        </div>
+                                                    </div>
+                                                </motion.div>
+                                            ))
+                                        ) : (
+                                            <div className="col-span-full py-12 text-center bg-slate-50/50 rounded-[3rem] border border-dashed border-slate-200">
+                                                <TrendingUp size={32} className="mx-auto text-slate-200 mb-4" />
+                                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Waiting for first assessment...</p>
                                             </div>
                                         )}
                                     </div>

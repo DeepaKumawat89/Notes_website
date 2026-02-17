@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
 import { Lock, Mail, ArrowRight, ShieldCheck, ArrowLeft, Eye, EyeOff } from 'lucide-react';
@@ -12,12 +12,81 @@ const AdminLogin = () => {
         password: ''
     });
     const [showPassword, setShowPassword] = useState(false);
+    const [checkingSession, setCheckingSession] = useState(true);
+
+    useEffect(() => {
+        const checkExistingSession = async () => {
+            const localSessionId = localStorage.getItem('adminSessionId');
+            if (localSessionId) {
+                try {
+                    const { db } = await import('../../firebase');
+                    const { doc, getDoc, updateDoc, serverTimestamp } = await import('firebase/firestore');
+                    const sessionDocRef = doc(db, 'admin_settings', 'session');
+                    const sessionDoc = await getDoc(sessionDocRef);
+
+                    if (sessionDoc.exists()) {
+                        const data = sessionDoc.data();
+                        const now = Date.now();
+                        const lastActive = data.lastActive?.toDate()?.getTime() || 0;
+                        const thirtyDaysInMs = 30 * 24 * 60 * 60 * 1000;
+
+                        if (data.activeSessionId === localSessionId) {
+                            if (now - lastActive < thirtyDaysInMs) {
+                                // Session is healthy, refresh it
+                                await updateDoc(sessionDocRef, {
+                                    lastActive: serverTimestamp()
+                                });
+                                navigate('/admin/dashboard', { replace: true });
+                                return;
+                            } else {
+                                // Session expired (30+ days)
+                                toast.error('Session expired: Please login again.');
+                                localStorage.removeItem('adminSessionId');
+                                await updateDoc(sessionDocRef, {
+                                    activeSessionId: null
+                                });
+                            }
+                        }
+                    }
+                } catch (error) {
+                    console.error("Session check error:", error);
+                }
+            }
+            setCheckingSession(false);
+        };
+        checkExistingSession();
+    }, [navigate]);
+
+    if (checkingSession) {
+        return (
+            <div className="min-h-screen bg-cream-light flex items-center justify-center">
+                <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ repeat: Infinity, duration: 1 }}
+                    className="w-10 h-10 border-4 border-pista-dark border-t-transparent rounded-full"
+                />
+            </div>
+        );
+    }
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
         // Simulating authentication
         if (formData.email === 'admin@gmail.com' && formData.password === 'admin@123') {
+            const sessionId = Math.random().toString(36).substring(2, 15);
+            localStorage.setItem('adminSessionId', sessionId);
+
+            // Sync with DB (using a static doc for global admin session)
+            import('../../firebase').then(async ({ db }) => {
+                const { doc, setDoc, serverTimestamp } = await import('firebase/firestore');
+                await setDoc(doc(db, 'admin_settings', 'session'), {
+                    activeSessionId: sessionId,
+                    lastLogin: serverTimestamp(),
+                    lastActive: serverTimestamp() // Add this for persistence tracking
+                });
+            });
+
             toast.success('Login successful! Welcome Admin.', {
                 duration: 3000,
                 style: {

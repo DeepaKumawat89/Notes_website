@@ -58,16 +58,9 @@ const AuthModal = ({ isOpen, onClose }) => {
 
         let currentSessions = userData.activeSessions || [];
 
-        // STRICT SESSION LIMIT
+        // FLUID SESSION MANAGEMENT: "Bump" the oldest session if we're at the limit
         if (currentSessions.length >= maxSessions) {
-          await signOut(auth);
-          localStorage.removeItem('activeSessionId');
-          localStorage.removeItem('lastSessionUpdate');
-          toast.error("Access restricted: Multiple logins not allowed", {
-            duration: 5000,
-            style: { borderRadius: '1rem', background: '#e11d48', color: '#fff', fontWeight: 'bold' }
-          });
-          return false;
+          currentSessions.shift(); // Remove oldest
         }
 
         // Add new session

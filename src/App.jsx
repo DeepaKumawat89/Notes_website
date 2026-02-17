@@ -8,6 +8,7 @@ const SubjectSelect = lazy(() => import('./pages/user/SubjectSelect'));
 const NoteList = lazy(() => import('./pages/user/NoteList'));
 const NoteDetail = lazy(() => import('./pages/user/NoteDetail'));
 const UserAuth = lazy(() => import('./pages/user/Auth'));
+const DailyQuiz = lazy(() => import('./pages/user/DailyQuiz'));
 
 const AdminLogin = lazy(() => import('./pages/admin/Login'));
 const AdminDashboard = lazy(() => import('./pages/admin/Dashboard'));
@@ -16,6 +17,7 @@ const ManageNotes = lazy(() => import('./pages/admin/ManageNotes'));
 const UsersList = lazy(() => import('./pages/admin/Users'));
 const Requests = lazy(() => import('./pages/admin/Requests'));
 const Payments = lazy(() => import('./pages/admin/Payments'));
+const UploadQuiz = lazy(() => import('./pages/admin/UploadQuiz'));
 
 const LoadingFallback = () => (
   <div className="flex items-center justify-center min-h-screen bg-cream-light">
@@ -38,6 +40,7 @@ const App = () => {
           <Route path="/notes/:classId/:subjectId" element={<NoteList />} />
           <Route path="/note/:noteId" element={<NoteDetail />} />
           <Route path="/login" element={<UserAuth />} />
+          <Route path="/daily-quiz" element={<DailyQuiz />} />
 
           {/* Admin Routes */}
           <Route path="/admin/login" element={<AdminLogin />} />
@@ -46,6 +49,7 @@ const App = () => {
           <Route path="/admin/manage" element={<ManageNotes />} />
           <Route path="/admin/users" element={<UsersList />} />
           <Route path="/admin/payments" element={<Payments />} />
+          <Route path="/admin/quizzes" element={<UploadQuiz />} />
           <Route path="/admin/requests" element={<Requests />} />
 
           {/* Catch-all */}

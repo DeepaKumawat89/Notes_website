@@ -317,26 +317,6 @@ const UploadNote = () => {
                                         </div>
                                     )}
                                 </motion.div>
-
-                                <div className="bg-white rounded-[3rem] p-10 border border-gray-100 shadow-sm">
-                                    <h4 className="flex items-center space-x-4 text-slate-900 font-black uppercase tracking-widest text-xs mb-8 italic">
-                                        <Info size={18} className="text-pista-dark" />
-                                        <span>Publication Specs</span>
-                                    </h4>
-                                    <ul className="space-y-6">
-                                        {[
-                                            'Verify legibility of complex equations.',
-                                            'Embed schematic diagrams for Science.',
-                                            'Pagination limit: 120 pages per log.',
-                                            'OCR capability recommended.'
-                                        ].map((item, i) => (
-                                            <li key={i} className="flex items-start space-x-4">
-                                                <div className="mt-1 w-1.5 h-4 bg-pista-dark rounded-full shrink-0"></div>
-                                                <span className="text-[11px] font-bold text-slate-400 leading-relaxed uppercase tracking-tighter">{item}</span>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
                             </div>
                         </div>
                     </div>

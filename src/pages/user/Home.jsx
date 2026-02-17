@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { GraduationCap, BookOpen, Download, Search, CheckCircle2, ArrowRight, Loader2 } from 'lucide-react';
+import { GraduationCap, BookOpen, Download, Search, CheckCircle2, ArrowRight, Loader2, Zap } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
 import { db, auth } from '../../firebase';
@@ -206,6 +206,45 @@ const Home = () => {
                             </motion.div>
                         ))}
                     </div>
+                </div>
+            </section>
+
+            {/* Daily Quiz Banner */}
+            <section className="py-12 px-6">
+                <div className="max-w-7xl mx-auto">
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        className="bg-slate-900 rounded-[3rem] p-8 lg:p-12 relative overflow-hidden group shadow-2xl shadow-slate-200"
+                    >
+                        <div className="absolute top-0 right-0 p-12 text-pista-dark/10 -rotate-12 translate-x-1/2 -translate-y-1/2 group-hover:rotate-0 transition-transform duration-1000">
+                            <Zap size={280} />
+                        </div>
+
+                        <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+                            <div className="space-y-6">
+                                <div className="inline-flex items-center gap-3 px-4 py-2 bg-pista-dark/20 text-pista-dark rounded-full border border-pista-dark/30">
+                                    <div className="w-2 h-2 bg-pista-dark rounded-full animate-pulse" />
+                                    <span className="text-[10px] font-black uppercase tracking-[0.2em]">Institutional Challenge</span>
+                                </div>
+                                <h2 className="text-4xl lg:text-5xl font-black text-white italic leading-tight">
+                                    Today's Knowledge <span className="text-pista-dark not-italic">Vault</span> is Active.
+                                </h2>
+                                <p className="text-slate-400 font-bold max-w-md uppercase text-[10px] tracking-widest leading-relaxed">
+                                    Test your understanding of recent concepts. Earn points and climb the elite student ranks.
+                                </p>
+                            </div>
+                            <div className="flex justify-end">
+                                <Link
+                                    to="/daily-quiz"
+                                    className="px-12 py-6 bg-pista-dark text-white rounded-[2rem] font-black uppercase text-xs tracking-[0.3em] hover:bg-pista-deep transition-all shadow-xl shadow-pista-dark/20 hover:scale-105 active:scale-95 flex items-center gap-4"
+                                >
+                                    <span>Enter Assessment Arena</span>
+                                    <ArrowRight size={20} />
+                                </Link>
+                            </div>
+                        </div>
+                    </motion.div>
                 </div>
             </section>
 
