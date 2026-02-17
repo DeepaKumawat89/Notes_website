@@ -38,7 +38,9 @@ const UploadNote = () => {
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         if (file) {
-            if (file.type !== 'application/pdf') {
+            // Mobile browsers sometimes don't set the type correctly
+            const isPDF = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
+            if (!isPDF) {
                 toast.error('Please upload a PDF file');
                 return;
             }
@@ -65,6 +67,11 @@ const UploadNote = () => {
             return;
         }
 
+        if (!uploadPreset) {
+            toast.error('Cloudinary Upload Preset not configured');
+            return;
+        }
+
         setUploading(true);
         const toastId = toast.loading('Publishing to Repository...');
 
@@ -73,14 +80,26 @@ const UploadNote = () => {
             data.append('file', selectedFile);
             data.append('upload_preset', uploadPreset);
             data.append('cloud_name', cloudName);
-            data.append('resource_type', 'auto');
+            data.append('resource_type', 'auto'); // Allows Cloudinary to handle PDF correctly
 
-            const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/upload`, {
+            const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
                 method: 'POST',
                 body: data
             });
 
-            if (!response.ok) throw new Error('Cloudinary upload failed');
+            if (!response.ok) {
+                let errorMessage = 'Cloudinary upload failed';
+                try {
+                    const errorData = await response.json();
+                    console.error('Cloudinary Error Detail:', errorData);
+                    errorMessage = errorData.error?.message || errorMessage;
+                } catch (e) {
+                    const errorText = await response.text();
+                    console.error('Cloudinary Raw Error:', errorText);
+                    errorMessage = `Upload Failed: ${response.status} ${response.statusText}`;
+                }
+                throw new Error(errorMessage);
+            }
 
             const cloudData = await response.json();
             const downloadURL = cloudData.secure_url;
