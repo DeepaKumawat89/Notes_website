@@ -53,29 +53,32 @@ const Requests = () => {
         <div className="min-h-screen bg-cream-light flex">
             <AdminSidebar />
 
-            <main className="flex-1 lg:ml-72 p-4 sm:p-6 lg:p-10 pt-24 lg:pt-0">
-                <header className="mb-12 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 pt-6 lg:pt-10">
-                    <div>
-                        <h1 className="text-3xl font-bold text-pista-deep">Note Requests</h1>
-                        <p className="text-pista-deep/50 font-medium">Study material requested by students</p>
+            <main className="flex-1 lg:ml-72 p-4 lg:p-10 flex flex-col h-screen overflow-hidden pt-20 lg:pt-0">
+                <header className="px-4 py-4 lg:px-10 lg:py-10 bg-white border-b border-gray-100 z-30">
+                    <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-4 lg:mb-10">
+                        <div className="flex-1 min-w-0">
+                            <div className="hidden lg:flex items-center space-x-3 mb-2">
+                                <div className="h-2 w-10 bg-pista-dark rounded-full" />
+                                <span className="text-[10px] font-black text-pista-deep/40 uppercase tracking-[0.4em]">Inquiry Management</span>
+                            </div>
+                            <h1 className="text-2xl lg:text-3xl font-black text-pista-deep tracking-tight">Note <span className="text-pista-dark italic">Requests</span></h1>
+                        </div>
+
+                        <div className="bg-slate-50 px-4 lg:px-6 py-2 lg:py-4 rounded-xl lg:rounded-2xl border border-gray-100 flex items-center space-x-3 w-full lg:w-auto justify-between lg:justify-start">
+                            <span className="text-pista-deep/50 font-black uppercase text-[10px] tracking-widest">Pending Items</span>
+                            <span className="text-xl lg:text-2xl font-black text-slate-900">{requests.length}</span>
+                        </div>
                     </div>
 
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full md:w-auto">
-                        <div className="bg-white px-6 py-3 rounded-2xl border border-pista-light/30 shadow-sm flex items-center space-x-3 w-full sm:w-auto justify-between sm:justify-start">
-                            <span className="text-pista-deep/50 font-bold uppercase text-xs tracking-widest">Pending</span>
-                            <span className="text-2xl font-black text-pista-deep">{requests.length}</span>
-                        </div>
-
-                        <div className="relative group flex-1 md:flex-none w-full">
-                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-pista-deep/30 group-focus-within:text-pista-dark" size={20} />
-                            <input
-                                type="text"
-                                placeholder="Search requests..."
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                className="pl-12 pr-4 py-3 bg-white border border-pista-light/30 rounded-2xl focus:outline-none focus:ring-2 focus:ring-pista/20 w-full md:w-64 lg:w-80 shadow-sm"
-                            />
-                        </div>
+                    <div className="relative group w-full lg:w-96">
+                        <Search className="absolute left-4 lg:left-5 top-1/2 -translate-y-1/2 text-pista-deep/30 group-focus-within:text-pista-dark transition-colors w-[18px] h-[18px] lg:w-5 lg:h-5" />
+                        <input
+                            type="text"
+                            placeholder="Search requests..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="w-full pl-12 lg:pl-14 pr-4 py-3 lg:py-4 bg-slate-50 border-none rounded-xl lg:rounded-2xl focus:ring-4 focus:ring-pista/10 font-bold text-slate-700 placeholder:text-slate-300 transition-all shadow-inner text-sm lg:text-base"
+                        />
                     </div>
                 </header>
 

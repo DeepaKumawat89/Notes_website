@@ -50,44 +50,44 @@ const UsersList = () => {
 
             <main className="flex-1 lg:ml-72 flex flex-col h-screen overflow-hidden pt-20 lg:pt-0">
                 {/* Premium Header */}
-                <header className="px-6 py-6 lg:px-10 lg:py-10 bg-white border-b border-gray-100 z-20">
-                    <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-8 mb-10">
-                        <div>
-                            <div className="flex items-center space-x-3 mb-2">
+                <header className="px-4 py-4 lg:px-10 lg:py-10 bg-white border-b border-gray-100 z-20">
+                    <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-4 lg:mb-10">
+                        <div className="flex-1 min-w-0">
+                            <div className="hidden lg:flex items-center space-x-3 mb-2">
                                 <div className="h-2 w-10 bg-pista-dark rounded-full" />
                                 <span className="text-[10px] font-black text-pista-deep/40 uppercase tracking-[0.4em]">Administrative Oversight</span>
                             </div>
-                            <h1 className="text-4xl font-black text-slate-900 tracking-tight">Student <span className="text-pista-dark italic">Directory</span></h1>
+                            <h1 className="text-2xl lg:text-4xl font-black text-slate-900 tracking-tight">Student <span className="text-pista-dark italic">Directory</span></h1>
                         </div>
 
-                        <div className="flex flex-wrap items-center gap-4">
-                            <div className="px-4 lg:px-6 py-4 bg-slate-50 rounded-3xl border border-slate-200 flex items-center space-x-4 flex-1 md:flex-none min-w-[140px]">
-                                <div className="p-2 bg-slate-800 text-white rounded-xl">
-                                    <UsersIcon size={18} />
+                        <div className="flex flex-wrap items-center gap-2 lg:gap-4">
+                            <div className="px-3 lg:px-6 py-2 lg:py-4 bg-slate-50 rounded-2xl lg:rounded-3xl border border-slate-200 flex items-center space-x-2 lg:space-x-4 flex-1 md:flex-none">
+                                <div className="p-1.5 lg:p-2 bg-slate-800 text-white rounded-lg lg:rounded-xl">
+                                    <UsersIcon className="w-4 h-4 lg:w-[18px] lg:h-[18px]" />
                                 </div>
                                 <div>
-                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Total</p>
-                                    <p className="text-xl font-black text-slate-900 leading-none">{stats.total}</p>
+                                    <p className="text-[9px] lg:text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Total</p>
+                                    <p className="text-sm lg:text-xl font-black text-slate-900 leading-none">{stats.total}</p>
                                 </div>
                             </div>
 
-                            <div className="px-4 lg:px-6 py-4 bg-purple-50 rounded-3xl border border-purple-100 flex items-center space-x-4 flex-1 md:flex-none min-w-[140px]">
-                                <div className="p-2 bg-purple-600 text-white rounded-xl shadow-lg shadow-purple-100">
-                                    <Shield size={18} />
+                            <div className="px-3 lg:px-6 py-2 lg:py-4 bg-purple-50 rounded-2xl lg:rounded-3xl border border-purple-100 flex items-center space-x-2 lg:space-x-4 flex-1 md:flex-none">
+                                <div className="p-1.5 lg:p-2 bg-purple-600 text-white rounded-lg lg:rounded-xl shadow-lg shadow-purple-100">
+                                    <Shield className="w-4 h-4 lg:w-[18px] lg:h-[18px]" />
                                 </div>
                                 <div>
-                                    <p className="text-[10px] font-black text-purple-600/50 uppercase tracking-widest leading-none mb-1">Premium</p>
-                                    <p className="text-xl font-black text-purple-700 leading-none">{stats.premium}</p>
+                                    <p className="text-[9px] lg:text-[10px] font-black text-purple-600/50 uppercase tracking-widest leading-none mb-1">Premium</p>
+                                    <p className="text-sm lg:text-xl font-black text-purple-700 leading-none">{stats.premium}</p>
                                 </div>
                             </div>
 
-                            <div className="px-4 lg:px-6 py-4 bg-pista-light/30 rounded-3xl border border-pista/20 flex items-center space-x-4 flex-1 md:flex-none min-w-[140px]">
-                                <div className="p-2 bg-pista-dark text-white rounded-xl shadow-lg shadow-pista/20">
-                                    <User size={18} />
+                            <div className="px-3 lg:px-6 py-2 lg:py-4 bg-pista-light/30 rounded-2xl lg:rounded-3xl border border-pista/20 flex items-center space-x-2 lg:space-x-4 flex-1 md:flex-none">
+                                <div className="p-1.5 lg:p-2 bg-pista-dark text-white rounded-lg lg:rounded-xl shadow-lg shadow-pista/20">
+                                    <User className="w-4 h-4 lg:w-[18px] lg:h-[18px]" />
                                 </div>
                                 <div>
-                                    <p className="text-[10px] font-black text-pista-dark/50 uppercase tracking-widest leading-none mb-1">Standard</p>
-                                    <p className="text-xl font-black text-pista-deep leading-none">{stats.standard}</p>
+                                    <p className="text-[9px] lg:text-[10px] font-black text-pista-dark/50 uppercase tracking-widest leading-none mb-1">Standard</p>
+                                    <p className="text-sm lg:text-xl font-black text-pista-deep leading-none">{stats.standard}</p>
                                 </div>
                             </div>
                         </div>
@@ -95,13 +95,13 @@ const UsersList = () => {
 
                     <div className="flex items-center space-x-4">
                         <div className="relative group flex-1">
-                            <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-pista-dark transition-colors" size={20} />
+                            <Search className="absolute left-4 lg:left-6 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-pista-dark transition-colors w-[18px] h-[18px] lg:w-5 lg:h-5" />
                             <input
                                 type="text"
                                 placeholder="Search students..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="w-full pl-14 pr-8 py-5 bg-slate-50 border-none rounded-[2rem] focus:outline-none focus:ring-4 focus:ring-pista/10 font-bold text-slate-700 placeholder:text-slate-300 transition-all shadow-inner"
+                                className="w-full pl-12 lg:pl-14 pr-8 py-3 lg:py-5 bg-slate-50 border-none rounded-xl lg:rounded-[2rem] focus:outline-none focus:ring-4 focus:ring-pista/10 font-bold text-slate-700 placeholder:text-slate-300 transition-all shadow-inner text-sm lg:text-base"
                             />
                         </div>
                     </div>

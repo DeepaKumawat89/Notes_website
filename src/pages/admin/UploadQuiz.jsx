@@ -162,14 +162,14 @@ const UploadQuiz = () => {
 
             <main className="flex-1 lg:ml-72 flex flex-col h-screen overflow-hidden pt-20 lg:pt-0">
                 {/* Premium Header */}
-                <header className="px-6 py-6 lg:px-10 lg:py-10 bg-white border-b border-gray-100 z-30">
-                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                        <div>
-                            <div className="flex items-center space-x-3 mb-2">
+                <header className="px-4 py-4 lg:px-10 lg:py-10 bg-white border-b border-gray-100 z-30">
+                    <div className="flex items-center justify-between gap-6">
+                        <div className="flex-1 min-w-0">
+                            <div className="hidden lg:flex items-center space-x-3 mb-2">
                                 <div className="h-2 w-10 bg-pista-dark rounded-full" />
                                 <span className="text-[10px] font-black text-pista-deep/40 uppercase tracking-[0.4em]">Knowledge Ingestion</span>
                             </div>
-                            <h1 className="text-4xl font-black text-slate-900 tracking-tight italic">
+                            <h1 className="text-2xl lg:text-4xl font-black text-slate-900 tracking-tight italic">
                                 Quiz <span className="text-pista-dark not-italic">Architect</span>
                             </h1>
                         </div>
@@ -177,10 +177,10 @@ const UploadQuiz = () => {
                             <button
                                 onClick={handleUpload}
                                 disabled={uploading || quizData.length === 0}
-                                className="px-8 py-4 bg-slate-900 text-white rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-black transition-all disabled:opacity-50 shadow-xl shadow-slate-200 flex items-center gap-3"
+                                className="px-4 lg:px-8 py-3 lg:py-4 bg-slate-900 text-white rounded-xl lg:rounded-2xl font-black uppercase text-[9px] lg:text-[10px] tracking-widest hover:bg-black transition-all disabled:opacity-50 shadow-xl shadow-slate-200 flex items-center gap-2 lg:gap-3"
                             >
-                                {uploading ? <Loader2 className="animate-spin" size={16} /> : <CheckCircle2 size={16} />}
-                                <span>Authorize Publication</span>
+                                {uploading ? <Loader2 className="animate-spin w-3.5 h-3.5 lg:w-4 lg:h-4" /> : <CheckCircle2 className="w-4 h-4 lg:w-[16px] lg:h-[16px]" />}
+                                <span>Authorize</span>
                             </button>
                         </div>
                     </div>
@@ -197,24 +197,24 @@ const UploadQuiz = () => {
                                     animate={{ opacity: 1, y: 0 }}
                                     className="bg-white rounded-[2.5rem] p-8 border border-gray-100 shadow-sm space-y-6"
                                 >
-                                    <div className="space-y-4">
+                                    <div className="space-y-3 lg:space-y-4">
                                         <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 italic">Quiz Designation</label>
                                         <input
                                             type="text"
-                                            placeholder="Enter archive title..."
+                                            placeholder="Enter title..."
                                             value={quizTitle}
                                             onChange={(e) => setQuizTitle(e.target.value)}
-                                            className="w-full px-6 py-4 bg-slate-50 border-none rounded-xl focus:ring-4 focus:ring-pista/10 transition-all font-bold text-slate-700 shadow-inner"
+                                            className="w-full px-6 py-3 lg:py-4 bg-slate-50 border-none rounded-xl focus:ring-4 focus:ring-pista/10 transition-all font-bold text-slate-700 shadow-inner text-sm lg:text-base"
                                         />
                                     </div>
 
-                                    <div className="space-y-4">
+                                    <div className="space-y-3 lg:space-y-4">
                                         <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 italic">Activation Date</label>
                                         <input
                                             type="date"
                                             value={quizDate}
                                             onChange={(e) => setQuizDate(e.target.value)}
-                                            className="w-full px-6 py-4 bg-slate-50 border-none rounded-xl focus:ring-4 focus:ring-pista/10 transition-all font-bold text-slate-700 shadow-inner"
+                                            className="w-full px-6 py-3 lg:py-4 bg-slate-50 border-none rounded-xl focus:ring-4 focus:ring-pista/10 transition-all font-bold text-slate-700 shadow-inner text-sm lg:text-base"
                                         />
                                     </div>
 

@@ -117,19 +117,19 @@ const AdminDashboard = () => {
 
             <main className="flex-1 lg:ml-72 flex flex-col h-screen overflow-hidden pt-20 lg:pt-0">
                 {/* Premium Header */}
-                <header className="px-6 py-6 lg:px-10 lg:py-10 bg-white border-b border-gray-100 z-30 overflow-visible">
-                    <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-8">
-                        <div>
-                            <div className="flex items-center space-x-3 mb-2">
+                <header className="px-4 py-4 lg:px-10 lg:py-10 bg-white border-b border-gray-100 z-30 overflow-visible">
+                    <div className="flex items-center justify-between gap-4">
+                        <div className="flex-1 min-w-0">
+                            <div className="hidden lg:flex items-center space-x-3 mb-2">
                                 <div className="h-2 w-10 bg-pista-dark rounded-full" />
                                 <span className="text-[10px] font-black text-pista-deep/40 uppercase tracking-[0.4em]">System Status</span>
                             </div>
-                            <h1 className="text-4xl font-black text-slate-900 tracking-tight italic">
-                                Admin <span className="text-pista-dark not-italic">Panel</span>
+                            <h1 className="text-2xl lg:text-4xl font-black text-slate-900 tracking-tight italic truncate">
+                                <span className="lg:not-italic font-black lg:text-slate-900 text-pista-dark">Dashboard</span>
                             </h1>
                         </div>
 
-                        <div className="flex items-center space-x-6">
+                        <div className="flex items-center space-x-2 lg:space-x-6">
                             {/* Search bar removed for more focus or simplified */}
 
                             <div className="relative" ref={notificationRef}>
@@ -137,11 +137,11 @@ const AdminDashboard = () => {
                                     whileHover={{ scale: 1.05 }}
                                     whileTap={{ scale: 0.95 }}
                                     onClick={() => setShowNotifications(!showNotifications)}
-                                    className={`p-4 rounded-[1.5rem] border transition-all relative ${showNotifications ? 'bg-slate-900 text-white border-slate-900 shadow-xl' : 'bg-slate-50 border-transparent text-slate-600 hover:bg-white hover:border-slate-200'}`}
+                                    className={`p-3 lg:p-4 rounded-xl lg:rounded-[1.5rem] border transition-all relative ${showNotifications ? 'bg-slate-900 text-white border-slate-900 shadow-xl' : 'bg-slate-50 border-transparent text-slate-600 hover:bg-white hover:border-slate-200'}`}
                                 >
-                                    <Bell size={22} strokeWidth={2.5} />
+                                    <Bell className="w-5 h-5 lg:w-[22px] lg:h-[22px]" strokeWidth={2.5} />
                                     {hasNotifications && (
-                                        <span className={`absolute top-3.5 right-3.5 w-3 h-3 bg-red-500 border-2 rounded-full shadow-sm ${showNotifications ? 'border-slate-900' : 'border-white animate-pulse'}`}></span>
+                                        <span className={`absolute top-2.5 right-2.5 lg:top-3.5 lg:right-3.5 w-2.5 h-2.5 lg:w-3 h-3 bg-red-500 border-2 rounded-full shadow-sm ${showNotifications ? 'border-slate-900' : 'border-white animate-pulse'}`}></span>
                                     )}
                                 </motion.button>
 
@@ -211,13 +211,13 @@ const AdminDashboard = () => {
                                 </AnimatePresence>
                             </div>
 
-                            <div className="flex items-center space-x-4 pl-6 border-l border-gray-100">
+                            <div className="flex items-center space-x-3 lg:space-x-4 pl-3 lg:pl-6 border-l border-gray-100">
                                 <div className="text-right hidden sm:block">
                                     <p className="font-black text-slate-900 leading-none">Super Admin</p>
                                     <p className="text-[10px] text-pista-dark font-black uppercase tracking-widest mt-1">Institutional Lead</p>
                                 </div>
-                                <div className="w-14 h-14 bg-white p-1 rounded-2xl shadow-xl shadow-slate-200 border border-gray-100 relative group overflow-hidden">
-                                    <div className="w-full h-full bg-slate-900 rounded-xl flex items-center justify-center text-white font-black italic cursor-pointer group-hover:bg-pista-dark transition-colors">
+                                <div className="w-10 h-10 lg:w-14 lg:h-14 bg-white p-0.5 lg:p-1 rounded-xl lg:rounded-2xl shadow-xl shadow-slate-200 border border-gray-100 relative group overflow-hidden">
+                                    <div className="w-full h-full bg-slate-900 rounded-lg lg:rounded-xl flex items-center justify-center text-white font-black italic cursor-pointer group-hover:bg-pista-dark transition-colors text-xs lg:text-base">
                                         SA
                                     </div>
                                 </div>
@@ -236,18 +236,18 @@ const AdminDashboard = () => {
                         ) : (
                             <>
                                 {/* Stats Matrix */}
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-8">
                                     {stats.map((stat, idx) => (
                                         <motion.div
                                             key={idx}
                                             initial={{ opacity: 0, y: 20 }}
                                             animate={{ opacity: 1, y: 0 }}
                                             transition={{ delay: idx * 0.1, duration: 0.5 }}
-                                            className="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.02)] hover:shadow-[0_20px_50px_rgba(107,136,108,0.1)] transition-all group"
+                                            className="bg-white p-6 lg:p-8 rounded-[2rem] lg:rounded-[2.5rem] border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.02)] hover:shadow-[0_20px_50px_rgba(107,136,108,0.1)] transition-all group"
                                         >
-                                            <div className="flex justify-between items-center mb-8">
-                                                <div className={`p-4 rounded-2xl ${stat.bg} ${stat.color} shadow-inner transition-transform group-hover:scale-110`}>
-                                                    <stat.icon size={24} strokeWidth={2.5} />
+                                            <div className="flex justify-between items-center mb-6 lg:mb-8">
+                                                <div className={`p-3 lg:p-4 rounded-xl lg:rounded-2xl ${stat.bg} ${stat.color} shadow-inner transition-transform group-hover:scale-110`}>
+                                                    <stat.icon className="w-5 h-5 lg:w-6 lg:h-6" strokeWidth={2.5} />
                                                 </div>
                                                 <div className="px-3 py-1 bg-slate-50 rounded-lg text-slate-400 text-[10px] font-black italic uppercase tracking-widest">
                                                     Real-time

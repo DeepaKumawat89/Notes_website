@@ -124,28 +124,28 @@ const ManageNotes = () => {
 
             <main className="flex-1 lg:ml-72 flex flex-col h-screen overflow-hidden pt-20 lg:pt-0">
                 {/* Stunning Header */}
-                <header className="px-6 py-6 lg:px-10 lg:py-10 flex flex-col md:flex-row justify-between items-center bg-white border-b border-gray-100 z-20">
-                    <div className="mb-6 md:mb-0">
-                        <div className="flex items-center space-x-3 mb-2">
+                <header className="px-4 py-4 lg:px-10 lg:py-10 flex flex-col lg:flex-row justify-between lg:items-center bg-white border-b border-gray-100 z-20 gap-4">
+                    <div className="flex-1 min-w-0">
+                        <div className="hidden lg:flex items-center space-x-3 mb-2">
                             <div className="h-2 w-10 bg-pista-dark rounded-full" />
                             <span className="text-[10px] font-black text-pista-deep/40 uppercase tracking-[0.4em]">Resource Management</span>
                         </div>
-                        <h1 className="text-4xl font-black text-slate-900 tracking-tight">Manage <span className="text-pista-dark italic">Notes</span></h1>
+                        <h1 className="text-2xl lg:text-4xl font-black text-slate-900 tracking-tight">Manage <span className="text-pista-dark italic">Notes</span></h1>
                     </div>
 
-                    <div className="flex items-center space-x-4 w-full md:w-auto">
-                        <div className="relative group flex-1 md:flex-none">
-                            <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-pista-dark transition-colors" size={20} />
+                    <div className="flex items-center space-x-3 w-full lg:w-auto">
+                        <div className="relative group flex-1 lg:flex-none">
+                            <Search className="absolute left-4 lg:left-5 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-pista-dark transition-colors w-[18px] h-[18px] lg:w-5 lg:h-5" />
                             <input
                                 type="text"
-                                placeholder="Search repository..."
+                                placeholder="Search..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="pl-14 pr-8 py-5 bg-slate-50 border-none rounded-[2rem] focus:ring-4 focus:ring-pista/10 w-full md:w-80 font-bold text-slate-700 placeholder:text-slate-300 transition-all shadow-inner"
+                                className="pl-12 lg:pl-14 pr-8 py-3 lg:py-5 bg-slate-50 border-none rounded-xl lg:rounded-[2rem] focus:ring-4 focus:ring-pista/10 w-full lg:w-80 font-bold text-slate-700 placeholder:text-slate-300 transition-all shadow-inner text-sm lg:text-base"
                             />
                         </div>
-                        <button className="p-5 bg-white border border-gray-100 rounded-full hover:bg-slate-50 transition-all shadow-sm text-slate-400">
-                            <Settings2 size={24} />
+                        <button className="p-3 lg:p-5 bg-white border border-gray-100 rounded-full hover:bg-slate-50 transition-all shadow-sm text-slate-400">
+                            <Settings2 className="w-5 h-5 lg:w-6 lg:h-6" />
                         </button>
                     </div>
                 </header>

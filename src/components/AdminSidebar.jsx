@@ -131,9 +131,9 @@ const AdminSidebar = () => {
             <div className={`
                 fixed top-0 left-0 bottom-0 bg-white border-r border-gray-100 z-[80] transition-all duration-500 ease-in-out
                 lg:w-72 lg:translate-x-0
-                ${isMobileMenuOpen ? 'w-80 translate-x-0 shadow-2xl' : 'w-80 -translate-x-full lg:translate-x-0'}
+                ${isMobileMenuOpen ? 'w-[280px] translate-x-0 shadow-2xl' : 'w-[280px] -translate-x-full lg:translate-x-0'}
             `}>
-                <div className="h-full flex flex-col pt-10">
+                <div className="h-full flex flex-col pt-6 lg:pt-10">
                     <div className="px-8 mb-12 hidden lg:flex items-center space-x-4">
                         <div className="p-3 bg-pista-dark text-white rounded-2xl shadow-lg shadow-pista/20">
                             <BookOpen size={24} />
@@ -144,15 +144,20 @@ const AdminSidebar = () => {
                         </div>
                     </div>
 
-                    <div className="lg:hidden px-8 mb-12 flex items-center space-x-4 pt-10 lg:pt-0">
-                        <button onClick={toggleMenu} className="p-2 bg-slate-50 rounded-xl lg:hidden">
+                    <div className="lg:hidden px-8 mb-10 flex items-center justify-between pt-4">
+                        <div className="flex items-center space-x-3">
+                            <div className="p-2 bg-pista-dark text-white rounded-xl">
+                                <BookOpen size={18} />
+                            </div>
+                            <span className="font-black text-slate-900">Admin</span>
+                        </div>
+                        <button onClick={toggleMenu} className="p-2 bg-slate-50 rounded-xl">
                             <X size={20} className="text-slate-400" />
                         </button>
-                        <span className="font-black text-slate-900">Close Menu</span>
                     </div>
 
-                    <nav className="flex-1 px-6 space-y-4">
-                        <p className="px-4 text-[10px] font-black text-slate-300 uppercase tracking-widest mb-4">Core Management</p>
+                    <nav className="flex-1 px-4 lg:px-6 space-y-2 lg:space-y-4">
+                        <p className="px-4 text-[10px] font-black text-slate-300 uppercase tracking-widest mb-2 lg:mb-4">Core Management</p>
                         {menuItems.map((item) => {
                             const isActive = location.pathname === item.path;
                             return (

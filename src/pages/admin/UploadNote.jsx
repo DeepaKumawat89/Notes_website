@@ -115,14 +115,14 @@ const UploadNote = () => {
 
             <main className="flex-1 lg:ml-72 flex flex-col h-screen overflow-hidden pt-20 lg:pt-0">
                 {/* Premium Header */}
-                <header className="px-6 py-6 lg:px-10 lg:py-10 bg-white border-b border-gray-100 z-30">
-                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                        <div>
-                            <div className="flex items-center space-x-3 mb-2">
+                <header className="px-4 py-4 lg:px-10 lg:py-10 bg-white border-b border-gray-100 z-30">
+                    <div className="flex items-center justify-between gap-6">
+                        <div className="flex-1 min-w-0">
+                            <div className="hidden lg:flex items-center space-x-3 mb-2">
                                 <div className="h-2 w-10 bg-pista-dark rounded-full" />
                                 <span className="text-[10px] font-black text-pista-deep/40 uppercase tracking-[0.4em]">Asset Ingestion</span>
                             </div>
-                            <h1 className="text-4xl font-black text-slate-900 tracking-tight italic">
+                            <h1 className="text-2xl lg:text-4xl font-black text-slate-900 tracking-tight italic">
                                 Institutional <span className="text-pista-dark not-italic">Vault</span>
                             </h1>
                         </div>
@@ -131,8 +131,8 @@ const UploadNote = () => {
                                 <p className="text-[10px] font-black text-pista-dark uppercase tracking-widest">Storage Status</p>
                                 <p className="text-xs font-bold text-slate-400">92% Available</p>
                             </div>
-                            <div className="w-10 h-10 rounded-full bg-pista-light/30 flex items-center justify-center text-pista-dark">
-                                <Info size={20} />
+                            <div className="w-8 h-8 lg:w-10 lg:h-10 rounded-full bg-pista-light/30 flex items-center justify-center text-pista-dark">
+                                <Info className="w-4 h-4 lg:w-5 lg:h-5" />
                             </div>
                         </div>
                     </div>
@@ -165,7 +165,7 @@ const UploadNote = () => {
                                                             </div>
                                                             <span>{formData.classId}</span>
                                                         </div>
-                                                        <ChevronDown className={`text-slate-300 transition-transform duration-500 ${isClassOpen ? 'rotate-180' : ''}`} size={20} />
+                                                        <ChevronDown className={`text-slate-300 transition-transform duration-500 ${isClassOpen ? 'rotate-180' : ''} w-[18px] h-[18px] lg:w-5 lg:h-5`} />
                                                     </button>
 
                                                     <AnimatePresence>
@@ -194,21 +194,21 @@ const UploadNote = () => {
                                             </div>
 
                                             {/* Subject Select */}
-                                            <div className="space-y-4 relative">
+                                            <div className="space-y-3 lg:space-y-4 relative">
                                                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 italic">Knowledge Domain</label>
                                                 <div className="relative">
                                                     <button
                                                         type="button"
                                                         onClick={() => { setIsSubjectOpen(!isSubjectOpen); setIsClassOpen(false); }}
-                                                        className="w-full px-8 py-5 bg-slate-50 border-none rounded-2xl flex items-center justify-between focus:ring-4 focus:ring-pista/10 transition-all font-black text-slate-800 shadow-inner group"
+                                                        className="w-full px-6 lg:px-8 py-4 lg:py-5 bg-slate-50 border-none rounded-xl lg:rounded-2xl flex items-center justify-between focus:ring-4 focus:ring-pista/10 transition-all font-black text-slate-800 shadow-inner group text-sm lg:text-base"
                                                     >
-                                                        <div className="flex items-center gap-4">
-                                                            <div className="w-10 h-10 bg-pista-light/50 text-pista-dark rounded-xl flex items-center justify-center font-black italic">
+                                                        <div className="flex items-center gap-3 lg:gap-4">
+                                                            <div className="w-8 h-8 lg:w-10 lg:h-10 bg-pista-light/50 text-pista-dark rounded-lg lg:rounded-xl flex items-center justify-center font-black italic">
                                                                 {formData.subjectId.charAt(0)}
                                                             </div>
                                                             <span className="capitalize">{formData.subjectId}</span>
                                                         </div>
-                                                        <ChevronDown className={`text-slate-300 transition-transform duration-500 ${isSubjectOpen ? 'rotate-180' : ''}`} size={20} />
+                                                        <ChevronDown className={`text-slate-300 transition-transform duration-500 ${isSubjectOpen ? 'rotate-180' : ''} w-[18px] h-[18px] lg:w-5 lg:h-5`} />
                                                     </button>
 
                                                     <AnimatePresence>
@@ -237,39 +237,39 @@ const UploadNote = () => {
                                             </div>
                                         </div>
 
-                                        <div className="space-y-4">
+                                        <div className="space-y-3 lg:space-y-4">
                                             <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 italic">Manuscript Title</label>
                                             <input
                                                 type="text"
-                                                placeholder="Enter identifying title..."
+                                                placeholder="Enter title..."
                                                 value={formData.title}
                                                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                                                className="w-full px-8 py-5 bg-slate-50 border-none rounded-2xl focus:ring-4 focus:ring-pista/10 transition-all font-bold text-slate-700 shadow-inner"
+                                                className="w-full px-6 lg:px-8 py-4 lg:py-5 bg-slate-50 border-none rounded-xl lg:rounded-2xl focus:ring-4 focus:ring-pista/10 transition-all font-bold text-slate-700 shadow-inner text-sm lg:text-base"
                                                 required
                                             />
                                         </div>
 
-                                        <div className="space-y-4">
+                                        <div className="space-y-3 lg:space-y-4">
                                             <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 italic">Abstract / Meta Description</label>
                                             <textarea
-                                                rows="5"
-                                                placeholder="Provide a comprehensive summary of contents..."
+                                                rows="4"
+                                                placeholder="Provide summary..."
                                                 value={formData.description}
                                                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                                                className="w-full px-8 py-5 bg-slate-50 border-none rounded-[2rem] focus:ring-4 focus:ring-pista/10 transition-all font-bold text-slate-700 shadow-inner resize-none leading-relaxed"
+                                                className="w-full px-6 lg:px-8 py-4 lg:py-5 bg-slate-50 border-none rounded-2xl lg:rounded-[2rem] focus:ring-4 focus:ring-pista/10 transition-all font-bold text-slate-700 shadow-inner resize-none leading-relaxed text-sm lg:text-base"
                                             ></textarea>
                                         </div>
 
-                                        <div className="pt-6">
+                                        <div className="pt-4 lg:pt-6">
                                             <motion.button
                                                 whileHover={{ scale: 1.02 }}
                                                 whileTap={{ scale: 0.98 }}
                                                 type="submit"
                                                 disabled={uploading}
-                                                className="w-full py-6 bg-slate-900 text-white rounded-[2rem] font-black uppercase text-xs tracking-[0.4em] hover:bg-black hover:shadow-2xl transition-all disabled:opacity-50 flex items-center justify-center space-x-4"
+                                                className="w-full py-5 lg:py-6 bg-slate-900 text-white rounded-2xl lg:rounded-[2rem] font-black uppercase text-[10px] lg:text-xs tracking-[0.2em] lg:tracking-[0.4em] hover:bg-black hover:shadow-2xl transition-all disabled:opacity-50 flex items-center justify-center space-x-3 lg:space-x-4"
                                             >
-                                                {uploading ? <Loader2 className="animate-spin" size={24} /> : <CheckCircle2 size={24} strokeWidth={2.5} />}
-                                                <span>{uploading ? 'Processing Data...' : 'Authorize Publication'}</span>
+                                                {uploading ? <Loader2 className="animate-spin w-5 h-5 lg:w-6 lg:h-6" /> : <CheckCircle2 className="w-5 h-5 lg:w-6 lg:h-6" strokeWidth={2.5} />}
+                                                <span>{uploading ? 'Processing...' : 'Authorize Publication'}</span>
                                             </motion.button>
                                         </div>
                                     </form>
