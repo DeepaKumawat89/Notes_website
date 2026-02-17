@@ -38,9 +38,13 @@ const Navbar = () => {
 
                         // Session validation logic
                         const currentSessionId = localStorage.getItem('activeSessionId');
-                        // Only validate if we have a locally stored session ID and the database has an active list
-                        if (currentSessionId && data.activeSessions && data.activeSessions.length > 0) {
-                            if (!data.activeSessions.includes(currentSessionId)) {
+                        const lastSessionUpdate = localStorage.getItem('lastSessionUpdate');
+                        const gracePeriod = 5000; // 5 seconds grace period for new logins
+
+                        if (currentSessionId && data.activeSessions) {
+                            const isRecentlyUpdated = lastSessionUpdate && (Date.now() - parseInt(lastSessionUpdate) < gracePeriod);
+
+                            if (!isRecentlyUpdated && data.activeSessions.length > 0 && !data.activeSessions.includes(currentSessionId)) {
                                 handleLogout('Logged out: Active on another device');
                             }
                         }
@@ -69,18 +73,41 @@ const Navbar = () => {
     const handleLogout = async (customMessage) => {
         try {
             const currentSessionId = localStorage.getItem('activeSessionId');
-            if (user && currentSessionId) {
-                await updateDoc(doc(db, 'users', user.uid), {
-                    activeSessions: arrayRemove(currentSessionId)
-                });
-            }
-            await signOut(auth);
+            const currentUser = auth.currentUser;
+
+            // 1. Clear local storage immediately to stop session validation
             localStorage.removeItem('activeSessionId');
-            toast.success(customMessage || 'Logged out successfully');
+            localStorage.removeItem('lastSessionUpdate');
+
+            // 2. Close menus
             setIsMobileMenuOpen(false);
+
+            // 3. Try to update Firestore (don't let it block the logout if it fails)
+            if (currentUser && currentSessionId) {
+                try {
+                    await updateDoc(doc(db, 'users', currentUser.uid), {
+                        activeSessions: arrayRemove(currentSessionId)
+                    });
+                } catch (dbError) {
+                    console.warn("Could not remove session from database:", dbError);
+                }
+            }
+
+            // 4. Perform actual sign out
+            await signOut(auth);
+
+            toast.success(customMessage || 'Logged out successfully');
+
+            // 5. Force a navigation to home to ensure a clean state
+            // This prevents "white screens" if the user was on a protected state
+            window.location.href = '/';
+
         } catch (error) {
             console.error("Logout Error:", error);
             toast.error('Error logging out');
+            // Even if everything fails, try to clear local storage
+            localStorage.clear();
+            window.location.href = '/';
         }
     };
 
