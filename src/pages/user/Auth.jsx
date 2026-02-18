@@ -206,7 +206,7 @@ const AuthModal = ({ isOpen, onClose }) => {
   const handleToggle = () => setIsLogin(!isLogin);
 
   return (
-    <div className={`fixed inset-0 z-[100] flex flex-col items-center ${isStandalonePage ? 'overflow-y-auto bg-cream-light p-4 sm:p-8' : 'overflow-hidden justify-center p-2 sm:p-4'}`}>
+    <div className={`fixed inset-0 z-[100] flex flex-col items-center ${isStandalonePage ? 'overflow-y-auto bg-cream-light sm:p-8' : 'overflow-hidden justify-center p-2 sm:p-4'}`}>
       {/* Backdrop - Only show if modal */}
       {!isStandalonePage && (
         <motion.div
@@ -218,7 +218,7 @@ const AuthModal = ({ isOpen, onClose }) => {
       )}
 
       {/* Container */}
-      <div className={`relative w-full max-w-5xl lg:h-[720px] min-h-[500px] h-fit max-h-[96vh] sm:max-h-[90vh] [perspective:2000px] ${isStandalonePage ? 'my-auto' : ''}`}>
+      <div className={`relative w-full max-w-5xl lg:h-[720px] h-screen sm:h-fit sm:max-h-[90vh] [perspective:2000px] ${isStandalonePage ? 'my-auto' : ''}`}>
         <motion.div
           initial={false}
           animate={{ rotateY: isLogin ? 0 : 180 }}
@@ -226,7 +226,7 @@ const AuthModal = ({ isOpen, onClose }) => {
           className="w-full h-full relative [transform-style:preserve-3d]"
         >
           {/* FRONT SIDE (LOGIN) */}
-          <div className={`absolute inset-0 w-full h-full [backface-visibility:hidden] bg-white rounded-[1.5rem] sm:rounded-[2.5rem] shadow-2xl flex flex-col lg:flex-row overflow-hidden border border-pista-light/20 shadow-pista/5`}>
+          <div className={`absolute inset-0 w-full h-full [backface-visibility:hidden] bg-white rounded-none sm:rounded-[2.5rem] shadow-2xl flex flex-col lg:flex-row overflow-y-visible sm:overflow-hidden border border-pista-light/20 shadow-pista/5`}>
             {!isStandalonePage && (
               <button onClick={onClose} className="absolute top-4 right-4 sm:top-6 sm:right-6 z-20 p-2 bg-white/80 hover:bg-white rounded-full text-pista-deep shadow-md transition-all active:scale-95">
                 <X size={20} />
@@ -241,7 +241,7 @@ const AuthModal = ({ isOpen, onClose }) => {
               </div>
             </div>
 
-            <div className="w-full lg:w-7/12 flex flex-col bg-white overflow-y-auto custom-scrollbar">
+            <div className="w-full lg:w-7/12 flex flex-col bg-white overflow-y-visible lg:overflow-y-auto custom-scrollbar">
               <div className="max-w-md mx-auto w-full p-6 sm:p-8 lg:p-12 my-auto">
                 <header className="mb-8 text-center lg:text-left">
                   <h1 className="text-3xl sm:text-4xl font-black text-pista-deep mb-2">Login</h1>
@@ -306,7 +306,7 @@ const AuthModal = ({ isOpen, onClose }) => {
           </div>
 
           {/* BACK SIDE (SIGNUP) */}
-          <div className={`absolute inset-0 w-full h-full [backface-visibility:hidden] [transform:rotateY(180deg)] bg-white rounded-[1.5rem] sm:rounded-[2.5rem] shadow-2xl flex flex-col lg:flex-row-reverse overflow-hidden border border-pista-light/20 shadow-pista/5`}>
+          <div className={`absolute inset-0 w-full h-full [backface-visibility:hidden] [transform:rotateY(180deg)] bg-white rounded-none sm:rounded-[2.5rem] shadow-2xl flex flex-col lg:flex-row-reverse overflow-y-visible sm:overflow-hidden border border-pista-light/20 shadow-pista/5`}>
             {!isStandalonePage && (
               <button onClick={onClose} className="absolute top-6 left-6 z-20 p-2 bg-white/80 hover:bg-white rounded-full text-pista-deep shadow-md transition-all active:scale-95">
                 <X size={20} />
@@ -321,7 +321,7 @@ const AuthModal = ({ isOpen, onClose }) => {
               </div>
             </div>
 
-            <div className="w-full lg:w-7/12 flex flex-col bg-white overflow-y-auto custom-scrollbar">
+            <div className="w-full lg:w-7/12 flex flex-col bg-white overflow-y-visible lg:overflow-y-auto custom-scrollbar">
               <div className="max-w-md mx-auto w-full p-6 sm:p-8 lg:p-12 my-auto">
                 <header className="mb-6 text-center lg:text-left">
                   <h1 className="text-3xl sm:text-4xl font-black text-pista-deep mb-2">Register</h1>
