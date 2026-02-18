@@ -51,6 +51,7 @@ const AuthModal = ({ isOpen, onClose }) => {
 
   const manageSession = async (userEmail) => {
     try {
+      if (!userEmail) return true;
       const sessionId = Date.now().toString(36) + Math.random().toString(36).substring(2);
       const userRef = doc(db, 'users', userEmail);
       const userSnap = await getDoc(userRef);
@@ -78,8 +79,12 @@ const AuthModal = ({ isOpen, onClose }) => {
         localStorage.setItem('activeSessionId', sessionId);
         localStorage.setItem('lastSessionUpdate', Date.now().toString());
         return true;
+      } else {
+        // If doc doesn't exist for some reason, still set local session to prevent infinite login loops
+        localStorage.setItem('activeSessionId', sessionId);
+        localStorage.setItem('lastSessionUpdate', Date.now().toString());
+        return true;
       }
-      return true;
     } catch (error) {
       console.error("Session Error:", error);
       return true; // Proceed anyway on doc error to prevent lockout
@@ -115,7 +120,7 @@ const AuthModal = ({ isOpen, onClose }) => {
         await setDoc(doc(db, 'users', user.email), {
           uid: user.uid,
           name: formData.name,
-          email: formData.email,
+          email: user.email,
           createdAt: serverTimestamp(),
           role: 'user',
           viewsCount: 0,
@@ -134,10 +139,21 @@ const AuthModal = ({ isOpen, onClose }) => {
     } catch (error) {
       console.error("Auth Error:", error);
       let message = "An error occurred. Please try again.";
-      if (error.code === 'auth/email-already-in-use') message = "Email already in use.";
-      if (error.code === 'auth/invalid-credential') message = "Invalid email or password.";
+
+      if (error.code === 'auth/email-already-in-use') message = "This email is already registered.";
+      if (error.code === 'auth/invalid-credential') message = "Invalid email or password. Please try again.";
       if (error.code === 'auth/weak-password') message = "Password should be at least 6 characters.";
-      toast.error(message, { style: { borderRadius: '1rem' } });
+      if (error.code === 'auth/user-not-found') message = "No account found with this email.";
+      if (error.code === 'auth/wrong-password') message = "Incorrect password.";
+      if (error.code === 'auth/too-many-requests') message = "Too many failed attempts. Please try later.";
+      if (error.code === 'auth/user-disabled') message = "This account has been disabled.";
+      if (error.message.includes('permission-denied')) message = "Database error: Access Denied.";
+      if (error.code === 'auth/network-request-failed') message = "Network error. Please check your connection.";
+
+      toast.error(message, {
+        duration: 4000,
+        style: { borderRadius: '1rem', background: '#333', color: '#fff' }
+      });
     } finally {
       setLoading(false);
     }
@@ -146,10 +162,27 @@ const AuthModal = ({ isOpen, onClose }) => {
   const handleGoogleLogin = async () => {
     if (loading) return;
     setLoading(true);
+
+    // Use clear provider config
     const provider = new GoogleAuthProvider();
+    provider.setCustomParameters({ prompt: 'select_account' });
+
     try {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
+
+      if (!user.email) {
+        throw new Error("No email associated with this Google account.");
+      }
+
+      // BLOCK ADMIN EMAILS FROM USER AUTH (CONSISTENCY)
+      if (user.email && user.email.toLowerCase().startsWith('admin')) {
+        await signOut(auth); // Sign out immediately if it's an admin account
+        toast.error('Access Denied: Admin accounts must use the Admin Portal.');
+        setLoading(false);
+        return;
+      }
+
       const userDocRef = doc(db, 'users', user.email);
       const userDoc = await getDoc(userDocRef);
 
@@ -176,7 +209,20 @@ const AuthModal = ({ isOpen, onClose }) => {
       }
     } catch (error) {
       console.error("Google Auth Error:", error);
-      toast.error("Failed to sign in with Google.");
+      let message = "Failed to sign in with Google.";
+
+      // Detailed error reporting for debugging
+      if (error.code === 'auth/popup-blocked') message = "The sign-in popup was blocked. Please allow popups for this site.";
+      if (error.code === 'auth/cancelled-popup-request') return;
+      if (error.code === 'auth/popup-closed-by-user') return;
+      if (error.code === 'auth/operation-not-allowed') message = "Google Sign-In is not enabled in the Firebase Console.";
+      if (error.code === 'auth/internal-error') message = "Internal Firebase error. Please check your internet connection.";
+      if (error.message.includes('permission-denied')) message = "Database access denied. Please contact support.";
+
+      toast.error(message, {
+        duration: 5000,
+        style: { borderRadius: '1rem', background: '#333', color: '#fff' }
+      });
     } finally {
       setLoading(false);
     }
@@ -197,6 +243,7 @@ const AuthModal = ({ isOpen, onClose }) => {
       console.error("Reset Error:", error);
       let message = "Failed to send reset email.";
       if (error.code === 'auth/user-not-found') message = "No account found with this email.";
+      if (error.code === 'auth/too-many-requests') message = "Too many requests. Try again later.";
       toast.error(message, { style: { borderRadius: '1rem' } });
     } finally {
       setLoading(false);
@@ -206,19 +253,19 @@ const AuthModal = ({ isOpen, onClose }) => {
   const handleToggle = () => setIsLogin(!isLogin);
 
   return (
-    <div className={`fixed inset-0 z-[100] flex flex-col items-center ${isStandalonePage ? 'overflow-y-auto bg-cream-light sm:p-8' : 'overflow-hidden justify-center p-2 sm:p-4'}`}>
+    <div className={`fixed inset-0 z-[100] flex flex-col items-center ${isStandalonePage ? 'overflow-y-auto bg-cream-light' : 'overflow-y-auto justify-center bg-pista-deep/40 backdrop-blur-md'} p-4`}>
       {/* Backdrop - Only show if modal */}
       {!isStandalonePage && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           onClick={onClose}
-          className="absolute inset-0 bg-pista-deep/40 backdrop-blur-md"
+          className="fixed inset-0 -z-10"
         />
       )}
 
-      {/* Container */}
-      <div className={`relative w-full max-w-5xl lg:h-[720px] h-screen sm:h-fit sm:max-h-[90vh] [perspective:2000px] ${isStandalonePage ? 'my-auto' : ''}`}>
+      {/* Container - Added min-height for mobile to prevent card collapse */}
+      <div className={`relative w-full max-w-5xl lg:h-[620px] h-[580px] sm:h-fit sm:max-h-[85vh] [perspective:2000px] my-auto`}>
         <motion.div
           initial={false}
           animate={{ rotateY: isLogin ? 0 : 180 }}
@@ -226,7 +273,7 @@ const AuthModal = ({ isOpen, onClose }) => {
           className="w-full h-full relative [transform-style:preserve-3d]"
         >
           {/* FRONT SIDE (LOGIN) */}
-          <div className={`absolute inset-0 w-full h-full [backface-visibility:hidden] bg-white rounded-none sm:rounded-[2.5rem] shadow-2xl flex flex-col lg:flex-row overflow-y-visible sm:overflow-hidden border border-pista-light/20 shadow-pista/5`}>
+          <div className={`absolute inset-0 w-full h-full [backface-visibility:hidden] bg-white rounded-[2.5rem] shadow-2xl flex flex-col lg:flex-row overflow-y-auto sm:overflow-hidden border border-pista-light/20 shadow-pista/5`}>
             {!isStandalonePage && (
               <button onClick={onClose} className="absolute top-4 right-4 sm:top-6 sm:right-6 z-20 p-2 bg-white/80 hover:bg-white rounded-full text-pista-deep shadow-md transition-all active:scale-95">
                 <X size={20} />
@@ -241,7 +288,7 @@ const AuthModal = ({ isOpen, onClose }) => {
               </div>
             </div>
 
-            <div className="w-full lg:w-7/12 flex flex-col bg-white overflow-y-visible lg:overflow-y-auto custom-scrollbar">
+            <div className="w-full lg:w-7/12 flex flex-col bg-white overflow-y-auto custom-scrollbar">
               <div className="max-w-md mx-auto w-full p-6 sm:p-8 lg:p-12 my-auto">
                 <header className="mb-8 text-center lg:text-left">
                   <h1 className="text-3xl sm:text-4xl font-black text-pista-deep mb-2">Login</h1>
@@ -306,7 +353,7 @@ const AuthModal = ({ isOpen, onClose }) => {
           </div>
 
           {/* BACK SIDE (SIGNUP) */}
-          <div className={`absolute inset-0 w-full h-full [backface-visibility:hidden] [transform:rotateY(180deg)] bg-white rounded-none sm:rounded-[2.5rem] shadow-2xl flex flex-col lg:flex-row-reverse overflow-y-visible sm:overflow-hidden border border-pista-light/20 shadow-pista/5`}>
+          <div className={`absolute inset-0 w-full h-full [backface-visibility:hidden] [transform:rotateY(180deg)] bg-white rounded-[2.5rem] shadow-2xl flex flex-col lg:flex-row-reverse overflow-y-auto sm:overflow-hidden border border-pista-light/20 shadow-pista/5`}>
             {!isStandalonePage && (
               <button onClick={onClose} className="absolute top-6 left-6 z-20 p-2 bg-white/80 hover:bg-white rounded-full text-pista-deep shadow-md transition-all active:scale-95">
                 <X size={20} />
@@ -321,7 +368,7 @@ const AuthModal = ({ isOpen, onClose }) => {
               </div>
             </div>
 
-            <div className="w-full lg:w-7/12 flex flex-col bg-white overflow-y-visible lg:overflow-y-auto custom-scrollbar">
+            <div className="w-full lg:w-7/12 flex flex-col bg-white overflow-y-auto custom-scrollbar">
               <div className="max-w-md mx-auto w-full p-6 sm:p-8 lg:p-12 my-auto">
                 <header className="mb-6 text-center lg:text-left">
                   <h1 className="text-3xl sm:text-4xl font-black text-pista-deep mb-2">Register</h1>
@@ -382,7 +429,7 @@ const AuthModal = ({ isOpen, onClose }) => {
                   </button>
                 </form>
 
-                <footer className="mt-10 text-center border-t border-pista-light/20 pt-6">
+                <footer className="mt-6 text-center border-t border-pista-light/20 pt-4">
                   <p className="text-pista-deep/30 font-bold mb-2 uppercase tracking-tighter text-sm">Already a member?</p>
                   <button onClick={handleToggle} disabled={loading} className="text-pista-dark font-black hover:text-pista-deep transition-colors text-xl underline decoration-pista-light underline-offset-8 decoration-4 disabled:opacity-50">Back to login</button>
                 </footer>
