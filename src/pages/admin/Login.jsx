@@ -27,7 +27,7 @@ const AdminLogin = () => {
                     localStorage.setItem('adminSessionId', localSessionId);
                     localStorage.setItem('adminLastUpdate', Date.now().toString());
 
-                    const adminRef = doc(db, 'admins', user.uid);
+                    const adminRef = doc(db, 'admins', user.email);
                     try {
                         const adminSnap = await getDoc(adminRef);
 
@@ -96,7 +96,7 @@ const AdminLogin = () => {
             localStorage.setItem('adminSessionId', sessionId);
             localStorage.setItem('adminLastUpdate', Date.now().toString());
 
-            const adminRef = doc(db, 'admins', user.uid);
+            const adminRef = doc(db, 'admins', user.email);
             const adminSnap = await getDoc(adminRef);
 
             let activeSessions = [];

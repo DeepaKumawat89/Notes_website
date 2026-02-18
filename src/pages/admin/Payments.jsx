@@ -187,57 +187,57 @@ const Payments = () => {
                                             animate={{ opacity: 1, y: 0 }}
                                             exit={{ opacity: 0, scale: 0.95 }}
                                             transition={{ delay: idx * 0.05, duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
-                                            className="bg-white rounded-[2rem] lg:rounded-[3rem] p-6 lg:p-8 border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.02)] hover:shadow-[0_20px_50px_rgba(107,136,108,0.1)] transition-all group overflow-hidden relative"
+                                            className="bg-white rounded-2xl lg:rounded-[2.5rem] p-2.5 lg:p-6 border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.02)] hover:shadow-[0_10px_40px_rgba(107,136,108,0.08)] transition-all group overflow-hidden relative"
                                         >
                                             {/* Status Background Accent */}
                                             <div className={`absolute top-0 right-0 w-32 h-32 -mr-16 -mt-16 rounded-full blur-3xl opacity-10 transition-colors ${req.status === 'approved' ? 'bg-green-500' :
                                                 req.status === 'rejected' ? 'bg-red-500' : 'bg-amber-500 group-hover:bg-pista'
                                                 }`} />
 
-                                            <div className="flex justify-between items-start mb-10 relative z-10">
-                                                <div className="flex items-center space-x-5">
+                                            <div className="flex justify-between items-start mb-2 lg:mb-4 relative z-10">
+                                                <div className="flex items-center space-x-2.5 lg:space-x-4">
                                                     <div className="relative">
-                                                        <div className="w-16 h-16 bg-pista-light/30 rounded-[1.5rem] flex items-center justify-center text-pista-dark font-black text-2xl italic shadow-inner">
+                                                        <div className="w-10 h-10 lg:w-16 lg:h-16 bg-pista-light/30 rounded-lg lg:rounded-[1.5rem] flex items-center justify-center text-pista-dark font-black text-lg lg:text-2xl italic shadow-inner">
                                                             {req.userName?.charAt(0).toUpperCase()}
                                                         </div>
-                                                        <div className={`absolute -bottom-1 -right-1 w-6 h-6 rounded-lg flex items-center justify-center text-white shadow-sm ${req.status === 'approved' ? 'bg-green-500 animate-pulse' :
+                                                        <div className={`absolute -bottom-0.5 -right-0.5 w-4 h-4 lg:w-6 lg:h-6 rounded-md flex items-center justify-center text-white shadow-sm ${req.status === 'approved' ? 'bg-green-500 animate-pulse' :
                                                             req.status === 'rejected' ? 'bg-red-500' : 'bg-amber-500'
                                                             }`}>
-                                                            {req.status === 'approved' ? <Check size={12} strokeWidth={4} /> :
-                                                                req.status === 'rejected' ? <X size={12} strokeWidth={4} /> : <Clock size={12} strokeWidth={4} />}
+                                                            {req.status === 'approved' ? <Check size={8} strokeWidth={4} /> :
+                                                                req.status === 'rejected' ? <X size={8} strokeWidth={4} /> : <Clock size={8} strokeWidth={4} />}
                                                         </div>
                                                     </div>
                                                     <div>
-                                                        <h3 className="text-2xl font-black text-slate-900 leading-tight">{req.userName}</h3>
-                                                        <p className="text-sm font-bold text-slate-400 flex items-center gap-1.5 mt-1">
-                                                            <Mail size={14} className="text-pista-dark" /> {req.userEmail}
+                                                        <h3 className="text-base lg:text-2xl font-black text-slate-900 leading-tight">{req.userName}</h3>
+                                                        <p className="text-[10px] lg:text-sm font-bold text-slate-400 flex items-center gap-1 mt-0.5">
+                                                            <Mail size={10} className="text-pista-dark" /> {req.userEmail}
                                                         </p>
                                                     </div>
                                                 </div>
 
                                                 <div className="text-right">
-                                                    <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest mb-1 italic">Transaction ID</p>
-                                                    <p className="text-xs font-mono font-bold text-slate-400">#{req.id.slice(-8).toUpperCase()}</p>
+                                                    <p className="text-[8px] lg:text-[10px] font-black text-slate-300 uppercase tracking-widest mb-0.5 italic leading-none">ID</p>
+                                                    <p className="text-[9px] lg:text-xs font-mono font-bold text-slate-400">#{req.id.slice(-6).toUpperCase()}</p>
                                                 </div>
                                             </div>
 
-                                            <div className="grid grid-cols-2 gap-px bg-slate-100/50 rounded-[2rem] overflow-hidden mb-8 border border-slate-100">
-                                                <div className="bg-slate-50/50 p-6 backdrop-blur-sm">
-                                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Entitlement</p>
-                                                    <p className="text-xl font-black text-slate-800 italic">{req.planName}</p>
+                                            <div className="grid grid-cols-2 gap-px bg-slate-100/50 rounded-xl lg:rounded-[2rem] overflow-hidden mb-2 lg:mb-4 border border-slate-100">
+                                                <div className="bg-slate-50/50 p-2 lg:p-4 backdrop-blur-sm">
+                                                    <p className="text-[8px] lg:text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 leading-none">Plan</p>
+                                                    <p className="text-xs lg:text-lg font-black text-slate-800 italic">{req.planName}</p>
                                                 </div>
-                                                <div className="bg-slate-50/50 p-6 backdrop-blur-sm">
-                                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Contribution</p>
-                                                    <p className="text-xl font-black text-pista-dark">{req.amount}</p>
+                                                <div className="bg-slate-50/50 p-2 lg:p-4 backdrop-blur-sm">
+                                                    <p className="text-[8px] lg:text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 leading-none">Paid</p>
+                                                    <p className="text-xs lg:text-lg font-black text-pista-dark">{req.amount}</p>
                                                 </div>
-                                                <div className="col-span-2 bg-white p-6">
-                                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Transmission Date</p>
+                                                <div className="col-span-2 bg-white p-2 lg:p-4">
+                                                    <p className="text-[8px] lg:text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 leading-none">Date</p>
                                                     <div className="flex items-center justify-between">
-                                                        <p className="text-sm font-bold text-slate-600 flex items-center gap-2">
-                                                            <Clock size={14} className="text-pista" />
-                                                            {req.createdAt ? new Date(req.createdAt.seconds * 1000).toLocaleString('en-IN', { dateStyle: 'long', timeStyle: 'short' }) : 'Pending...'}
+                                                        <p className="text-[10px] lg:text-sm font-bold text-slate-600 flex items-center gap-1.5">
+                                                            <Clock size={10} className="text-pista" />
+                                                            {req.createdAt ? new Date(req.createdAt.seconds * 1000).toLocaleString('en-IN', { dateStyle: 'short', timeStyle: 'short' }) : 'Pending...'}
                                                         </p>
-                                                        <span className={`px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-tighter ${req.status === 'approved' ? 'bg-green-50 text-green-600' :
+                                                        <span className={`px-2 py-0.5 rounded-md text-[8px] lg:text-[10px] font-black uppercase tracking-tighter ${req.status === 'approved' ? 'bg-green-50 text-green-600' :
                                                             req.status === 'rejected' ? 'bg-red-50 text-red-600' : 'bg-amber-50 text-amber-600'
                                                             }`}>
                                                             {req.status}
@@ -246,36 +246,36 @@ const Payments = () => {
                                                 </div>
                                             </div>
 
-                                            <div className="flex items-center gap-4 relative z-10">
+                                            <div className="flex items-center gap-2 relative z-10">
                                                 <a
                                                     href={req.receiptUrl}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
-                                                    className="flex-1 flex items-center justify-center space-x-3 py-5 bg-slate-900 rounded-[1.5rem] font-black text-white hover:bg-slate-800 transition-all active:scale-[0.98] shadow-xl shadow-slate-200"
+                                                    className="flex-1 flex items-center justify-center space-x-1.5 py-2.5 lg:py-4 bg-slate-900 rounded-lg lg:rounded-[1.5rem] font-black text-white hover:bg-slate-800 transition-all active:scale-[0.98] shadow-lg shadow-slate-200"
                                                 >
-                                                    <span className="uppercase text-xs tracking-widest">Audit Receipt</span>
-                                                    <ExternalLink size={18} />
+                                                    <span className="uppercase text-[9px] lg:text-xs tracking-widest">Audit Receipt</span>
+                                                    <ExternalLink size={14} className="lg:w-[18px] lg:h-[18px]" />
                                                 </a>
 
                                                 {req.status === 'pending' && (
-                                                    <div className="flex gap-3">
+                                                    <div className="flex gap-2">
                                                         <motion.button
                                                             whileHover={{ scale: 1.05 }}
                                                             whileTap={{ scale: 0.95 }}
                                                             onClick={() => handleReject(req.id)}
-                                                            className="p-5 bg-white border border-red-100 text-red-500 rounded-[1.5rem] hover:bg-red-50 transition-colors shadow-sm"
-                                                            title="Decline Request"
+                                                            className="p-2.5 lg:p-4 bg-white border border-red-100 text-red-500 rounded-lg lg:rounded-[1.5rem] hover:bg-red-50 transition-colors shadow-sm"
+                                                            title="Decline"
                                                         >
-                                                            <X size={20} strokeWidth={3} />
+                                                            <X size={16} lg:size={20} strokeWidth={3} />
                                                         </motion.button>
                                                         <motion.button
                                                             whileHover={{ scale: 1.05 }}
                                                             whileTap={{ scale: 0.95 }}
                                                             onClick={() => handleApprove(req)}
-                                                            className="p-5 bg-pista-dark text-white rounded-[1.5rem] hover:bg-pista-deep shadow-2xl shadow-pista/30 transition-all"
-                                                            title="Validate & Activate"
+                                                            className="p-2.5 lg:p-4 bg-pista-dark text-white rounded-lg lg:rounded-[1.5rem] hover:bg-pista-deep shadow-xl shadow-pista/30 transition-all"
+                                                            title="Approve"
                                                         >
-                                                            <Check size={20} strokeWidth={3} />
+                                                            <Check size={16} lg:size={20} strokeWidth={3} />
                                                         </motion.button>
                                                     </div>
                                                 )}

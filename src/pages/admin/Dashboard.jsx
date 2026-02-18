@@ -236,25 +236,25 @@ const AdminDashboard = () => {
                         ) : (
                             <>
                                 {/* Stats Matrix */}
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-8">
+                                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-8">
                                     {stats.map((stat, idx) => (
                                         <motion.div
                                             key={idx}
                                             initial={{ opacity: 0, y: 20 }}
                                             animate={{ opacity: 1, y: 0 }}
                                             transition={{ delay: idx * 0.1, duration: 0.5 }}
-                                            className="bg-white p-6 lg:p-8 rounded-[2rem] lg:rounded-[2.5rem] border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.02)] hover:shadow-[0_20px_50px_rgba(107,136,108,0.1)] transition-all group"
+                                            className="bg-white p-4 sm:p-6 lg:p-8 rounded-[1.5rem] sm:rounded-[2rem] lg:rounded-[2.5rem] border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.02)] hover:shadow-[0_20px_50px_rgba(107,136,108,0.1)] transition-all group"
                                         >
-                                            <div className="flex justify-between items-center mb-6 lg:mb-8">
-                                                <div className={`p-3 lg:p-4 rounded-xl lg:rounded-2xl ${stat.bg} ${stat.color} shadow-inner transition-transform group-hover:scale-110`}>
-                                                    <stat.icon className="w-5 h-5 lg:w-6 lg:h-6" strokeWidth={2.5} />
+                                            <div className="flex justify-between items-center mb-4 sm:mb-6 lg:mb-8">
+                                                <div className={`p-2.5 sm:p-3 lg:p-4 rounded-xl lg:rounded-2xl ${stat.bg} ${stat.color} shadow-inner transition-transform group-hover:scale-110`}>
+                                                    <stat.icon className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6" strokeWidth={2.5} />
                                                 </div>
-                                                <div className="px-3 py-1 bg-slate-50 rounded-lg text-slate-400 text-[10px] font-black italic uppercase tracking-widest">
+                                                <div className="hidden sm:block px-3 py-1 bg-slate-50 rounded-lg text-slate-400 text-[10px] font-black italic uppercase tracking-widest">
                                                     Real-time
                                                 </div>
                                             </div>
-                                            <h3 className="text-slate-400 font-black text-[10px] uppercase tracking-[0.2em] mb-1">{stat.label}</h3>
-                                            <p className="text-3xl font-black text-slate-900 tracking-tight italic">{stat.value}</p>
+                                            <h3 className="text-slate-400 font-black text-[8px] sm:text-[10px] uppercase tracking-[0.1em] sm:tracking-[0.2em] mb-1 truncate">{stat.label}</h3>
+                                            <p className="text-xl sm:text-2xl lg:text-3xl font-black text-slate-900 tracking-tight italic">{stat.value}</p>
                                         </motion.div>
                                     ))}
                                 </div>
@@ -280,41 +280,41 @@ const AdminDashboard = () => {
                                                 initial={{ opacity: 0, x: -20 }}
                                                 animate={{ opacity: 1, x: 0 }}
                                                 transition={{ delay: 0.4 + (idx * 0.05) }}
-                                                className="group bg-white rounded-[2rem] p-5 sm:p-6 border border-gray-100 shadow-sm hover:shadow-[0_20px_50px_rgba(0,0,0,0.04)] hover:border-pista-light/30 transition-all flex flex-col sm:flex-row sm:items-center gap-6 sm:gap-8 relative overflow-hidden"
+                                                className="group bg-white rounded-[1.5rem] sm:rounded-[2rem] p-3 sm:p-6 border border-gray-100 shadow-sm hover:shadow-[0_20px_50px_rgba(0,0,0,0.04)] hover:border-pista-light/30 transition-all flex items-center gap-4 sm:gap-8 relative overflow-hidden"
                                             >
                                                 {/* Left Accent Bar */}
-                                                <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-pista-dark/10 group-hover:bg-pista-dark transition-colors" />
+                                                <div className="absolute left-0 top-0 bottom-0 w-1 bg-pista-dark/10 group-hover:bg-pista-dark transition-colors" />
 
-                                                <div className="w-14 h-14 sm:w-16 sm:h-16 bg-slate-50 rounded-[1.2rem] sm:rounded-[1.5rem] flex items-center justify-center text-slate-800 group-hover:bg-slate-900 group-hover:text-white transition-all shadow-inner flex-shrink-0">
-                                                    <FileText size={24} strokeWidth={2.5} />
+                                                <div className="w-12 h-12 sm:w-16 sm:h-16 bg-slate-50 rounded-xl sm:rounded-[1.5rem] flex items-center justify-center text-slate-800 group-hover:bg-slate-900 group-hover:text-white transition-all shadow-inner flex-shrink-0">
+                                                    <FileText size={20} className="sm:w-6 sm:h-6" strokeWidth={2.5} />
                                                 </div>
 
                                                 <div className="flex-1 min-w-0">
-                                                    <div className="flex items-center space-x-3 mb-1">
-                                                        <span className="px-3 py-0.5 bg-pista-light/30 text-pista-dark text-[9px] font-black uppercase tracking-widest rounded-full">
+                                                    <div className="flex items-center space-x-2 mb-0.5 sm:mb-1">
+                                                        <span className="px-2 py-0.5 bg-pista-light/30 text-pista-dark text-[8px] sm:text-[9px] font-black uppercase tracking-widest rounded-full">
                                                             {note.classId}
                                                         </span>
-                                                        <span className="text-[9px] font-black text-slate-300 uppercase tracking-widest truncate">
+                                                        <span className="hidden sm:inline text-[8px] sm:text-[9px] font-black text-slate-300 uppercase tracking-widest truncate">
                                                             ID: {note.id.slice(0, 8)}
                                                         </span>
                                                     </div>
-                                                    <h4 className="font-black text-lg sm:text-xl text-slate-900 truncate group-hover:text-pista-dark transition-colors leading-tight">
+                                                    <h4 className="font-black text-sm sm:text-lg text-slate-900 truncate group-hover:text-pista-dark transition-colors leading-tight">
                                                         {note.title || 'Untitled Fragment'}
                                                     </h4>
-                                                    <div className="flex items-center space-x-4 mt-2">
-                                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter truncate max-w-[100px] sm:max-w-none">
-                                                            Domain: <span className="text-slate-900">{note.subjectId}</span>
+                                                    <div className="flex items-center space-x-3 mt-1">
+                                                        <p className="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-tighter truncate max-w-[80px] sm:max-w-none">
+                                                            <span className="text-slate-900">{note.subjectId}</span>
                                                         </p>
                                                         <div className="w-1 h-1 bg-slate-200 rounded-full" />
-                                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter flex items-center gap-1">
+                                                        <p className="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-tighter flex items-center gap-1">
                                                             <Clock size={10} className="text-pista-dark" />
                                                             {note.createdAt?.toDate().toLocaleDateString('en-IN', { month: 'short', day: 'numeric' })}
                                                         </p>
                                                     </div>
                                                 </div>
 
-                                                <div className="flex items-center justify-between sm:justify-end space-x-6 sm:pr-4">
-                                                    <div className="hidden md:flex flex-col items-end">
+                                                <div className="flex items-center gap-4 flex-shrink-0">
+                                                    <div className="hidden lg:flex flex-col items-end">
                                                         <div className="flex items-center -space-x-2 mb-2">
                                                             {[1, 2, 3].map((i) => (
                                                                 <div key={i} className="w-6 h-6 rounded-full bg-slate-100 border-2 border-white flex items-center justify-center text-[8px] font-black text-slate-400">
@@ -327,9 +327,9 @@ const AdminDashboard = () => {
 
                                                     <motion.button
                                                         whileHover={{ x: 5 }}
-                                                        className="p-3 sm:p-4 bg-slate-50 text-slate-300 hover:bg-pista-dark hover:text-white rounded-2xl transition-all shadow-sm ml-auto sm:ml-0"
+                                                        className="p-3 bg-slate-50 text-slate-300 hover:bg-pista-dark hover:text-white rounded-xl transition-all shadow-sm"
                                                     >
-                                                        <ArrowUpRight size={20} strokeWidth={3} />
+                                                        <ArrowUpRight size={18} strokeWidth={3} />
                                                     </motion.button>
                                                 </div>
                                             </motion.div>

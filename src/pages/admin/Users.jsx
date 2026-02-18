@@ -125,39 +125,39 @@ const UsersList = () => {
                                             animate={{ opacity: 1, y: 0 }}
                                             exit={{ opacity: 0, scale: 0.95 }}
                                             transition={{ delay: idx * 0.03, duration: 0.4 }}
-                                            className="bg-white rounded-[3rem] p-8 border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.02)] hover:shadow-[0_20px_50px_rgba(107,136,108,0.1)] transition-all group overflow-hidden"
+                                            className="bg-white rounded-[1.5rem] sm:rounded-[3rem] p-3 sm:p-8 border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.02)] hover:shadow-[0_20px_50px_rgba(107,136,108,0.1)] transition-all group overflow-hidden"
                                         >
-                                            <div className="flex items-center justify-between mb-8">
+                                            <div className="flex items-center justify-between mb-2 sm:mb-8">
                                                 <div className="relative">
-                                                    <div className="w-16 h-16 bg-pista-light/30 rounded-[1.5rem] flex items-center justify-center text-pista-dark font-black text-2xl italic shadow-inner">
-                                                        {user.name?.charAt(0).toUpperCase() || <User size={24} />}
+                                                    <div className="w-10 h-10 sm:w-16 sm:h-16 bg-pista-light/30 rounded-lg sm:rounded-[1.5rem] flex items-center justify-center text-pista-dark font-black text-lg sm:text-2xl italic shadow-inner">
+                                                        {user.name?.charAt(0).toUpperCase() || <User size={18} className="sm:w-6 sm:h-6" />}
                                                     </div>
                                                     {user.subscription === 'premium' && (
-                                                        <div className="absolute -top-2 -right-2 p-1.5 bg-purple-600 text-white rounded-lg shadow-lg border-2 border-white">
-                                                            <Shield size={12} fill="currentColor" />
+                                                        <div className="absolute -top-1 -right-1 p-0.5 bg-purple-600 text-white rounded-md shadow-lg border border-white">
+                                                            <Shield size={8} fill="currentColor" />
                                                         </div>
                                                     )}
                                                 </div>
                                                 <div className="text-right">
-                                                    <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest italic border ${user.subscription === 'premium' ? 'bg-purple-100 text-purple-700 border-purple-200' : 'bg-pista-light text-pista-dark border-pista'
+                                                    <span className={`px-2 py-0.5 sm:px-4 sm:py-1.5 rounded-full text-[8px] sm:text-[10px] font-black uppercase tracking-widest italic border ${user.subscription === 'premium' ? 'bg-purple-100 text-purple-700 border-purple-200' : 'bg-pista-light text-pista-dark border-pista'
                                                         }`}>
                                                         {user.subscription || 'free tier'}
                                                     </span>
                                                 </div>
                                             </div>
 
-                                            <div className="mb-8">
-                                                <h3 className="text-xl font-black text-slate-900 truncate">{user.name || 'Anonymous User'}</h3>
-                                                <p className="text-sm font-bold text-slate-400 truncate mt-1">{user.email || 'no-email-recorded'}</p>
+                                            <div className="mb-2 sm:mb-8 px-1">
+                                                <h3 className="text-lg sm:text-xl font-black text-slate-900 truncate tracking-tight">{user.name || 'Anonymous User'}</h3>
+                                                <p className="text-xs sm:text-sm font-bold text-slate-400 truncate mt-0">{user.email || 'no-email-recorded'}</p>
                                             </div>
 
-                                            <div className="space-y-6 pt-6 border-t border-slate-50">
+                                            <div className="space-y-3 sm:space-y-6 pt-2 sm:pt-6 border-t border-slate-50 px-1">
                                                 <div>
-                                                    <div className="flex justify-between items-end mb-2">
-                                                        <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest italic">Inventory Views</p>
-                                                        <p className="text-xs font-black text-slate-700">{user.viewsCount || 0}/3 <span className="text-slate-300 font-bold ml-1">Limit</span></p>
+                                                    <div className="flex justify-between items-end mb-1 sm:mb-2">
+                                                        <p className="text-[9px] sm:text-[10px] font-black text-slate-300 uppercase tracking-widest italic">Inventory Views</p>
+                                                        <p className="text-[11px] sm:text-xs font-black text-slate-700">{user.viewsCount || 0}/3 <span className="text-slate-300 font-bold ml-1">Limit</span></p>
                                                     </div>
-                                                    <div className="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden shadow-inner flex">
+                                                    <div className="w-full bg-slate-100 h-1.5 sm:h-2.5 rounded-full overflow-hidden shadow-inner flex">
                                                         <motion.div
                                                             initial={{ width: 0 }}
                                                             animate={{ width: `${Math.min(((user.viewsCount || 0) / 3) * 100, 100)}%` }}
@@ -168,13 +168,13 @@ const UsersList = () => {
                                                 </div>
 
                                                 <div className="flex items-center justify-between text-slate-400">
-                                                    <div className="flex items-center gap-2">
-                                                        <Calendar size={14} className="text-pista-dark" />
-                                                        <span className="text-xs font-bold uppercase tracking-tighter">
+                                                    <div className="flex items-center gap-1.5 sm:gap-2">
+                                                        <Calendar size={12} className="text-pista-dark sm:w-3.5 sm:h-3.5" />
+                                                        <span className="text-[10px] sm:text-xs font-bold uppercase tracking-tighter">
                                                             {user.createdAt ? new Date(user.createdAt.seconds * 1000).toLocaleDateString('en-IN', { month: 'short', year: 'numeric' }) : 'Joined Age Ago'}
                                                         </span>
                                                     </div>
-                                                    <p className="text-[10px] font-black italic tracking-widest text-slate-300">#{user.id.slice(0, 8).toUpperCase()}</p>
+                                                    <p className="text-[8px] sm:text-[10px] font-black italic tracking-widest text-slate-300">#{user.id.slice(0, 6).toUpperCase()}</p>
                                                 </div>
                                             </div>
                                         </motion.div>

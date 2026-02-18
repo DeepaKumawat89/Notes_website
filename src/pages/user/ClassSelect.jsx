@@ -35,12 +35,12 @@ const ClassSelect = () => {
                         >
                             <Link
                                 to={`/class/${cls.id}`}
-                                className="group block relative bg-white rounded-[2.5rem] p-10 shadow-xl shadow-pista/5 border border-pista-light/20 hover:border-pista hover:scale-[1.02] transition-all duration-300"
+                                className="group block relative bg-white rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-10 shadow-xl shadow-pista/5 border border-pista-light/20 hover:border-pista hover:scale-[1.02] transition-all duration-300"
                             >
-                                <div className={`w-16 h-16 ${cls.color} rounded-2xl flex items-center justify-center text-white mb-8 group-hover:scale-110 transition-transform duration-500 shadow-lg`}>
-                                    <GraduationCap size={32} />
+                                <div className={`w-12 h-12 sm:w-16 sm:h-16 ${cls.color} rounded-xl sm:rounded-2xl flex items-center justify-center text-white mb-6 sm:mb-8 group-hover:scale-110 transition-transform duration-500 shadow-lg`}>
+                                    <GraduationCap size={28} />
                                 </div>
-                                <h3 className="text-2xl font-bold text-pista-deep mb-2">{cls.title}</h3>
+                                <h3 className="text-xl sm:text-2xl font-bold text-pista-deep mb-2">{cls.title}</h3>
                                 <p className="text-pista-deep/50 mb-8 font-medium">{cls.subtitle}</p>
                                 <div className="flex items-center text-pista-dark font-bold space-x-2 group-hover:translate-x-2 transition-transform">
                                     <span>Explore Subjects</span>

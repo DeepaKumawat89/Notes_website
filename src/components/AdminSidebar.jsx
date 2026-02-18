@@ -28,18 +28,20 @@ const AdminSidebar = () => {
         const unsubscribeAuth = onAuthStateChanged(auth, async (user) => {
             if (!user) {
                 setAuthLoading(false);
-                window.location.replace('/admin/login');
+                if (!localStorage.getItem('adminLoggingOut')) {
+                    window.location.replace('/admin/login');
+                }
                 return;
             }
 
-            if (!user.email.toLowerCase().startsWith('admin')) {
+            if (!user?.email?.toLowerCase()?.startsWith('admin')) {
                 setAuthLoading(false);
                 window.location.replace('/admin/login');
                 return;
             }
 
             const localSessionId = localStorage.getItem('adminSessionId');
-            const adminDocRef = doc(db, 'admins', user.uid);
+            const adminDocRef = doc(db, 'admins', user?.email || 'unknown');
 
             try {
                 // Refresh grace period pulse on valid detection
@@ -92,7 +94,7 @@ const AdminSidebar = () => {
         try {
             const user = auth.currentUser;
             if (user) {
-                const adminRef = doc(db, 'admins', user.uid);
+                const adminRef = doc(db, 'admins', user.email);
                 const localSessionId = localStorage.getItem('adminSessionId');
                 const adminSnap = await getDoc(adminRef);
 
@@ -106,10 +108,16 @@ const AdminSidebar = () => {
                 }
             }
 
+            localStorage.setItem('adminLoggingOut', 'true');
             await signOut(auth);
             localStorage.removeItem('adminSessionId');
+            localStorage.removeItem('adminLastUpdate');
+
             toast.success('Admin logged out successfully');
-            window.location.href = '/';
+            window.location.replace('/');
+
+            // Clean up the flag after a short delay in case redirect is slow
+            setTimeout(() => localStorage.removeItem('adminLoggingOut'), 1000);
         } catch (error) {
             console.error("Logout Error:", error);
             window.location.href = '/';

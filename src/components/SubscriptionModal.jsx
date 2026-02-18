@@ -4,6 +4,7 @@ import { X, Check, QrCode, Upload, Loader2, Clock, Ticket, CheckCircle2, CreditC
 import { db, auth } from '../firebase';
 import { collection, addDoc, serverTimestamp, doc, updateDoc } from 'firebase/firestore';
 import toast from 'react-hot-toast';
+import qrCodeImg from '../assets/qr_code.jpeg';
 
 const SubscriptionModal = ({ isOpen, onClose, user }) => {
     const [step, setStep] = useState(1); // 1: Pricing, 2: Payment, 3: Success
@@ -164,7 +165,7 @@ const SubscriptionModal = ({ isOpen, onClose, user }) => {
 
     return (
         <AnimatePresence>
-            <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+            <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 sm:p-4">
                 <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
@@ -177,76 +178,80 @@ const SubscriptionModal = ({ isOpen, onClose, user }) => {
                     initial={{ opacity: 0, scale: 0.9, y: 20 }}
                     animate={{ opacity: 1, scale: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                    className="relative w-full max-w-4xl bg-cream-light rounded-[3rem] shadow-2xl overflow-hidden border border-white/20"
+                    className="relative w-[92%] sm:w-[90%] lg:w-[900px] h-auto lg:h-[600px] max-h-[90vh] bg-cream-light rounded-[2.5rem] sm:rounded-[3rem] shadow-2xl overflow-hidden border border-white/20 flex flex-col sm:block"
                 >
                     {/* Header */}
-                    <div className="absolute top-8 right-8 z-10">
-                        <button onClick={onClose} className="p-3 bg-white/50 hover:bg-white rounded-full transition-all active:scale-95 shadow-lg">
-                            <X size={20} />
+                    <div className="absolute top-4 right-4 sm:top-8 sm:right-8 z-20">
+                        <button onClick={onClose} className="p-2 sm:p-3 bg-white/50 hover:bg-white rounded-full transition-all active:scale-95 shadow-lg backdrop-blur-md">
+                            <X size={18} />
                         </button>
                     </div>
 
-                    <div className="flex flex-col lg:flex-row h-full min-h-[600px]">
+                    <div className="flex flex-col lg:flex-row h-full">
                         {/* Sidebar / Feature List */}
-                        <div className="lg:w-1/3 bg-pista-dark p-12 text-white flex flex-col justify-center">
-                            <div className="mb-8">
-                                <span className="px-4 py-1.5 bg-white/20 rounded-full text-[10px] font-black tracking-widest uppercase mb-4 inline-block italic">Exclusive Membership</span>
-                                <h2 className="text-4xl font-black mb-4">Unlock the <br />Archive.</h2>
-                                <p className="text-pista-light/60 text-sm font-medium leading-relaxed">Join 5000+ students already using EduNotes to ace their exams.</p>
+                        <div className="lg:w-1/3 bg-pista-dark p-6 sm:p-8 text-white flex flex-col justify-center">
+                            <div className="mb-3 sm:mb-4">
+                                <span className="px-3 py-0.5 bg-white/20 rounded-full text-[9px] font-black tracking-widest uppercase mb-2 inline-block italic">Elite Membership</span>
+                                <h2 className="text-xl sm:text-2xl font-black mb-1 whitespace-nowrap">Unlock the Archive.</h2>
+                                <p className="text-pista-light/60 text-[10px] sm:text-xs font-medium leading-tight">Join 5000+ students already using EduNotes to ace their exams.</p>
                             </div>
 
-                            <div className="space-y-6">
+                            <div className="space-y-3">
                                 {plans[1].features.map((f, i) => (
-                                    <div key={i} className="flex items-center space-x-3">
+                                    <div key={i} className="flex items-center space-x-2">
                                         <div className="p-1 bg-white/20 rounded-lg">
-                                            <Check size={14} />
+                                            <Check size={10} />
                                         </div>
-                                        <span className="text-sm font-bold text-pista-light/80">{f}</span>
+                                        <span className="text-[10px] sm:text-[11px] font-bold text-pista-light/80">{f}</span>
                                     </div>
                                 ))}
                             </div>
                         </div>
 
                         {/* Content Area */}
-                        <div className="lg:w-2/3 p-12 overflow-y-auto max-h-[700px]">
+                        <div className="lg:w-2/3 p-5 sm:p-10 overflow-y-auto lg:overflow-hidden flex flex-col justify-center max-h-[70vh] lg:max-h-none">
                             {step === 1 && (
-                                <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}>
-                                    <header className="mb-10 text-center lg:text-left">
-                                        <h3 className="text-3xl font-black text-pista-deep mb-2">Select Your Plan</h3>
-                                        <p className="text-pista-deep/40 font-bold uppercase tracking-widest text-[10px]">Free limit reached. Get unlimited access today.</p>
+                                <motion.div
+                                    initial={{ opacity: 0, x: 20 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    className="flex flex-col justify-center lg:min-h-[400px]"
+                                >
+                                    <header className="mb-6 sm:mb-8 text-center lg:text-left">
+                                        <h3 className="text-xl sm:text-2xl font-black text-pista-deep mb-1">Select Your Plan</h3>
+                                        <p className="text-pista-deep/40 font-bold uppercase tracking-widest text-[9px]">Free limit reached. Get unlimited access today.</p>
                                     </header>
 
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                                         {plans.map((plan) => (
                                             <div
                                                 key={plan.id}
-                                                className={`relative p-8 rounded-[2rem] border-2 transition-all cursor-pointer hover:scale-[1.02] ${plan.popular ? 'border-pista-dark bg-white shadow-xl' : 'border-pista-light/40 bg-white/50'}`}
+                                                className={`relative p-5 sm:p-6 rounded-[1.5rem] border-2 transition-all cursor-pointer hover:scale-[1.02] ${plan.popular ? 'border-pista-dark bg-white shadow-xl' : 'border-pista-light/40 bg-white/50'}`}
                                                 onClick={() => handlePlanSelect(plan)}
                                             >
                                                 {plan.popular && (
-                                                    <span className="absolute -top-3 left-8 bg-pista-dark text-white px-4 py-1 rounded-full text-[10px] font-black tracking-widest uppercase italic">Most Popular</span>
+                                                    <span className="absolute -top-3 left-6 bg-pista-dark text-white px-3 py-1 rounded-full text-[8px] font-black tracking-widest uppercase italic">Popular Choice</span>
                                                 )}
-                                                <h4 className="text-xl font-black text-pista-deep mb-1">{plan.name}</h4>
-                                                <div className="flex items-baseline space-x-2 mb-4">
-                                                    <span className="text-3xl font-black text-pista-dark">{plan.price}</span>
-                                                    <span className="text-xs font-bold text-pista-deep/40">/ {plan.duration}</span>
+                                                <h4 className="text-lg font-black text-pista-deep mb-1">{plan.name}</h4>
+                                                <div className="flex items-baseline space-x-1 mb-3">
+                                                    <span className="text-2xl font-black text-pista-dark">{plan.price}</span>
+                                                    <span className="text-[10px] font-bold text-pista-deep/40">/ {plan.duration}</span>
                                                 </div>
-                                                <button className={`w-full py-3 rounded-xl font-black text-sm transition-all ${plan.popular ? 'bg-pista-dark text-white shadow-lg' : 'bg-pista-light/30 text-pista-dark'}`}>
+                                                <button className={`w-full py-2.5 rounded-xl font-black text-xs transition-all ${plan.popular ? 'bg-pista-dark text-white shadow-lg' : 'bg-pista-light/30 text-pista-dark'}`}>
                                                     Choose Plan
                                                 </button>
                                             </div>
                                         ))}
                                     </div>
 
-                                    <div className="pt-8 border-t border-pista-light/30">
-                                        <p className="text-xs font-black text-pista-deep/30 uppercase tracking-widest text-center mb-4">Have a coupon code?</p>
+                                    <div className="pt-6 border-t border-pista-light/30">
+                                        <p className="text-[9px] font-black text-pista-deep/30 uppercase tracking-widest text-center mb-3">Have a coupon code?</p>
                                         <div className="flex gap-2">
                                             <div className="flex-1 relative group">
-                                                <Ticket size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-pista-deep/20 group-focus-within:text-pista-dark transition-colors" />
+                                                <Ticket size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-pista-deep/20 group-focus-within:text-pista-dark transition-colors" />
                                                 <input
                                                     type="text"
-                                                    placeholder="Enter Code (EX: FREEPASS)"
-                                                    className="w-full pl-12 pr-4 py-4 bg-white border border-pista-light/40 rounded-2xl focus:outline-none focus:border-pista transition-all font-bold text-pista-deep"
+                                                    placeholder="Enter Code"
+                                                    className="w-full pl-10 pr-4 py-3 bg-white border border-pista-light/40 rounded-xl focus:outline-none focus:border-pista transition-all font-bold text-pista-deep text-sm"
                                                     value={couponCode}
                                                     onChange={(e) => setCouponCode(e.target.value)}
                                                 />
@@ -254,9 +259,9 @@ const SubscriptionModal = ({ isOpen, onClose, user }) => {
                                             <button
                                                 onClick={handleApplyCoupon}
                                                 disabled={applyingCoupon || !couponCode}
-                                                className="px-8 bg-pista-dark text-white rounded-2xl font-black hover:bg-pista-deep transition-all active:scale-95 disabled:opacity-50"
+                                                className="px-6 bg-pista-dark text-white rounded-xl font-black text-sm hover:bg-pista-deep transition-all active:scale-95 disabled:opacity-50"
                                             >
-                                                {applyingCoupon ? <Loader2 className="animate-spin" size={20} /> : 'Apply'}
+                                                {applyingCoupon ? <Loader2 className="animate-spin" size={16} /> : 'Apply'}
                                             </button>
                                         </div>
                                     </div>
@@ -264,30 +269,35 @@ const SubscriptionModal = ({ isOpen, onClose, user }) => {
                             )}
 
                             {step === 2 && (
-                                <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="text-center">
-                                    <header className="mb-8">
-                                        <div className="flex items-center justify-center space-x-2 text-red-500 font-black mb-2 italic">
-                                            <Clock size={16} />
-                                            <span>Session Expires in: {formatTime(timeLeft)}</span>
+                                <motion.div
+                                    initial={{ opacity: 0, y: 30 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    className="flex flex-col items-center justify-center text-center min-h-[400px]"
+                                >
+                                    <header className="mb-2">
+                                        <div className="flex items-center justify-center space-x-2 text-red-500 font-extrabold mb-1 italic">
+                                            <Clock size={14} className="animate-pulse" />
+                                            <span className="text-[9px] uppercase tracking-widest">Expires: {formatTime(timeLeft)}</span>
                                         </div>
-                                        <h3 className="text-3xl font-black text-pista-deep">Scan & Pay</h3>
-                                        <p className="text-pista-deep/40 font-bold uppercase tracking-widest text-[10px]">Payment for {selectedPlan.name}</p>
+                                        <h3 className="text-xl sm:text-2xl font-black text-pista-deep italic uppercase leading-none">Scan & Pay</h3>
                                     </header>
 
-                                    <div className="bg-white p-8 rounded-[3rem] shadow-xl border border-pista-light/10 mb-8 inline-block mx-auto relative group">
-                                        {/* Replace with real UPI QR logic if available */}
-                                        <div className="w-56 h-56 bg-cream-light rounded-2xl flex items-center justify-center border-4 border-pista-light/20 relative overflow-hidden">
-                                            <QrCode size={120} className="text-pista-deep/80" />
-                                            <div className="absolute inset-0 bg-white/10 group-hover:bg-transparent transition-all"></div>
-                                        </div>
-                                        <div className="mt-4 flex items-center justify-center space-x-3">
-                                            <CreditCard size={20} className="text-pista-dark" />
-                                            <span className="font-black text-pista-deep text-lg">UPI ID: edu@okaxis</span>
+                                    <div className="relative mb-1">
+                                        <div className="w-56 h-56 sm:w-64 sm:h-64 flex items-center justify-center relative">
+                                            <img
+                                                src={qrCodeImg}
+                                                alt="Payment QR Code"
+                                                className="w-full h-full object-contain"
+                                                onError={(e) => {
+                                                    e.target.style.display = 'none';
+                                                    e.target.parentElement.innerHTML = '<div class="text-pista-deep/40 font-bold p-10 text-xs">QR Code currently unavailable.</div>';
+                                                }}
+                                            />
                                         </div>
                                     </div>
 
-                                    <div className="max-w-md mx-auto space-y-4">
-                                        <div className="p-6 bg-white border border-pista-light/30 border-dashed rounded-[2rem] relative group cursor-pointer overflow-hidden">
+                                    <div className="max-w-xs mx-auto space-y-3 w-full">
+                                        <div className="p-4 bg-white/50 border border-pista-light/30 border-dashed rounded-2xl relative group cursor-pointer overflow-hidden transition-all hover:bg-white">
                                             <input
                                                 type="file"
                                                 className="absolute inset-0 opacity-0 cursor-pointer z-10"
@@ -295,24 +305,23 @@ const SubscriptionModal = ({ isOpen, onClose, user }) => {
                                                 accept="image/*,.pdf"
                                             />
                                             <div className="flex flex-col items-center">
-                                                <div className="p-4 bg-pista-light/30 rounded-2xl text-pista-dark mb-3 group-hover:scale-110 transition-transform">
-                                                    <Upload size={24} />
+                                                <div className="p-2 bg-pista-light/30 rounded-xl text-pista-dark mb-1">
+                                                    <Upload size={18} />
                                                 </div>
-                                                <p className="font-black text-pista-deep text-sm">
-                                                    {receipt ? receipt.name : 'Upload Payment Receipt'}
+                                                <p className="font-bold text-pista-deep text-[11px]">
+                                                    {receipt ? receipt.name : 'Upload Receipt'}
                                                 </p>
-                                                <p className="text-[10px] text-pista-deep/40 font-bold uppercase tracking-widest mt-1">Screenshot of successful payment</p>
                                             </div>
                                         </div>
 
                                         <button
                                             onClick={handleSubmitPayment}
                                             disabled={uploading || !receipt}
-                                            className="w-full flex items-center justify-center space-x-3 py-5 bg-pista-dark text-white rounded-[2rem] font-black text-lg hover:bg-pista-deep transition-all shadow-xl shadow-pista/20 active:scale-[0.98] disabled:opacity-70"
+                                            className="w-full flex items-center justify-center space-x-2 py-4 bg-pista-dark text-white rounded-xl font-black text-sm hover:bg-pista-deep transition-all shadow-xl shadow-pista/20 active:scale-95 disabled:opacity-50"
                                         >
-                                            {uploading ? <Loader2 className="animate-spin" size={24} /> : 'Verify Payment'}
+                                            {uploading ? <Loader2 className="animate-spin" size={18} /> : <span>Verify Payment</span>}
                                         </button>
-                                        <button onClick={() => setStep(1)} className="text-pista-deep/40 font-bold hover:text-pista-dark transition-colors uppercase text-[10px] tracking-widest">Changed my mind? Go back</button>
+                                        <button onClick={() => setStep(1)} className="text-[10px] font-bold text-pista-deep/30 hover:text-pista-dark uppercase tracking-widest block mx-auto">Go Back</button>
                                     </div>
                                 </motion.div>
                             )}

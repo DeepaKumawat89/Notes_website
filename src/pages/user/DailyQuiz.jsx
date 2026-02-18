@@ -218,15 +218,15 @@ const DailyQuiz = () => {
                             exit={{ y: -20, opacity: 0 }}
                             className="space-y-10"
                         >
-                            <div className="bg-white p-10 lg:p-14 rounded-[3rem] border border-slate-100 shadow-2xl shadow-slate-100/50 relative overflow-hidden">
+                            <div className="bg-white p-6 sm:p-10 lg:p-14 rounded-[2.5rem] sm:rounded-[3rem] border border-slate-100 shadow-2xl shadow-slate-100/50 relative overflow-hidden">
                                 <div className="absolute top-0 right-0 p-10 opacity-[0.03] rotate-12 scale-150">
                                     <Award size={160} />
                                 </div>
-                                <h2 className="text-xl lg:text-2xl font-black text-slate-800 leading-relaxed mb-12 relative z-10 italic">
+                                <h2 className="text-lg sm:text-xl lg:text-2xl font-black text-slate-800 leading-relaxed mb-8 sm:mb-12 relative z-10 italic">
                                     {currentQ.question}
                                 </h2>
 
-                                <div className="grid grid-cols-1 gap-4 relative z-10">
+                                <div className="grid grid-cols-1 gap-3 sm:gap-4 relative z-10">
                                     {currentQ.options.map((option, idx) => {
                                         const isSelected = userAnswers[currentQuestionIndex] === idx;
                                         return (
@@ -236,18 +236,18 @@ const DailyQuiz = () => {
                                                 whileTap={{ scale: 0.99 }}
                                                 onClick={() => handleAnswerSelect(idx)}
                                                 className={`
-                                                    w-full px-8 py-5 rounded-2xl text-left border-2 transition-all duration-300 font-bold text-sm
+                                                    w-full px-5 sm:px-8 py-4 sm:py-5 rounded-xl sm:rounded-2xl text-left border-2 transition-all duration-300 font-bold text-xs sm:text-sm
                                                     ${isSelected
                                                         ? 'bg-slate-900 border-slate-900 text-white shadow-xl shadow-slate-200'
                                                         : 'bg-slate-50 border-transparent text-slate-600 hover:bg-white hover:border-pista-light'}
                                                 `}
                                             >
                                                 <div className="flex items-center justify-between">
-                                                    <div className="flex items-center gap-6">
-                                                        <span className={`w-10 h-10 flex items-center justify-center rounded-xl text-xs font-black italic ${isSelected ? 'bg-pista-dark text-white' : 'bg-white text-slate-300 shadow-sm'}`}>
+                                                    <div className="flex items-center gap-4 sm:gap-6">
+                                                        <span className={`w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-lg sm:rounded-xl text-[10px] sm:text-xs font-black italic ${isSelected ? 'bg-pista-dark text-white' : 'bg-white text-slate-300 shadow-sm'}`}>
                                                             {String.fromCharCode(65 + idx)}
                                                         </span>
-                                                        <span>{option}</span>
+                                                        <span className="flex-1">{option}</span>
                                                     </div>
                                                     {isSelected && <CheckCircle size={20} />}
                                                 </div>
@@ -301,7 +301,7 @@ const DailyQuiz = () => {
                 <motion.div
                     initial={{ y: 30, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
-                    className="bg-white rounded-[4rem] p-10 lg:p-20 border border-slate-100 shadow-2xl text-center"
+                    className="bg-white rounded-[2.5rem] sm:rounded-[4rem] p-6 sm:p-10 lg:p-20 border border-slate-100 shadow-2xl text-center"
                 >
                     <div className="inline-flex p-4 rounded-3xl bg-pista-light/20 text-pista-dark mb-10">
                         <Award size={48} />

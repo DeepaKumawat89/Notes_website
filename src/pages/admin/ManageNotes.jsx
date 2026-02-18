@@ -174,68 +174,68 @@ const ManageNotes = () => {
                                             animate={{ opacity: 1, x: 0 }}
                                             exit={{ opacity: 0, scale: 0.95 }}
                                             transition={{ delay: index * 0.05 }}
-                                            className="group relative bg-white rounded-[2rem] border border-gray-100 p-2 flex flex-col md:flex-row md:items-center hover:shadow-[0_20px_50px_rgba(0,0,0,0.04)] hover:border-pista-light/30 transition-all duration-500 overflow-hidden"
+                                            className="group relative bg-white rounded-xl sm:rounded-[2rem] border border-gray-100 p-1 sm:p-2 flex flex-row items-center hover:shadow-[0_20px_50px_rgba(0,0,0,0.04)] hover:border-pista-light/30 transition-all duration-500 overflow-hidden"
                                         >
                                             {/* Left Section: Icon & Identity */}
-                                            <div className="flex items-center space-x-6 p-4 md:pr-10 border-b md:border-b-0 md:border-r border-gray-50 bg-slate-50/50 rounded-t-[1.8rem] md:rounded-l-[1.8rem] md:rounded-tr-none">
+                                            <div className="flex items-center p-2 sm:p-4 md:pr-10 md:border-r border-gray-50 flex-shrink-0">
                                                 <div className="relative">
-                                                    <div className="p-5 bg-white rounded-2xl text-slate-400 group-hover:bg-pista-dark group-hover:text-white transition-all duration-500 shadow-sm">
-                                                        <FileText size={32} />
+                                                    <div className="p-2 sm:p-5 bg-slate-50 md:bg-white rounded-lg sm:rounded-2xl text-slate-400 group-hover:bg-pista-dark group-hover:text-white transition-all duration-500 shadow-sm">
+                                                        <FileText size={18} className="sm:w-8 sm:h-8" />
                                                     </div>
-                                                    <div className="absolute -bottom-2 -right-2 h-8 w-8 bg-white border-4 border-slate-50 rounded-full flex items-center justify-center text-xs font-black text-pista-dark shadow-sm">
-                                                        {note.classId}
+                                                    <div className="absolute -bottom-1 -right-1 sm:-bottom-2 sm:-right-2 h-5 w-5 sm:h-8 sm:w-8 bg-white border-2 sm:border-4 border-slate-50 rounded-full flex items-center justify-center text-[7px] sm:text-xs font-black text-pista-dark shadow-sm">
+                                                        {note.classId?.replace('Class ', '')}
                                                     </div>
                                                 </div>
                                             </div>
 
                                             {/* Center Section: Main Info */}
-                                            <div className="flex-1 px-6 md:px-10 py-6 min-w-0">
-                                                <div className="flex items-center space-x-3 mb-2">
-                                                    <span className="px-3 py-1 bg-pista-light/40 text-pista-dark text-[10px] font-black uppercase tracking-widest rounded-lg">
+                                            <div className="flex-1 px-3 sm:px-10 py-1 sm:py-6 min-w-0">
+                                                <div className="flex items-center space-x-2 sm:space-x-3 mb-0.5 sm:mb-1">
+                                                    <span className="px-1.5 py-0.5 bg-pista-light/40 text-pista-dark text-[7px] sm:text-[10px] font-black uppercase tracking-widest rounded-md sm:rounded-lg">
                                                         {note.subjectId}
                                                     </span>
-                                                    <span className="text-[10px] font-bold text-slate-300 uppercase tracking-widest">
+                                                    <span className="hidden sm:inline text-[8px] sm:text-[10px] font-bold text-slate-300 uppercase tracking-widest">
                                                         Ref: {note.id.slice(0, 8)}
                                                     </span>
                                                 </div>
-                                                <h3 className="text-xl md:text-2xl font-black text-slate-900 truncate leading-tight group-hover:text-pista-deep transition-colors">
+                                                <h4 className="text-[10px] sm:text-base md:text-2xl font-black text-slate-900 truncate leading-tight group-hover:text-pista-deep transition-colors">
                                                     {note.title}
-                                                </h3>
-                                                <div className="flex items-center space-x-6 mt-4">
-                                                    <div className="flex items-center space-x-2">
-                                                        <Calendar size={14} className="text-slate-300" />
-                                                        <span className="text-[10px] md:text-xs font-bold text-slate-400">
-                                                            {note.createdAt?.toDate().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+                                                </h4>
+                                                <div className="hidden sm:flex items-center space-x-3 sm:space-x-6 mt-1 sm:mt-4">
+                                                    <div className="flex items-center space-x-1 sm:space-x-2">
+                                                        <Calendar size={10} className="text-slate-300 sm:w-3.5 sm:h-3.5" />
+                                                        <span className="text-[7px] sm:text-[10px] md:text-xs font-bold text-slate-400">
+                                                            {note.createdAt?.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                                                         </span>
                                                     </div>
                                                 </div>
                                             </div>
 
                                             {/* Right Section: Actions */}
-                                            <div className="flex items-center justify-between md:justify-end space-x-3 p-6 md:pr-10 bg-slate-50/30 md:bg-transparent border-t md:border-t-0 border-gray-50">
-                                                <div className="flex items-center space-x-2">
+                                            <div className="flex items-center justify-end space-x-1 sm:space-x-3 p-2 sm:p-6 md:pr-10 flex-shrink-0">
+                                                <div className="flex items-center space-x-1 sm:space-x-2">
                                                     <a
                                                         href={note.fileUrl}
                                                         target="_blank"
                                                         rel="noreferrer"
-                                                        className="p-3 md:p-4 bg-white md:bg-slate-50 text-slate-400 rounded-2xl hover:bg-pista-dark hover:text-white transition-all shadow-sm border border-gray-100 md:border-transparent"
-                                                        title="Preview Asset"
+                                                        className="p-1.5 sm:p-4 bg-slate-50 text-slate-400 rounded-lg sm:rounded-2xl hover:bg-pista-dark hover:text-white transition-all shadow-sm border border-gray-100 md:border-transparent"
+                                                        title="Preview"
                                                     >
-                                                        <ExternalLink size={18} />
+                                                        <ExternalLink size={14} className="sm:w-[18px] sm:h-[18px]" />
                                                     </a>
                                                     <button
                                                         onClick={() => handleEditClick(note)}
-                                                        className="p-3 md:p-4 bg-white md:bg-slate-50 text-slate-400 rounded-2xl hover:bg-slate-900 hover:text-white transition-all shadow-sm border border-gray-100 md:border-transparent"
-                                                        title="Edit Record"
+                                                        className="p-1.5 sm:p-4 bg-slate-50 text-slate-400 rounded-lg sm:rounded-2xl hover:bg-slate-900 hover:text-white transition-all shadow-sm border border-gray-100 md:border-transparent"
+                                                        title="Edit"
                                                     >
-                                                        <Edit3 size={18} />
+                                                        <Edit3 size={14} className="sm:w-[18px] sm:h-[18px]" />
                                                     </button>
                                                     <button
                                                         onClick={() => deleteNote(note)}
-                                                        className="p-3 md:p-4 bg-white md:bg-slate-50 text-slate-400 rounded-2xl hover:bg-red-500 hover:text-white transition-all shadow-sm border border-gray-100 md:border-transparent"
-                                                        title="Expunge Note"
+                                                        className="p-1.5 sm:p-4 bg-slate-50 text-slate-400 rounded-lg sm:rounded-2xl hover:bg-red-500 hover:text-white transition-all shadow-sm border border-gray-100 md:border-transparent"
+                                                        title="Delete"
                                                     >
-                                                        <Trash2 size={18} />
+                                                        <Trash2 size={14} className="sm:w-[18px] sm:h-[18px]" />
                                                     </button>
                                                 </div>
 
@@ -268,7 +268,7 @@ const ManageNotes = () => {
                 </div>
 
                 {/* Status Bar */}
-                <footer className="px-10 py-4 bg-white border-t border-gray-50 flex justify-between items-center z-20">
+                <footer className="hidden sm:flex px-10 py-4 bg-white border-t border-gray-50 justify-between items-center z-20">
                     <div className="flex items-center space-x-6 text-[10px] font-black uppercase tracking-widest text-slate-300">
                         <div className="flex items-center space-x-2">
                             <div className="h-1.5 w-1.5 rounded-full bg-pista-dark" />
@@ -279,7 +279,7 @@ const ManageNotes = () => {
                             <span>{notes.length} Total Assets</span>
                         </div>
                     </div>
-                    <div>
+                    <div className="hidden md:block">
                         <span className="text-[10px] font-black uppercase tracking-widest text-pista-deep/20">Aurelian Admin Management Portal v4.2</span>
                     </div>
                 </footer>

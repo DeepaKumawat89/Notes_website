@@ -218,7 +218,7 @@ const AuthModal = ({ isOpen, onClose }) => {
       )}
 
       {/* Container */}
-      <div className={`relative w-full max-w-5xl h-[620px] sm:h-[720px] max-h-[96vh] sm:max-h-[90vh] [perspective:2000px] ${isStandalonePage ? 'my-auto' : ''}`}>
+      <div className={`relative w-full max-w-5xl lg:h-[720px] min-h-[500px] h-fit max-h-[96vh] sm:max-h-[90vh] [perspective:2000px] ${isStandalonePage ? 'my-auto' : ''}`}>
         <motion.div
           initial={false}
           animate={{ rotateY: isLogin ? 0 : 180 }}
@@ -228,7 +228,7 @@ const AuthModal = ({ isOpen, onClose }) => {
           {/* FRONT SIDE (LOGIN) */}
           <div className={`absolute inset-0 w-full h-full [backface-visibility:hidden] bg-white rounded-[1.5rem] sm:rounded-[2.5rem] shadow-2xl flex flex-col lg:flex-row overflow-hidden border border-pista-light/20 shadow-pista/5`}>
             {!isStandalonePage && (
-              <button onClick={onClose} className="absolute top-6 right-6 z-20 p-2 bg-white/80 hover:bg-white rounded-full text-pista-deep shadow-md transition-all active:scale-95">
+              <button onClick={onClose} className="absolute top-4 right-4 sm:top-6 sm:right-6 z-20 p-2 bg-white/80 hover:bg-white rounded-full text-pista-deep shadow-md transition-all active:scale-95">
                 <X size={20} />
               </button>
             )}

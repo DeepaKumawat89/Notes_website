@@ -114,19 +114,19 @@ const SubjectSelect = () => {
                         >
                             <Link
                                 to={`/notes/${classId}/${subject.id}`}
-                                className="group flex flex-col items-center justify-center p-8 bg-white rounded-3xl border border-pista-light/30 hover:border-pista hover:shadow-2xl hover:shadow-pista/10 transition-all duration-300"
+                                className="group flex flex-col items-center justify-center p-5 sm:p-8 bg-white rounded-[2rem] sm:rounded-3xl border border-pista-light/30 hover:border-pista hover:shadow-2xl hover:shadow-pista/10 transition-all duration-300"
                             >
-                                <div className={`p-5 rounded-2xl ${subject.bg} ${subject.color} group-hover:scale-110 transition-transform duration-500 mb-6 relative`}>
-                                    <subject.icon size={36} />
+                                <div className={`p-4 sm:p-5 rounded-xl sm:rounded-2xl ${subject.bg} ${subject.color} group-hover:scale-110 transition-transform duration-500 mb-4 sm:mb-6 relative`}>
+                                    <subject.icon size={28} className="sm:w-9 sm:h-9" />
                                     {noteCounts[subject.id.toLowerCase()] > 0 && (
-                                        <span className="absolute -top-2 -right-2 bg-pista-dark text-white text-[10px] font-black w-6 h-6 rounded-full flex items-center justify-center shadow-lg border-2 border-white">
+                                        <span className="absolute -top-1.5 -right-1.5 bg-pista-dark text-white text-[8px] sm:text-[10px] font-black w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center shadow-lg border-2 border-white">
                                             {noteCounts[subject.id.toLowerCase()]}
                                         </span>
                                     )}
                                 </div>
-                                <h3 className="text-lg font-bold text-pista-deep text-center">{subject.name}</h3>
-                                <p className="text-xs text-pista-deep/40 mt-2 font-medium">
-                                    {noteCounts[subject.id.toLowerCase()] || 0} Notes Available
+                                <h3 className="text-sm sm:text-lg font-bold text-pista-deep text-center line-clamp-1">{subject.name}</h3>
+                                <p className="text-[10px] sm:text-xs text-pista-deep/40 mt-1 sm:mt-2 font-medium">
+                                    {noteCounts[subject.id.toLowerCase()] || 0} Notes
                                 </p>
                             </Link>
                         </motion.div>
