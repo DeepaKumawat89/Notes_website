@@ -346,7 +346,6 @@ const AuthModal = ({ isOpen, onClose }) => {
               </div>
 
               <footer className="mt-2 text-center border-t border-pista-light/20 pt-4">
-                <p className="text-pista-deep/30 font-bold mb-2 uppercase tracking-tighter text-sm">New to the community?</p>
                 <button onClick={handleToggle} disabled={loading} className="text-pista-dark font-black hover:text-pista-deep transition-colors text-xl underline decoration-pista-light underline-offset-8 decoration-4 disabled:opacity-50">Create new account</button>
               </footer>
             </div>
@@ -430,7 +429,6 @@ const AuthModal = ({ isOpen, onClose }) => {
                 </form>
 
                 <footer className="mt-6 text-center border-t border-pista-light/20 pt-4">
-                  <p className="text-pista-deep/30 font-bold mb-2 uppercase tracking-tighter text-sm">Already a member?</p>
                   <button onClick={handleToggle} disabled={loading} className="text-pista-dark font-black hover:text-pista-deep transition-colors text-xl underline decoration-pista-light underline-offset-8 decoration-4 disabled:opacity-50">Back to login</button>
                 </footer>
               </div>
