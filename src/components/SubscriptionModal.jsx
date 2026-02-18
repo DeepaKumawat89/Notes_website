@@ -33,7 +33,7 @@ const SubscriptionModal = ({ isOpen, onClose, user }) => {
                     const { collection, query, where, getDocs, limit } = await import('firebase/firestore');
                     const q = query(
                         collection(db, 'subscription_requests'),
-                        where('userId', '==', user?.uid),
+                        where('userId', '==', user?.email),
                         where('status', '==', 'pending'),
                         limit(1)
                     );
@@ -110,7 +110,7 @@ const SubscriptionModal = ({ isOpen, onClose, user }) => {
 
             // 2. Save request to Firestore
             await addDoc(collection(db, 'subscription_requests'), {
-                userId: user.uid,
+                userId: user.email,
                 userName: user.displayName || 'Student',
                 userEmail: user.email,
                 planId: selectedPlan.id,
@@ -139,7 +139,7 @@ const SubscriptionModal = ({ isOpen, onClose, user }) => {
         try {
             if (couponCode.toUpperCase() === 'FREEPASS') {
                 // GRANT FULL ACCESS DIRECTLY
-                const userRef = doc(db, 'users', user.uid);
+                const userRef = doc(db, 'users', user.email);
                 await updateDoc(userRef, {
                     subscription: 'premium',
                     viewsCount: 0,

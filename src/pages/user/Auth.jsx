@@ -49,10 +49,10 @@ const AuthModal = ({ isOpen, onClose }) => {
     }
   };
 
-  const manageSession = async (userUid) => {
+  const manageSession = async (userEmail) => {
     try {
       const sessionId = Date.now().toString(36) + Math.random().toString(36).substring(2);
-      const userRef = doc(db, 'users', userUid);
+      const userRef = doc(db, 'users', userEmail);
       const userSnap = await getDoc(userRef);
 
       if (userSnap.exists()) {
@@ -101,7 +101,7 @@ const AuthModal = ({ isOpen, onClose }) => {
 
       if (isLogin) {
         const userCredential = await signInWithEmailAndPassword(auth, formData.email, formData.password);
-        const sessionAllowed = await manageSession(userCredential.user.uid);
+        const sessionAllowed = await manageSession(userCredential.user.email);
         if (sessionAllowed) {
           toast.success('Successfully logged in!', {
             style: { borderRadius: '1rem', background: '#5F6F52', color: '#fff' }
@@ -112,7 +112,7 @@ const AuthModal = ({ isOpen, onClose }) => {
         const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
         const user = userCredential.user;
 
-        await setDoc(doc(db, 'users', user.uid), {
+        await setDoc(doc(db, 'users', user.email), {
           uid: user.uid,
           name: formData.name,
           email: formData.email,
@@ -123,7 +123,7 @@ const AuthModal = ({ isOpen, onClose }) => {
           activeSessions: []
         });
 
-        const sessionAllowed = await manageSession(user.uid);
+        const sessionAllowed = await manageSession(user.email);
         if (sessionAllowed) {
           toast.success('Account created successfully!', {
             style: { borderRadius: '1rem', background: '#5F6F52', color: '#fff' }
@@ -150,7 +150,7 @@ const AuthModal = ({ isOpen, onClose }) => {
     try {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
-      const userDocRef = doc(db, 'users', user.uid);
+      const userDocRef = doc(db, 'users', user.email);
       const userDoc = await getDoc(userDocRef);
 
       if (!userDoc.exists()) {
@@ -170,7 +170,7 @@ const AuthModal = ({ isOpen, onClose }) => {
         toast.success('Signed in with Google!');
       }
 
-      const sessionAllowed = await manageSession(user.uid);
+      const sessionAllowed = await manageSession(user.email);
       if (sessionAllowed) {
         handleSuccess();
       }

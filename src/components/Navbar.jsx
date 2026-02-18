@@ -32,7 +32,7 @@ const Navbar = () => {
             setUser(currentUser);
             if (currentUser) {
                 // Listen to user document for session changes and real-time data
-                unsubscribeDoc = onSnapshot(doc(db, 'users', currentUser.uid), (docSnap) => {
+                unsubscribeDoc = onSnapshot(doc(db, 'users', currentUser.email), (docSnap) => {
                     if (docSnap.exists()) {
                         const data = docSnap.data();
                         setUserData(data);
@@ -86,7 +86,7 @@ const Navbar = () => {
             // 3. Try to update Firestore (don't let it block the logout if it fails)
             if (currentUser && currentSessionId) {
                 try {
-                    await updateDoc(doc(db, 'users', currentUser.uid), {
+                    await updateDoc(doc(db, 'users', currentUser.email), {
                         activeSessions: arrayRemove(currentSessionId)
                     });
                 } catch (dbError) {

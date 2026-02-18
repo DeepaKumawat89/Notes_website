@@ -75,7 +75,7 @@ const NoteList = () => {
         }
 
         try {
-            const userRef = doc(db, 'users', user.uid);
+            const userRef = doc(db, 'users', user.email);
             const userSnap = await getDoc(userRef);
 
             if (userSnap.exists()) {

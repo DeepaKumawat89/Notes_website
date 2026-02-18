@@ -29,7 +29,7 @@ const DailyQuiz = () => {
 
             try {
                 // 1. Check if already taken
-                const submissionRef = doc(db, 'quizSubmissions', `${auth.currentUser.uid}_${todayDate}`);
+                const submissionRef = doc(db, 'quizSubmissions', `${auth.currentUser.email}_${todayDate}`);
                 const submissionSnap = await getDoc(submissionRef);
 
                 if (submissionSnap.exists()) {
@@ -93,8 +93,8 @@ const DailyQuiz = () => {
         setLoading(true);
 
         try {
-            await setDoc(doc(db, 'quizSubmissions', `${auth.currentUser.uid}_${todayDate}`), {
-                userId: auth.currentUser.uid,
+            await setDoc(doc(db, 'quizSubmissions', `${auth.currentUser.email}_${todayDate}`), {
+                userId: auth.currentUser.email,
                 userName: auth.currentUser.displayName || 'Anonymous User',
                 quizDate: todayDate,
                 score: finalScore,
