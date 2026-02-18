@@ -147,18 +147,25 @@ const Navbar = () => {
                                             {userData?.photoURL ? (
                                                 <img src={userData.photoURL} alt={userData.name} className="w-full h-full object-cover" />
                                             ) : (
-                                                userData?.name?.charAt(0).toUpperCase() || <User size={14} />
+                                                userData?.name?.charAt(0).toUpperCase() || (user.email?.toLowerCase().startsWith('admin') ? 'A' : <User size={14} />)
                                             )}
                                         </div>
                                         <div className="flex flex-col text-left">
                                             <span className="text-sm font-black text-pista-deep leading-none">
-                                                {userData?.name || 'User'}
+                                                {user.email?.toLowerCase().startsWith('admin') ? 'Admin' : (userData?.name || 'User')}
                                             </span>
                                             <span className="text-[10px] font-bold text-pista-deep/50 uppercase tracking-wider">
-                                                Student Profile
+                                                {user.email?.toLowerCase().startsWith('admin') ? 'Institutional Lead' : 'Student Profile'}
                                             </span>
                                         </div>
                                     </button>
+
+                                    {user.email?.toLowerCase().startsWith('admin') && (
+                                        <Link to="/admin/dashboard" className="hidden lg:flex items-center space-x-2 px-4 py-2 bg-pista-dark text-white rounded-full hover:bg-pista-deep transition-all shadow-lg shadow-pista/20 font-bold text-xs">
+                                            <Shield size={14} />
+                                            <span>Dashboard</span>
+                                        </Link>
+                                    )}
 
                                     <AnimatePresence>
                                         {isProfileOpen && (

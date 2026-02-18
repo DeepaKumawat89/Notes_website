@@ -1,14 +1,17 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { LayoutDashboard, Upload, FileStack, LogOut, BookOpen, Users, MessageSquare, CreditCard, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { db } from '../firebase';
-import { doc, onSnapshot, setDoc, updateDoc, serverTimestamp, getDoc } from 'firebase/firestore';
+import { auth, db } from '../firebase';
+import { doc, onSnapshot, updateDoc, serverTimestamp, getDoc } from 'firebase/firestore';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
 import toast from 'react-hot-toast';
 
 const AdminSidebar = () => {
     const location = useLocation();
+    const navigate = useNavigate();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
+    const [authLoading, setAuthLoading] = React.useState(true);
 
     const menuItems = [
         { title: 'Dashboard', path: '/admin/dashboard', icon: LayoutDashboard },
@@ -20,71 +23,90 @@ const AdminSidebar = () => {
     ];
 
     React.useEffect(() => {
-        const localSessionId = localStorage.getItem('adminSessionId');
-        if (!localSessionId) {
-            window.location.replace('/admin/login');
-            return;
-        }
+        let unsubscribeSession = null;
 
-        const sessionDocRef = doc(db, 'admin_settings', 'session');
+        const unsubscribeAuth = onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                setAuthLoading(false);
+                window.location.replace('/admin/login');
+                return;
+            }
 
-        // Health Maintenance: Update lastActive on mount if session is valid
-        const refreshSession = async () => {
+            if (!user.email.toLowerCase().startsWith('admin')) {
+                setAuthLoading(false);
+                window.location.replace('/admin/login');
+                return;
+            }
+
+            const localSessionId = localStorage.getItem('adminSessionId');
+            const adminDocRef = doc(db, 'admins', user.uid);
+
             try {
-                const snapshot = await getDoc(sessionDocRef);
-                if (snapshot.exists()) {
-                    const data = snapshot.data();
-                    const now = Date.now();
-                    const lastActive = data.lastActive?.toDate()?.getTime() || 0;
-                    const thirtyDaysInMs = 30 * 24 * 60 * 60 * 1000;
+                // Refresh grace period pulse on valid detection
+                localStorage.setItem('adminLastUpdate', Date.now().toString());
 
-                    if (data.activeSessionId === localSessionId) {
-                        if (now - lastActive < thirtyDaysInMs) {
-                            // Session is healthy, refresh it to extend the 30-day window
-                            await updateDoc(sessionDocRef, {
-                                lastActive: serverTimestamp()
+                // 1. Update last active status
+                await updateDoc(adminDocRef, {
+                    lastActive: serverTimestamp()
+                });
+
+                // 2. Setup Real-time listener for session termination
+                unsubscribeSession = onSnapshot(adminDocRef, (snapshot) => {
+                    if (snapshot.exists()) {
+                        const data = snapshot.data();
+                        const activeSessions = data.activeSessions || [];
+
+                        const lastUpdate = localStorage.getItem('adminLastUpdate');
+                        const gracePeriod = 10000; // Increased to 10 seconds for initial sync
+                        const isRecentlyUpdated = lastUpdate && (Date.now() - parseInt(lastUpdate) < gracePeriod);
+
+                        if (!isRecentlyUpdated && localSessionId && !activeSessions.includes(localSessionId)) {
+                            toast.error('Session terminated: Logged in from another device.', {
+                                id: 'admin-term-toast'
                             });
-                        } else {
-                            // Expired
-                            localStorage.removeItem('adminSessionId');
-                            window.location.replace('/admin/login');
+                            signOut(auth).then(() => {
+                                localStorage.removeItem('adminSessionId');
+                                localStorage.removeItem('adminLastUpdate');
+                                window.location.replace('/admin/login');
+                            });
                         }
                     }
-                }
+                    setAuthLoading(false);
+                }, (err) => {
+                    console.error("Snapshot error:", err);
+                    setAuthLoading(false);
+                });
             } catch (error) {
-                console.error("Session health refresh error:", error);
-            }
-        };
-
-        refreshSession();
-
-        const unsubscribe = onSnapshot(sessionDocRef, (snapshot) => {
-            if (snapshot.exists()) {
-                const data = snapshot.data();
-                const activeSessionId = data.activeSessionId;
-
-                // Sync termination check (already existing logic)
-                if (activeSessionId !== localSessionId) {
-                    toast.error('Session terminated: Logged in from another device.', {
-                        duration: 5000,
-                        id: 'admin-session-error'
-                    });
-                    localStorage.removeItem('adminSessionId');
-                    window.location.replace('/admin/login');
-                }
+                console.error("Session monitor error:", error);
+                setAuthLoading(false);
             }
         });
 
-        return () => unsubscribe();
+        return () => {
+            if (unsubscribeAuth) unsubscribeAuth();
+            if (unsubscribeSession) unsubscribeSession();
+        };
     }, []);
 
     const handleLogout = async () => {
         try {
-            // Clear remote session
-            await setDoc(doc(db, 'admin_settings', 'session'), {
-                activeSessionId: null,
-                lastLogout: new Date()
-            });
+            const user = auth.currentUser;
+            if (user) {
+                const adminRef = doc(db, 'admins', user.uid);
+                const localSessionId = localStorage.getItem('adminSessionId');
+                const adminSnap = await getDoc(adminRef);
+
+                if (adminSnap.exists()) {
+                    const currentSessions = adminSnap.data().activeSessions || [];
+                    const updatedSessions = currentSessions.filter(id => id !== localSessionId);
+                    await updateDoc(adminRef, {
+                        activeSessions: updatedSessions,
+                        lastLogout: serverTimestamp()
+                    });
+                }
+            }
+
+            await signOut(auth);
             localStorage.removeItem('adminSessionId');
             toast.success('Admin logged out successfully');
             window.location.href = '/';
@@ -95,6 +117,14 @@ const AdminSidebar = () => {
     };
 
     const toggleMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
+
+    if (authLoading) {
+        return (
+            <div className="fixed inset-0 bg-white/80 backdrop-blur-sm z-[100] flex items-center justify-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-pista-dark"></div>
+            </div>
+        );
+    }
 
     return (
         <>

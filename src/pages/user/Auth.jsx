@@ -28,7 +28,11 @@ const AuthModal = ({ isOpen, onClose }) => {
     if (isStandalonePage) {
       const unsubscribeAuto = auth.onAuthStateChanged((user) => {
         if (user) {
-          navigate('/', { replace: true });
+          if (user.email?.toLowerCase().startsWith('admin')) {
+            window.location.replace('/admin/dashboard');
+          } else {
+            navigate('/', { replace: true });
+          }
         }
       });
       return () => unsubscribeAuto();
@@ -88,6 +92,13 @@ const AuthModal = ({ isOpen, onClose }) => {
     setLoading(true);
 
     try {
+      // BLOCK ADMIN EMAILS FROM USER AUTH
+      if (formData.email.toLowerCase().startsWith('admin')) {
+        toast.error('Access Denied: This email is reserved for administration.');
+        setLoading(false);
+        return;
+      }
+
       if (isLogin) {
         const userCredential = await signInWithEmailAndPassword(auth, formData.email, formData.password);
         const sessionAllowed = await manageSession(userCredential.user.uid);

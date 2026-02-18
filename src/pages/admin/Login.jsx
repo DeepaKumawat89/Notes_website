@@ -4,9 +4,12 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Lock, Mail, ArrowRight, ShieldCheck, ArrowLeft, Eye, EyeOff } from 'lucide-react';
 import toast from 'react-hot-toast';
 
+import { signInWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
+import { auth, db } from '../../firebase';
+import { doc, getDoc, updateDoc, setDoc, serverTimestamp } from 'firebase/firestore';
+
 const AdminLogin = () => {
     const navigate = useNavigate();
-    // Default admin credentials
     const [formData, setFormData] = useState({
         email: '',
         password: ''
@@ -15,46 +18,53 @@ const AdminLogin = () => {
     const [checkingSession, setCheckingSession] = useState(true);
 
     useEffect(() => {
-        const checkExistingSession = async () => {
-            const localSessionId = localStorage.getItem('adminSessionId');
-            if (localSessionId) {
-                try {
-                    const { db } = await import('../../firebase');
-                    const { doc, getDoc, updateDoc, serverTimestamp } = await import('firebase/firestore');
-                    const sessionDocRef = doc(db, 'admin_settings', 'session');
-                    const sessionDoc = await getDoc(sessionDocRef);
+        const unsubscribe = onAuthStateChanged(auth, async (user) => {
+            if (user && user.email.toLowerCase().startsWith('admin')) {
+                let localSessionId = localStorage.getItem('adminSessionId');
 
-                    if (sessionDoc.exists()) {
-                        const data = sessionDoc.data();
-                        const now = Date.now();
-                        const lastActive = data.lastActive?.toDate()?.getTime() || 0;
-                        const thirtyDaysInMs = 30 * 24 * 60 * 60 * 1000;
+                if (!localSessionId) {
+                    localSessionId = Date.now().toString(36) + Math.random().toString(36).substring(2);
+                    localStorage.setItem('adminSessionId', localSessionId);
+                    localStorage.setItem('adminLastUpdate', Date.now().toString());
 
-                        if (data.activeSessionId === localSessionId) {
-                            if (now - lastActive < thirtyDaysInMs) {
-                                // Session is healthy, refresh it
-                                await updateDoc(sessionDocRef, {
-                                    lastActive: serverTimestamp()
-                                });
-                                navigate('/admin/dashboard', { replace: true });
-                                return;
-                            } else {
-                                // Session expired (30+ days)
-                                toast.error('Session expired: Please login again.');
-                                localStorage.removeItem('adminSessionId');
-                                await updateDoc(sessionDocRef, {
-                                    activeSessionId: null
-                                });
-                            }
+                    const adminRef = doc(db, 'admins', user.uid);
+                    try {
+                        const adminSnap = await getDoc(adminRef);
+
+                        let activeSessions = [];
+                        if (adminSnap.exists()) {
+                            activeSessions = adminSnap.data().activeSessions || [];
+                        } else {
+                            await setDoc(adminRef, {
+                                email: user.email,
+                                createdAt: serverTimestamp(),
+                                activeSessions: []
+                            });
                         }
+
+                        // Bump logic (2 session limit for admin)
+                        if (activeSessions.length >= 2) activeSessions.shift();
+                        activeSessions.push(localSessionId);
+
+                        await updateDoc(adminRef, {
+                            activeSessions: activeSessions,
+                            lastActive: serverTimestamp()
+                        });
+                        navigate('/admin/dashboard', { replace: true });
+                    } catch (err) {
+                        console.error("Session init error:", err);
+                        setCheckingSession(false);
                     }
-                } catch (error) {
-                    console.error("Session check error:", error);
+                } else {
+                    // Update grace period pulse even on resumption
+                    localStorage.setItem('adminLastUpdate', Date.now().toString());
+                    navigate('/admin/dashboard', { replace: true });
                 }
+            } else {
+                setCheckingSession(false);
             }
-            setCheckingSession(false);
-        };
-        checkExistingSession();
+        });
+        return () => unsubscribe();
     }, [navigate]);
 
     if (checkingSession) {
@@ -69,22 +79,45 @@ const AdminLogin = () => {
         );
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Simulating authentication
-        if (formData.email === 'admin@gmail.com' && formData.password === 'admin@123') {
-            const sessionId = Math.random().toString(36).substring(2, 15);
-            localStorage.setItem('adminSessionId', sessionId);
+        // 1. Password/Email validation
+        if (!formData.email.toLowerCase().startsWith('admin')) {
+            toast.error('Access Denied: Only admin accounts can log in here.');
+            return;
+        }
 
-            // Sync with DB (using a static doc for global admin session)
-            import('../../firebase').then(async ({ db }) => {
-                const { doc, setDoc, serverTimestamp } = await import('firebase/firestore');
-                await setDoc(doc(db, 'admin_settings', 'session'), {
-                    activeSessionId: sessionId,
-                    lastLogin: serverTimestamp(),
-                    lastActive: serverTimestamp() // Add this for persistence tracking
+        try {
+            const userCredential = await signInWithEmailAndPassword(auth, formData.email, formData.password);
+            const user = userCredential.user;
+
+            const sessionId = Date.now().toString(36) + Math.random().toString(36).substring(2);
+            localStorage.setItem('adminSessionId', sessionId);
+            localStorage.setItem('adminLastUpdate', Date.now().toString());
+
+            const adminRef = doc(db, 'admins', user.uid);
+            const adminSnap = await getDoc(adminRef);
+
+            let activeSessions = [];
+            if (adminSnap.exists()) {
+                activeSessions = adminSnap.data().activeSessions || [];
+            } else {
+                await setDoc(adminRef, {
+                    email: user.email,
+                    createdAt: serverTimestamp(),
+                    activeSessions: []
                 });
+            }
+
+            // Bump logic (2 session limit)
+            if (activeSessions.length >= 2) activeSessions.shift();
+            activeSessions.push(sessionId);
+
+            await updateDoc(adminRef, {
+                activeSessions: activeSessions,
+                lastLogin: serverTimestamp(),
+                lastActive: serverTimestamp()
             });
 
             toast.success('Login successful! Welcome Admin.', {
@@ -96,11 +129,16 @@ const AdminLogin = () => {
                     fontWeight: 'bold'
                 }
             });
+
             setTimeout(() => {
                 navigate('/admin/dashboard');
             }, 1000);
-        } else {
-            toast.error('Invalid admin credentials.');
+
+        } catch (error) {
+            console.error("Admin Auth Error:", error);
+            toast.error(error.message.includes('invalid-credential')
+                ? 'Invalid admin email or password.'
+                : 'Authentication failed. Please try again.');
         }
     };
 

@@ -21,6 +21,10 @@ const Home = () => {
     useEffect(() => {
         const unsubscribeAuth = onAuthStateChanged(auth, (currentUser) => {
             setUser(currentUser);
+            // Redirect admin to dashboard if they land here
+            if (currentUser && currentUser.email.toLowerCase().startsWith('admin')) {
+                window.location.replace('/admin/dashboard');
+            }
         });
 
         const q = query(
