@@ -10,8 +10,7 @@
   
   **NotesHub** is a premium web platform designed for students in Classes 10, 11, and 12 to access high-quality, chapter-wise PDF notes. Built with a mobile-first approach and a sleek glassmorphic UI.
   
-  [View Demo](notes-website-mu.vercel.app) • [Report Bug](https://github.com/DeepaKumawat89/Notes_website/issues) • [Request Feature](https://github.com/DeepaKumawat89/Notes_website/issues)
-</div>
+
 
 <br />
 
