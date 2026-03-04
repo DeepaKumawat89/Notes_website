@@ -1,6 +1,6 @@
-# NotesHub - Modern Academic Resource Platform
+# StudywithSN - Modern Academic Resource Platform
 
-NotesHub is a premium web platform designed for students in Classes 10, 11, and 12 to access high-quality, chapter-wise and syllabus-wise PDF notes.
+StudywithSN is a premium web platform designed for students in Classes 10, 11, and 12 to access high-quality, chapter-wise and syllabus-wise PDF notes.
 
 ## Features
 

@@ -185,7 +185,7 @@ const Navbar = () => {
                                 <div className="p-2 bg-pista-light rounded-2xl group-hover:bg-pista-dark group-hover:text-white transition-all duration-300">
                                     <BookOpen size={24} />
                                 </div>
-                                <span className="text-xl font-bold tracking-tight text-pista-deep">EduNotes</span>
+                                <span className="text-xl font-bold tracking-tight text-pista-deep">StudywithSN</span>
                             </Link>
 
                             {/* Desktop Menu */}

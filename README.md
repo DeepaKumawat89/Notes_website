@@ -1,4 +1,7 @@
-  # 📚 NotesHub
+<div align="center">
+  <img src="./src/assets/Notes_website.png" alt="StudywithSN Logo" width="120" style="border-radius: 20px; margin-bottom: 20px;">
+  
+  # 📚 StudywithSN
   ### *Modern Academic Resource Platform for Excellence*
   
   [![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://reactjs.org/)
@@ -8,7 +11,7 @@
 
   ---
   
-  **NotesHub** is a premium web platform designed for students in Classes 10, 11, and 12 to access high-quality, chapter-wise PDF notes. Built with a mobile-first approach and a sleek glassmorphic UI.
+  **StudywithSN** is a premium web platform designed for students in Classes 10, 11, and 12 to access high-quality, chapter-wise PDF notes. Built with a mobile-first approach and a sleek glassmorphic UI.
   
 
 

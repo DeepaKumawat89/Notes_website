@@ -277,7 +277,7 @@ const Home = () => {
                                     </span>
                                 </div>
                                 <h2 className="text-4xl lg:text-5xl font-black text-white italic leading-tight">
-                                    Today's Knowledge <span className={`${userData?.subscription === 'premium' ? 'text-purple-500' : 'text-pista-dark'} not-italic`}>Vault</span> is Active.
+                                    Take Your <span className={`${userData?.subscription === 'premium' ? 'text-purple-500' : 'text-pista-dark'} not-italic`}>Daily Quiz</span> Now.
                                 </h2>
                                 <p className="text-slate-400 font-bold max-w-md uppercase text-[10px] tracking-widest leading-relaxed">
                                     {userData?.subscription === 'premium'
@@ -360,7 +360,7 @@ const Home = () => {
                                         <div>
                                             <h3 className="text-xl font-bold text-pista-deep mb-1 line-clamp-1">{note.title}</h3>
                                             <p className="text-sm text-pista-deep/60 font-bold uppercase tracking-tight">
-                                                {note.subjectId} • {note.size || '0 MB'}
+                                                {note.subjectId}
                                             </p>
                                         </div>
                                         <span className="px-3 py-1 bg-pista-dark text-white rounded-full text-[10px] font-black tracking-widest">PDF</span>
@@ -390,7 +390,7 @@ const Home = () => {
                             <div className="p-2 bg-pista rounded-xl text-white">
                                 <BookOpen size={24} />
                             </div>
-                            <span className="text-2xl font-bold tracking-tight">EduNotes</span>
+                            <span className="text-2xl font-bold tracking-tight">StudywithSN</span>
                         </div>
                         <p className="text-pista-light/60 max-w-sm mb-8 leading-relaxed">
                             Empowering students with accessible, high-quality educational resources.
@@ -408,7 +408,7 @@ const Home = () => {
                     </div>
                 </div>
                 <div className="max-w-7xl mx-auto mt-16 pt-8 border-t border-white/10 text-center text-sm text-pista-light/30">
-                    © 2026 EduNotes Archive. All rights reserved. Designed with ❤️ for students.
+                    © 2026 StudywithSN Archive. All rights reserved. Designed with ❤️ for students.
                 </div>
             </footer>
         </div>

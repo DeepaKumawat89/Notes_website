@@ -193,7 +193,7 @@ const SubscriptionModal = ({ isOpen, onClose, user }) => {
                             <div className="mb-3 sm:mb-4">
                                 <span className="px-3 py-0.5 bg-white/20 rounded-full text-[9px] font-black tracking-widest uppercase mb-2 inline-block italic">Elite Membership</span>
                                 <h2 className="text-xl sm:text-2xl font-black mb-1 whitespace-nowrap">Unlock the Archive.</h2>
-                                <p className="text-pista-light/60 text-[10px] sm:text-xs font-medium leading-tight">Join 5000+ students already using EduNotes to ace their exams.</p>
+                                <p className="text-pista-light/60 text-[10px] sm:text-xs font-medium leading-tight">Join 5000+ students already using StudywithSN to ace their exams.</p>
                             </div>
 
                             <div className="space-y-3">
